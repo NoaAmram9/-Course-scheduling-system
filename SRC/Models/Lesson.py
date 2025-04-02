@@ -1,19 +1,10 @@
 from SRC.Models.LessonTimes import LessonTimes
 class Lesson:
-    def __init__(self, professor: str = "", time: LessonTimes = None, lesson_type: str = "", building: int = 0, room: int = 0):
-        self._professor = professor  # שם המרצה
+    def __init__(self, time: LessonTimes = None, lesson_type: str = "", building: int = 0, room: int = 0):
         self._time = time if time else LessonTimes()  # הזמן של השיעור
         self._lesson_type = lesson_type  # סוג השיעור (הרצאה, תרגול, מעבדה)
         self._building = building  # מיקום השיעור
         self._room = room  # חדר השיעור
-
-    @property
-    def professor(self):
-        return self._professor
-
-    @professor.setter
-    def professor(self, value):
-        self._professor = value
 
     @property
     def time(self):

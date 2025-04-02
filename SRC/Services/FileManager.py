@@ -108,7 +108,7 @@ class FileManager:
                             
                         day, start, end, building, room = match.groups()
                         lessonTimes= LessonTimes (start, end, day)  # Create a new lesson times object
-                        lesson = Lesson(instructor, lessonTimes, lessonType, building, room)  # Create a new lesson object
+                        lesson = Lesson(lessonTimes, lessonType, building, room)  # Create a new lesson object
                         # Store in the correct category
                         if lessonType == "L":
                             lectures.append(lesson)
@@ -121,7 +121,7 @@ class FileManager:
                     print(f"Skipping course '{name}': No valid lessons found.")
                     continue
             
-                course = Course(name, course_number, lectures, exercises, labs)
+                course = Course(name, course_number, instructor, lectures, exercises, labs)
                 courses.append(course)  # add the course to the list
 
 
@@ -135,14 +135,14 @@ class FileManager:
         """ Writes a list of courses to a new file in the required format """
         try: 
                 for course in courses:                    
-                    if not course.name or not course.code or not course.lectures:
+                    if not course.name or not course.code or not course.instructor or not course.lectures:
                         print(f"Skipping incomplete course '{course.name}' during writing.")
                         continue
                 
                     # Write Course Name, Course Number, and Instructor
                     file.write(f"{course.name}\n")
                     file.write(f"{course.code}\n")
-                    file.write(f"{course.lectures[0].professor}\n") #todo: add instructor to course object
+                    file.write(f"{course.instructor}\n")
 
                     # Write Lectures, Exercises, and Labs in order
                     file.write(self.format_lessons(course.lectures, "L"))

@@ -10,12 +10,14 @@ from SRC.Controller.Controller import Controller
 def main():
     # יצירת אובייקט של ה-Controller
     controller = Controller()
-    
+    controller.run("courses2.txt", "chosen_courses.txt")
+
     # יצירת אובייקט GUI ומחובר ל-Controller
     app = GUI(controller)
     
     # הפעלת ה-GUI
     app.run()
+    
 
 if __name__ == "__main__":
     main()
