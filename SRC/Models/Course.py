@@ -1,10 +1,11 @@
 class Course:
-    def __init__(self, name: str = "", code: str = "", lectures: list = None, exercises: list = None, labs: list = None):
-        self._name = name  # שם הקורס
-        self._code = code  # קוד הקורס
-        self._lectures = lectures if lectures else []  # רשימת הרצאות בקורס
-        self._exercises = exercises if exercises else []  # רשימת תרגולים בקורס
-        self._labs = labs if labs else []  # רשימת מעבדות בקורס
+    def __init__(self, name: str = "", code: str = "", instructor: str = "", lectures: list = None, exercises: list = None, labs: list = None):
+        self._name = name  # course name
+        self._code = code  # course number
+        self._instructor = instructor # course instructor
+        self._lectures = lectures if lectures else []  # list of lectures in the course
+        self._exercises = exercises if exercises else []  # list of exercises in the course
+        self._labs = labs if labs else []  # list of labs in the course
 
     @property
     def name(self):
@@ -22,6 +23,14 @@ class Course:
     def code(self, value):
         self._code = value
 
+    @property
+    def instructor(self):
+        return self._instructor
+    
+    @instructor.setter
+    def instructor(self, value):
+        self._instructor = value
+    
     @property
     def lectures(self):
         return self._lectures

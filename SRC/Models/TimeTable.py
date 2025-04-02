@@ -1,4 +1,4 @@
-class Timetable:
+class TimeTable:
     def __init__(self, courses: list = None):
         self._courses = courses if courses else []  # רשימה של קורסים במערכת השעות
 

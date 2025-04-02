@@ -5,6 +5,7 @@ from SRC.Models.Course import Course
 
 class ScheduleService(IScheduleService):
     def generate_schedules(self, courses: list) -> list:
+        
         possible_timetables = []
         
         # רשימת כל הקומבינציות האפשריות של שיעורים לכל קורס (הרצאה אחת, תרגול אחד, מעבדה אחת)
@@ -15,17 +16,17 @@ class ScheduleService(IScheduleService):
             labs = course._labs if course._labs else [None]
             
             # כל שילוב אפשרי של הרצאה אחת, תרגול אחד ומעבדה אחת לקורס מסוים
-            course_combinations.append([(course._name, course._code, lec, ex, lab) for lec, ex, lab in product(lectures, exercises, labs)])
+            course_combinations.append([(course._name, course._code, course.instructor, lec, ex, lab) for lec, ex, lab in product(lectures, exercises, labs)])
         
         # יוצרים את כל הקומבינציות האפשריות של מערכות שעות
         for combination in product(*course_combinations):
             timetable_courses = []
             timetable_lessons = []
             
-            for course_name, course_code, lec, ex, lab in combination:
+            for course_name, course_code, course_instructor, lec, ex, lab in combination:
                 selected_lessons = [lesson for lesson in (lec, ex, lab) if lesson is not None]
                 timetable_lessons.extend(selected_lessons)
-                timetable_courses.append(Course(name=course_name, code=course_code, lectures=[lec] if lec else [], exercises=[ex] if ex else [], labs=[lab] if lab else []))
+                timetable_courses.append(Course(name=course_name, code=course_code, instructor=course_instructor, lectures=[lec] if lec else [], exercises=[ex] if ex else [], labs=[lab] if lab else []))
                 
             if self._is_valid_timetable(timetable_lessons):
                 possible_timetables.append(TimeTable(timetable_courses))
