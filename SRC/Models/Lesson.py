@@ -1,4 +1,4 @@
-import LessonTimes
+from SRC.Models.LessonTimes import LessonTimes
 class Lesson:
     def __init__(self, professor: str = "", time: LessonTimes = None, lesson_type: str = "", building: int = 0, room: int = 0):
         self._professor = professor  # שם המרצה
