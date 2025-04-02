@@ -134,8 +134,7 @@ class FileManager:
     def write_courses_to_file(self, file, courses):
         """ Writes a list of courses to a new file in the required format """
         try: 
-                for course in courses:
-                    
+                for course in courses:                    
                     if not course.name or not course.code or not course.lectures:
                         print(f"Skipping incomplete course '{course.name}' during writing.")
                         continue
@@ -152,7 +151,6 @@ class FileManager:
 
                     # Add course separator
                     file.write("$$$$\n")
-                print(f"Courses successfully written.")
 
         except Exception as e:
             print(f"Error writing file '{file}': {e}")
@@ -167,7 +165,7 @@ class FileManager:
                 
                 for schedule in schedule_options:
                     # כתיבת כל אפשרות מערכת שעות לקובץ
-                    self.write_courses_to_file(file, schedule)
+                    self.write_courses_to_file(file, schedule.courses)  
                     file.write("*****\n")
                 print(f"Schedule options successfully written to '{filename}'.")
                 
