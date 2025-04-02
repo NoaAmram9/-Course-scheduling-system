@@ -3,7 +3,6 @@ from SRC.Interfaces.IScheduleService import IScheduleService
 from SRC.Models.TimeTable import TimeTable
 from SRC.Models.Course import Course
 
-
 class ScheduleService(IScheduleService):
     def generate_schedules(self, courses: list) -> list:
         
