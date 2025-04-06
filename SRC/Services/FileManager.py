@@ -35,6 +35,12 @@ class FileManager:
             if len(course_numbers) > 7:
                 print(f"Warning: Expected no more then 7 course numbers, but found {len(course_numbers)} in '{filename}'.")
                 return []
+            
+            # Validate all entries are digits
+            for num in course_numbers:
+                if not num.isdigit():
+                    print(f"Warning: Invalid course number '{num}' found in '{filename}'. Only numeric values are allowed.")
+                    return []
 
         except Exception as e:
             print(f"Error reading file '{filename}': {e}")
