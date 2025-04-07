@@ -5,13 +5,12 @@ from SRC.Models.Lesson import Lesson
 from SRC.Models.LessonTimes import LessonTimes
 import time
 
-def test_generate_all_possible_schedules():
-    service = ScheduleService()
+service = ScheduleService()
 
-    # First course: 2 lectures x 1 exercise
+def test_generate_all_possible_schedules():
     course1 = Course(
         name="Course1",
-        code="C1",
+        code="11111",
         instructor="Instructor1",
         lectures=[
             Lesson(LessonTimes("08:00", "09:00", "1"), "L", "100", "101"),
@@ -23,10 +22,9 @@ def test_generate_all_possible_schedules():
         labs=[]
     )
 
-    # Second course: 1 lecture x 2 exercises
     course2 = Course(
         name="Course2",
-        code="C2",
+        code="22222",
         instructor="Instructor2",
         lectures=[
             Lesson(LessonTimes("11:00", "12:00", "1"), "L", "200", "201")
@@ -40,17 +38,12 @@ def test_generate_all_possible_schedules():
 
     schedules = service.generate_schedules([course1, course2])
 
-    # course1: 2 lectures x 1 exercise = 2 combinations
-    # course2: 1 lecture x 2 exercises = 2 combinations
-    # total valid combinations (if no conflicts): 2 x 2 = 4
-    assert len(schedules) == 4, "Should generate all possible combinations for two courses without conflicts"
+    assert len(schedules) == 4
 
-def test_detect_schedule_conflicts():
-    service = ScheduleService()
-
+def test_schedule_conflicts():
     course1 = Course(
         name="Course1",
-        code="C1",
+        code="11111",
         instructor="Instructor1",
         lectures=[
             Lesson(LessonTimes("10:00", "12:00", "1"), "L", "100", "101")
@@ -63,10 +56,10 @@ def test_detect_schedule_conflicts():
 
     course2 = Course(
         name="Course2",
-        code="C2",
+        code="22222",
         instructor="Instructor2",
         lectures=[
-            Lesson(LessonTimes("11:00", "13:00", "1"), "L", "200", "201")  # Conflict with course1's lecture
+            Lesson(LessonTimes("11:00", "13:00", "1"), "L", "200", "201")
         ],
         exercises=[
             Lesson(LessonTimes("14:00", "15:00", "1"), "T", "200", "202")
@@ -75,14 +68,12 @@ def test_detect_schedule_conflicts():
     )
 
     schedules = service.generate_schedules([course1, course2])
-    assert len(schedules) == 0, "Should not generate schedules with conflicting lectures"
+    assert len(schedules) == 0
 
-def test_schedule_course_with_all_components():
-    service = ScheduleService()
-
+def test_schedule_course_with_all_parts():
     course = Course(
-        name="FullCourse",
-        code="FC1",
+        name="Course",
+        code="11111",
         instructor="Instructor",
         lectures=[
             Lesson(LessonTimes("08:00", "09:00", "2"), "L", "A", "101")
@@ -96,14 +87,12 @@ def test_schedule_course_with_all_components():
     )
 
     schedules = service.generate_schedules([course])
-    assert len(schedules) == 1, "Should generate a schedule with all components (lecture, exercise, lab)"
+    assert len(schedules) == 1
 
 def test_schedule_course_with_multiple_lecture_groups():
-    service = ScheduleService()
-
     course = Course(
-        name="MultiLecture",
-        code="ML1",
+        name="Course",
+        code="11111",
         instructor="Instructor",
         lectures=[
             Lesson(LessonTimes("08:00", "09:00", "1"), "L", "C", "301"),
@@ -117,15 +106,13 @@ def test_schedule_course_with_multiple_lecture_groups():
     )
 
     schedules = service.generate_schedules([course])
-    assert len(schedules) == 3, "Should create a schedule for each lecture group (with the same exercise)"
+    assert len(schedules) == 3
 
-def test_lessons_on_different_days_do_not_conflict():
-    service = ScheduleService()
-
+def test_schedule_lessons_on_different_days():
     course1 = Course(
         name="Course1",
-        code="C1",
-        instructor="Inst1",
+        code="11111",
+        instructor="Instructor1",
         lectures=[
             Lesson(LessonTimes("10:00", "11:00", "1"), "L", "A", "001")
         ],
@@ -137,8 +124,8 @@ def test_lessons_on_different_days_do_not_conflict():
 
     course2 = Course(
         name="Course2",
-        code="C2",
-        instructor="Inst2",
+        code="22222",
+        instructor="Instructor2",
         lectures=[
             Lesson(LessonTimes("10:00", "11:00", "2"), "L", "B", "003")
         ],
@@ -149,15 +136,13 @@ def test_lessons_on_different_days_do_not_conflict():
     )
 
     schedules = service.generate_schedules([course1, course2])
-    assert len(schedules) == 1, "Courses on different days should be allowed"
+    assert len(schedules) == 1
 
-def test_non_consecutive_lessons_are_valid():
-    service = ScheduleService()
-
+def test_schedule_not_consecutive_lessons():
     course = Course(
-        name="CourseBreaks",
-        code="CB1",
-        instructor="Prof. Break",
+        name="Course",
+        code="11111",
+        instructor="Instructor",
         lectures=[
             Lesson(LessonTimes("09:00", "10:00", "3"), "L", "B1", "100")
         ],
@@ -168,15 +153,13 @@ def test_non_consecutive_lessons_are_valid():
     )
 
     schedules = service.generate_schedules([course])
-    assert len(schedules) == 1, "Should handle non-consecutive lessons with breaks"
+    assert len(schedules) == 1
 
-def test_minimum_one_course_schedule():
-    service = ScheduleService()
-
+def test_schedule_minimum_one_course():
     course = Course(
-        name="SoloCourse",
-        code="SOLO1",
-        instructor="Solo Teach",
+        name="Course",
+        code="11111",
+        instructor="Instructor",
         lectures=[
             Lesson(LessonTimes("08:00", "09:00", "1"), "L", "A", "001")
         ],
@@ -187,16 +170,14 @@ def test_minimum_one_course_schedule():
     )
 
     schedules = service.generate_schedules([course])
-    assert len(schedules) == 1, "Should handle schedule with only one course"
+    assert len(schedules) == 1
 
-def test_maximum_seven_courses_schedule():
-    service = ScheduleService()
-
+def test_schedule_maximum_seven_courses():
     courses = []
     for i in range(7):
         course = Course(
             name=f"Course{i+1}",
-            code=f"C{i+1}",
+            code=f"{i+1}{i+1}{i+1}{i+1}{i+1}",
             instructor=f"Instructor{i+1}",
             lectures=[
                 Lesson(LessonTimes("08:00", "09:00", str(i + 1)), "L", f"B{i+1}", f"00{i+1}")
@@ -209,35 +190,30 @@ def test_maximum_seven_courses_schedule():
         courses.append(course)
 
     schedules = service.generate_schedules(courses)
-    assert len(schedules) > 0, "Should generate valid schedules with 7 courses"
+    assert len(schedules) > 0
 
-def test_schedule_generation_performance():
-    service = ScheduleService()
-
+def test_schedule_performance():
     courses = []
     for i in range(7):
-        lectures = [
-            Lesson(LessonTimes("08:00", "09:00", str(i + 1)), "L", f"B{i}", f"{i}01"),
-            Lesson(LessonTimes("10:00", "11:00", str(i + 1)), "L", f"B{i}", f"{i}02"),
-        ]
-        exercises = [
-            Lesson(LessonTimes("12:00", "13:00", str(i + 1)), "T", f"B{i}", f"{i}03"),
-            Lesson(LessonTimes("14:00", "15:00", str(i + 1)), "T", f"B{i}", f"{i}04"),
-        ]
-        course = Course(
-            name=f"PerfCourse{i+1}",
-            code=f"P{i+1}",
-            instructor=f"Dr. Speed{i+1}",
-            lectures=lectures,
-            exercises=exercises,
+        course = Course (
+            name=f"Course{i+1}",
+            code=f"{i+1}{i+1}{i+1}{i+1}{i+1}",
+            instructor=f"Instructor{i+1}",
+            lectures = [
+                Lesson(LessonTimes("08:00", "09:00", str(i + 1)), "L", f"B{i}", f"{i}01"),
+                Lesson(LessonTimes("10:00", "11:00", str(i + 1)), "L", f"B{i}", f"{i}02"),
+            ],
+            exercises = [
+                Lesson(LessonTimes("12:00", "13:00", str(i + 1)), "T", f"B{i}", f"{i}03"),
+                Lesson(LessonTimes("14:00", "15:00", str(i + 1)), "T", f"B{i}", f"{i}04"),
+            ],
             labs=[]
         )
         courses.append(course)
 
-    # Time the schedule generation
     start_time = time.time()
     schedules = service.generate_schedules(courses)
     duration = time.time() - start_time
 
-    assert duration < 10, f"Schedule generation took too long: {duration:.2f} seconds"
-    assert len(schedules) > 0, "No schedules were generated, which is suspiciously fast 😅"
+    assert duration < 10
+    assert len(schedules) > 0

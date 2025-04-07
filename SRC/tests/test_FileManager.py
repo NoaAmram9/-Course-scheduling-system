@@ -6,206 +6,134 @@ from SRC.Models.Course import Course
 from SRC.Models.LessonTimes import LessonTimes
 from SRC.Models.Lesson import Lesson
 from SRC.Services.FileManager import FileManager
+from SRC.Controller.Controller import Controller
 
-def test_valid_file_read():
-    file_manager = FileManager()
+file_manager = FileManager()
 
-    # Create a temporary file with valid content
+def test_courses_file_read():
     with NamedTemporaryFile(delete=False, mode='w', encoding='utf-8') as file:
-        file.write("$$$$\nCourse Name\n12345\nInstructor Name\nL S,5,10:00,16:00,605,061\nT S,5,16:00,17:00,605,061\n" \
-        "$$$$\nCourse Name 2\n14395\nInstructor Name\nL S,1,14:00,16:00,1401,4 S,2,14:00,16:00,1401,4\nT " \
+        file.write("$$$$\nCourse\n12345\nInstructor\nL S,5,10:00,16:00,605,061\nT S,5,16:00,17:00,605,061\n" \
+        "$$$$\nCourse 2\n14395\nInstructor 2\nL S,1,14:00,16:00,1401,4 S,2,14:00,16:00,1401,4\nT " \
         "S,2,18:00,19:00,1100,22\n")
         test_file = file.name
-    
-    # Read courses from the file
+
     courses = file_manager.read_courses_from_file(test_file)
 
-    # Assertions
-    assert len(courses) == 2  # Ensure that at least one course is loaded
-    assert isinstance(courses[0], Course)  # Ensure that the data is converted to Course objects
-    os.remove(test_file)  # Clean up
+    assert len(courses) == 2 
+    assert isinstance(courses[0], Course) 
+    os.remove(test_file)
 
-def test_file_not_found():
-    file_manager = FileManager()
-    
-    # Try to read a non-existing file
+def test_courses_file_not_found():
     courses = file_manager.read_courses_from_file("non_existing_file.txt")
+    assert courses == []
 
-    # Assertions
-    assert courses == [], "The system should return an empty list if the file doesn't exist."
-
-def test_empty_file():
-    file_manager = FileManager()
-    
-    # Create an empty file
+def test_courses_empty_file():
     with NamedTemporaryFile(delete=False, mode='w', encoding='utf-8') as file:
         test_file = file.name
 
-    # Try reading the empty file
     courses = file_manager.read_courses_from_file(test_file)
+    assert courses == []
+    os.remove(test_file) 
 
-    # Assertions
-    assert courses == [], "The system should return an empty list if the file is empty."
-    os.remove(test_file)  # Clean up
-
-def test_wrong_format_file():
-    file_manager = FileManager()
-    
-    # Create an empty file
+def test_wrong_format_courses_file():
     with NamedTemporaryFile(delete=False, mode='w', encoding='utf-8') as file:
-        file.write("Course Name\n12345\nL S,5,10:00,16:00,605,061\nT S,5,16:00,17:00,605,061\n")
+        file.write("Course\n12345\nL S,5,10:00,16:00,605,061\nT S,5,16:00,17:00,605,061\n") #instructor missing
         test_file = file.name
 
-    # Try reading the empty file
     courses = file_manager.read_courses_from_file(test_file)
-
-    # Assertions
-    assert courses == [], "The system should return an empty list if the file is empty."
-    os.remove(test_file)  # Clean up
-
-def test_valid_course_numbers():
-    file_manager = FileManager()
-
-    # Simulate a file with valid course numbers
-    course_file_content = "12345\n23456\n34567\n"
-    with NamedTemporaryFile(delete=False, mode='w', encoding='utf-8') as file:
-        file.write(course_file_content)
-        test_file = file.name
-    
-    # Read course numbers from file
-    course_numbers = file_manager.read_course_numbers_from_file(test_file)
-    
-    # Assertions
-    assert len(course_numbers) == 3, "The system should load the correct number of course numbers."
-    assert course_numbers == ["12345", "23456", "34567"], "The course numbers should match the expected values."
-    os.remove(test_file)  # Clean up
-
-def test_invalid_course_numbers():
-    file_manager = FileManager()
-
-    # Simulate a file with invalid course numbers (non-numeric)
-    course_file_content1 = "abcde\nxyz12\n"
-    course_file_content2 = "12654\n124@$\n"
-    with NamedTemporaryFile(delete=False, mode='w', encoding='utf-8') as file:
-        file.write(course_file_content1)
-        test_file = file.name
-    
-    # Read course numbers from file
-    course_numbers1 = file_manager.read_course_numbers_from_file(test_file)
-    
-    # Assertions
-    assert course_numbers1 == [], "The system should return an empty list if the course numbers are invalid."
-
-    with NamedTemporaryFile(delete=False, mode='w', encoding='utf-8') as file:
-        file.write(course_file_content2)
-        test_file = file.name
-    
-    # Read course numbers from file
-    course_numbers2 = file_manager.read_course_numbers_from_file(test_file)
-    
-    # Assertions
-    assert course_numbers2 == [], "The system should return an empty list if the course numbers are invalid."
-    os.remove(test_file)  # Clean up
-
-def test_read_course_numbers_from_file_too_many_courses():
-    file_manager = FileManager()
-    
-    # Create a temporary file with more than 7 course numbers
-    with NamedTemporaryFile(delete=False, mode='w', encoding='utf-8') as file:
-        file.write("1\n2\n3\n4\n5\n6\n7\n8\n")
-        test_file = file.name
-
-    # Try reading the file with too many courses
-    result = file_manager.read_course_numbers_from_file(test_file)
-
-    # Assertions: The system should return an empty list due to too many courses
-    assert result == []
-
-    # Clean up
+    assert courses == []
     os.remove(test_file)
 
-def test_read_course_numbers_from_file_valid_courses():
-    file_manager = FileManager()
-    
-    # Create a temporary file with exactly 7 course numbers
+def test_course_numbers_file_read():
     with NamedTemporaryFile(delete=False, mode='w', encoding='utf-8') as file:
-        file.write("1\n2\n3\n4\n5\n6\n7")
+        file.write("11111\n22222\n33333\n")
         test_file = file.name
-
-    # Try reading the file with exactly 7 courses
-    result = file_manager.read_course_numbers_from_file(test_file)
-
-    # Assertions: The system should return the list of course numbers
-    assert result == ['1', '2', '3', '4', '5', '6', '7']
-
-    # Clean up
+    
+    course_numbers_selection = file_manager.read_course_numbers_from_file(test_file)
+    assert len(course_numbers_selection) == 3
+    assert course_numbers_selection == ["11111", "22222", "33333"]
     os.remove(test_file)
 
-def test_read_course_numbers_from_file_empty():
-    file_manager = FileManager()
+def test_invalid_course_numbers_selection_file():
+    with NamedTemporaryFile(delete=False, mode='w', encoding='utf-8') as file:
+        file.write("abcde\nxyz12\n")
+        test_file = file.name
     
-    # Create a temporary empty file
+    course_numbers_selection1 = file_manager.read_course_numbers_from_file(test_file)
+    assert course_numbers_selection1 == []
+
+    with NamedTemporaryFile(delete=False, mode='w', encoding='utf-8') as file:
+        file.write("12654\n124@$\n")
+        test_file = file.name
+    
+    course_numbers_selection2 = file_manager.read_course_numbers_from_file(test_file)
+    assert course_numbers_selection2 == []
+    os.remove(test_file)
+
+def test_invalid_course_numbers_courses_file(): 
+    with NamedTemporaryFile(delete=False, mode='w', encoding='utf-8') as file:
+        file.write("$$$$\nCourse Name\n1234A\nInstructor Name\nL S,5,10:00,16:00,605,061\nT S,5,16:00,17:00,605,061\n" \
+        "$$$$\nCourse Name 2\n123\nInstructor Name\nL S,1,14:00,16:00,1401,4 S,2,14:00,16:00,1401,4\nT " \
+        "S,2,18:00,19:00,1100,22\n")
+        test_file = file.name
+
+    courses = file_manager.read_courses_from_file(test_file)
+    assert len(courses) == 0
+    os.remove(test_file)
+
+def test_read_file_with_invalid_encoding():
+    with NamedTemporaryFile(delete=False, mode='wb') as bad_file:
+        bad_file.write(b'\x80\x81\x82\x83')  # Invalid UTF-8
+        bad_filename = bad_file.name
+
+    result = file_manager.read_course_numbers_from_file(bad_filename)
+    assert result == []
+    os.remove(bad_filename)
+
+def test_too_many_selected_courses():
+    with NamedTemporaryFile(delete=False, mode='w', encoding='utf-8') as file:
+        file.write("11111\n22222\n33333\n44444\n55555\n66666\n77777\n88888\n")
+        test_file = file.name
+
+    result = file_manager.read_course_numbers_from_file(test_file)
+    assert result == []
+    os.remove(test_file)
+
+def test_course_selection_file_not_found():
+    courses = file_manager.read_course_numbers_from_file("non_existing_file.txt")
+    assert courses == []
+
+def test_course_selection_file_empty():
     with NamedTemporaryFile(delete=False, mode='w', encoding='utf-8') as file:
         test_file = file.name
 
-    # Try reading the empty file
     result = file_manager.read_course_numbers_from_file(test_file)
-
-    # Assertions: The system should return an empty list for an empty file
     assert result == []
-
-    # Clean up
     os.remove(test_file)
 
 def test_course_requires_lecture_and_exercise():
-    file_manager = FileManager()
-
-    # יצירת קובץ זמני עם קורס שלא כולל תרגול
     with NamedTemporaryFile(delete=False, mode='w', encoding='utf-8') as file:
-        file.write(
-            "$$$$\n"
-            "Course With No Exercise\n"
-            "12345\n"
-            "Dr. Smith\n"
-            "L S,1,08:00,10:00,101,201\n"
-        )
+        file.write("$$$$\nCourse\n12345\nInstructor\nL S,1,08:00,10:00,101,201\n") #no exercise
         test_file = file.name
 
-    # קריאת הקורסים מתוך הקובץ
     courses = file_manager.read_courses_from_file(test_file)
-
-    # ודא שהקורס לא נוסף בגלל שאין בו תרגול
-    assert courses == [], "קורס ללא תרגול לא אמור להיכלל ברשימת הקורסים"
-
+    assert courses == []
     os.remove(test_file)
 
-    # יצירת קובץ זמני עם קורס שלא כולל הרצאה
     with NamedTemporaryFile(delete=False, mode='w', encoding='utf-8') as file:
-        file.write(
-            "$$$$\n"
-            "Course With No Lecture\n"
-            "54321\n"
-            "Dr. Johnson\n"
-            "T S,2,10:00,12:00,102,202\n"
-        )
+        file.write("$$$$\nCourse\n12345\nInstructor\nT S,2,10:00,12:00,102,202\n") #no lecture
         test_file = file.name
 
     courses = file_manager.read_courses_from_file(test_file)
-
-    # ודא שהקורס לא נוסף בגלל שאין בו הרצאה
-    assert courses == [], "קורס ללא הרצאה לא אמור להיכלל ברשימת הקורסים"
-
+    assert courses == []
     os.remove(test_file)
 
 def test_output_format():
-    file_manager = FileManager()
-
-    # יצירת קורס לדוגמה
     lesson_time1 = LessonTimes("10:00", "12:00", "1")
     lesson_time2 = LessonTimes("13:00", "14:00", "3")
     lecture = Lesson(lesson_time1, "L", "100", "101")
     exercise = Lesson(lesson_time2, "T", "100", "102")
-    course = Course("Math", "12345", "Dr. Cohen", [lecture], [exercise], [])
+    course = Course("Math", "12345", "Dr. Tom", [lecture], [exercise], [])
 
     with NamedTemporaryFile(delete=False, mode='w+', encoding='utf-8') as temp_file:
         file_manager.write_courses_to_file(temp_file, [course])
@@ -214,22 +142,19 @@ def test_output_format():
 
     os.remove(temp_file.name)
 
-    # בדיקות על הפורמט
     assert "Math" in content
     assert "12345" in content
-    assert "Dr. Cohen" in content
+    assert "Dr. Tom" in content
     assert "L S,1,10:00,12:00,100,101" in content
     assert "T S,3,13:00,14:00,100,102" in content
     assert "$$$$" in content
 
 def test_write_schedule_to_file():
-    file_manager = FileManager()
-
-    # יצירת קורס לדוגמה
-    lesson_time = LessonTimes("09:00", "11:00", "2")
-    lecture = Lesson(lesson_time, "L", "200", "201")
-    exercise = Lesson(lesson_time, "T", "200", "202")
-    course = Course("Physics", "54321", "Prof. Newton", [lecture], [exercise], [])
+    lesson_time1 = LessonTimes("10:00", "12:00", "1")
+    lesson_time2 = LessonTimes("13:00", "14:00", "3")
+    lecture = Lesson(lesson_time1, "L", "100", "101")
+    exercise = Lesson(lesson_time2, "T", "100", "102")
+    course = Course("Math", "12345", "Dr. Tom", [lecture], [exercise], [])
     timetable = TimeTable([course])
 
     with NamedTemporaryFile(delete=False, mode='r+', encoding='utf-8') as temp_file:
@@ -239,39 +164,62 @@ def test_write_schedule_to_file():
 
     os.remove(temp_file.name)
 
-    # בדיקות על השמירה
-    assert "Physics" in content
-    assert "54321" in content
-    assert "Prof. Newton" in content
-    assert "L S,2,09:00,11:00,200,201" in content
-    assert "T S,2,09:00,11:00,200,202" in content
+    assert "Math" in content
+    assert "12345" in content
+    assert "Dr. Tom" in content
+    assert "L S,1,10:00,12:00,100,101" in content
+    assert "T S,3,13:00,14:00,100,102" in content
     assert "*****" in content
 
-def test_read_file_with_invalid_encoding():
-    file_manager = FileManager()
-
-    with NamedTemporaryFile(delete=False, mode='wb') as bad_file:
-        bad_file.write(b'\x80\x81\x82\x83')  # Invalid UTF-8
-        bad_filename = bad_file.name
-
-    result = file_manager.read_course_numbers_from_file(bad_filename)
-    assert result == [], "Expected reading an invalid-encoded file to return an empty list."
-    os.remove(bad_filename)
-
-def test_invalid_course_number_length():
-    file_manager = FileManager()
-
-    # Create a temporary file with various invalid and one valid course numbers
+def test_invalid_course_number_length_selection_file():
     with NamedTemporaryFile(delete=False, mode="w", encoding="utf-8") as file:
-        file.write("123\n")         # Too short
-        file.write("123456\n")      # Too long
-        file.write("12345\n")       # Valid
+        file.write("123\n")
+        file.write("123456\n")
+        file.write("12345\n")
         test_file = file.name
 
     result = file_manager.read_course_numbers_from_file(test_file)
-    
-    # Cleanup
+    assert result == []
     os.remove(test_file)
 
-    # Assertion
+def test_duplicate_course_selection_file():
+    with NamedTemporaryFile(delete=False, mode='w', encoding='utf-8') as file:
+        file.write("12345\n23456\n12345\n")  # 12345 is duplicated
+        test_file = file.name
+
+    result = file_manager.read_course_numbers_from_file(test_file)
     assert result == []
+    os.remove(test_file)
+
+def test_duplicate_courses_file():
+    with NamedTemporaryFile(delete=False, mode='w', encoding='utf-8') as file:
+        file.write("$$$$\nCourse\n12345\nInstructor\nL S,5,10:00,16:00,605,061\nT S,5,16:00,17:00,605,061\n" \
+        "$$$$\nCourse\n12345\nInstructor\nL S,5,10:00,16:00,605,061\nT S,5,16:00,17:00,605,061\n")
+        test_file = file.name
+
+    courses = file_manager.read_courses_from_file(test_file)
+    assert len(courses) == 1 #Duplicate courses should be skipped."
+    assert courses[0].code == "12345"
+    assert courses[0].name == "Course"
+    assert courses[0].instructor == "Instructor"
+    os.remove(test_file)
+
+def test_validate_course_numbers_exist_in_courses_file():
+    controller = Controller()
+
+    with NamedTemporaryFile(delete=False, mode='w', encoding='utf-8') as file:
+        file.write("$$$$\nCourse 1\n12345\nInstructor 1\nL S,5,10:00,12:00,605,061\n" \
+        "$$$$\nCourse 2\n12346\nInstructor 2\nT S,5,14:00,16:00,605,061\n")
+        courses_file = file.name
+
+    chosen_courses_file_content = "12345\n12347\n"
+    
+    with NamedTemporaryFile(delete=False, mode='w', encoding='utf-8') as file:
+        file.write(chosen_courses_file_content)
+        chosen_courses_file = file.name
+
+    assert not file_manager.validate_course_numbers_exist(chosen_courses_file, courses_file)
+    schedules = controller.create_schedules(chosen_courses_file_content, chosen_courses_file, courses_file)
+    assert len(schedules) == 0
+    os.remove(courses_file)
+    os.remove(chosen_courses_file)
