@@ -26,22 +26,6 @@ class GUI:
         # יצירת כפתור לאישור בחירת קורסים
         self.select_button = tk.Button(self.window, text="Select Courses", command=self.select_courses)
         self.select_button.pack(pady=10)
-        
-    # def load_file(self):
-    #     """ פותח חלון קובץ וטעינת הקובץ למערכת """
-    #     file_path = filedialog.askopenfilename(filetypes=[("Text files", "*.txt")])
-        
-    #     if file_path:
-    #         try:
-    #             # שלח את הקובץ ל-Controller למיפוי לאובייקטים
-    #             self.controller.process_file(file_path)
-    #             messagebox.showinfo("Success", "File loaded successfully.")
-                
-    #             # לאחר שהקובץ נטען, הצג את הקורסים ב-ComboBox
-    #             courses = self.controller.get_courses()
-    #             self.course_combobox['values'] = courses
-    #         except Exception as e:
-    #             messagebox.showerror("Error", f"Failed to load file: {str(e)}")
 
     def load_file(self):
         """ פותח חלון קובץ וטעינת הקובץ למערכת """   
@@ -84,12 +68,7 @@ class GUI:
                 messagebox.showerror("Error", f"Failed to load file: {str(e)}")
 
     def select_courses(self):
-        """ שולח את הקורסים שנבחרו ל-Controller """
-        # selected_courses = self.course_combobox.get()
-        # if not selected_courses:
-        #     messagebox.showwarning("Warning", "Please select courses.")
-        #     return
-        
+        """ שולח את הקורסים שנבחרו ל-Controller """     
         # שלח את הקורסים שנבחרו ל-Controller להמשך עיבוד
         self.controller.run("Data/courses.txt", "Data/chosen_courses.txt")
  
