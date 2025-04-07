@@ -19,12 +19,8 @@ class GUI:
         self.load_chosen_courses_button = tk.Button(self.window, text="Load chosen courses file", command=self.load_chosen_courses_file)
         self.load_chosen_courses_button.pack(pady=10)
         
-        # יצירת ComboBox להציג את הקורסים
-        self.course_combobox = ttk.Combobox(self.window, state="readonly")
-        self.course_combobox.pack(pady=10)
-        
         # יצירת כפתור לאישור בחירת קורסים
-        self.select_button = tk.Button(self.window, text="Select Courses", command=self.select_courses)
+        self.select_button = tk.Button(self.window, text="Generate Schedule", command=self.select_courses)
         self.select_button.pack(pady=10)
 
     def load_file(self):
