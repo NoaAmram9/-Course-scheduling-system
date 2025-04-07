@@ -1,6 +1,7 @@
 import pytest
 import os
 from tempfile import NamedTemporaryFile
+from SRC.Models.TimeTable import TimeTable
 from SRC.Models.Course import Course
 from SRC.Models.LessonTimes import LessonTimes
 from SRC.Models.Lesson import Lesson
@@ -155,3 +156,122 @@ def test_read_course_numbers_from_file_empty():
 
     # Clean up
     os.remove(test_file)
+
+def test_course_requires_lecture_and_exercise():
+    file_manager = FileManager()
+
+    # יצירת קובץ זמני עם קורס שלא כולל תרגול
+    with NamedTemporaryFile(delete=False, mode='w', encoding='utf-8') as file:
+        file.write(
+            "$$$$\n"
+            "Course With No Exercise\n"
+            "12345\n"
+            "Dr. Smith\n"
+            "L S,1,08:00,10:00,101,201\n"
+        )
+        test_file = file.name
+
+    # קריאת הקורסים מתוך הקובץ
+    courses = file_manager.read_courses_from_file(test_file)
+
+    # ודא שהקורס לא נוסף בגלל שאין בו תרגול
+    assert courses == [], "קורס ללא תרגול לא אמור להיכלל ברשימת הקורסים"
+
+    os.remove(test_file)
+
+    # יצירת קובץ זמני עם קורס שלא כולל הרצאה
+    with NamedTemporaryFile(delete=False, mode='w', encoding='utf-8') as file:
+        file.write(
+            "$$$$\n"
+            "Course With No Lecture\n"
+            "54321\n"
+            "Dr. Johnson\n"
+            "T S,2,10:00,12:00,102,202\n"
+        )
+        test_file = file.name
+
+    courses = file_manager.read_courses_from_file(test_file)
+
+    # ודא שהקורס לא נוסף בגלל שאין בו הרצאה
+    assert courses == [], "קורס ללא הרצאה לא אמור להיכלל ברשימת הקורסים"
+
+    os.remove(test_file)
+
+def test_output_format():
+    file_manager = FileManager()
+
+    # יצירת קורס לדוגמה
+    lesson_time1 = LessonTimes("10:00", "12:00", "1")
+    lesson_time2 = LessonTimes("13:00", "14:00", "3")
+    lecture = Lesson(lesson_time1, "L", "100", "101")
+    exercise = Lesson(lesson_time2, "T", "100", "102")
+    course = Course("Math", "12345", "Dr. Cohen", [lecture], [exercise], [])
+
+    with NamedTemporaryFile(delete=False, mode='w+', encoding='utf-8') as temp_file:
+        file_manager.write_courses_to_file(temp_file, [course])
+        temp_file.seek(0)
+        content = temp_file.read()
+
+    os.remove(temp_file.name)
+
+    # בדיקות על הפורמט
+    assert "Math" in content
+    assert "12345" in content
+    assert "Dr. Cohen" in content
+    assert "L S,1,10:00,12:00,100,101" in content
+    assert "T S,3,13:00,14:00,100,102" in content
+    assert "$$$$" in content
+
+def test_write_schedule_to_file():
+    file_manager = FileManager()
+
+    # יצירת קורס לדוגמה
+    lesson_time = LessonTimes("09:00", "11:00", "2")
+    lecture = Lesson(lesson_time, "L", "200", "201")
+    exercise = Lesson(lesson_time, "T", "200", "202")
+    course = Course("Physics", "54321", "Prof. Newton", [lecture], [exercise], [])
+    timetable = TimeTable([course])
+
+    with NamedTemporaryFile(delete=False, mode='r+', encoding='utf-8') as temp_file:
+        file_manager.write_schedule_to_file(temp_file.name, [timetable])
+        temp_file.seek(0)
+        content = temp_file.read()
+
+    os.remove(temp_file.name)
+
+    # בדיקות על השמירה
+    assert "Physics" in content
+    assert "54321" in content
+    assert "Prof. Newton" in content
+    assert "L S,2,09:00,11:00,200,201" in content
+    assert "T S,2,09:00,11:00,200,202" in content
+    assert "*****" in content
+
+def test_read_file_with_invalid_encoding():
+    file_manager = FileManager()
+
+    with NamedTemporaryFile(delete=False, mode='wb') as bad_file:
+        bad_file.write(b'\x80\x81\x82\x83')  # Invalid UTF-8
+        bad_filename = bad_file.name
+
+    result = file_manager.read_course_numbers_from_file(bad_filename)
+    assert result == [], "Expected reading an invalid-encoded file to return an empty list."
+    os.remove(bad_filename)
+
+def test_invalid_course_number_length():
+    file_manager = FileManager()
+
+    # Create a temporary file with various invalid and one valid course numbers
+    with NamedTemporaryFile(delete=False, mode="w", encoding="utf-8") as file:
+        file.write("123\n")         # Too short
+        file.write("123456\n")      # Too long
+        file.write("12345\n")       # Valid
+        test_file = file.name
+
+    result = file_manager.read_course_numbers_from_file(test_file)
+    
+    # Cleanup
+    os.remove(test_file)
+
+    # Assertion
+    assert result == []

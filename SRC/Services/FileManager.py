@@ -41,6 +41,10 @@ class FileManager:
                 if not num.isdigit():
                     print(f"Warning: Invalid course number '{num}' found in '{filename}'. Only numeric values are allowed.")
                     return []
+                
+                if not len(num) == 5:
+                    print(f"Warning: Invalid Non 5-digit course number found in '{filename}'.")
+                    return []
 
         except Exception as e:
             print(f"Error reading file '{filename}': {e}")
