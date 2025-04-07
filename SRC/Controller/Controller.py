@@ -9,7 +9,7 @@ class Controller:
         courses_info = self.process_repository_file(file_path1) # Process the repository file with all the courses info
         selected_courses = self.get_selected_courses(file_path2) # Get the selected courses from the user
         selected_courses_info = self.selected_courses_info(courses_info, selected_courses) # Get the selected courses info from the repository
-        time_table = self.create_schedules(selected_courses_info) # Create the schedules based on the selected courses
+        time_table = self.create_schedules(selected_courses_info, file_path2, file_path1) # Create the schedules based on the selected courses
         self.write_schedule_to_file(time_table) # Write the schedule to an output file
     
     # Function to process the repository file with all the courses info       
@@ -31,7 +31,14 @@ class Controller:
         return selected_courses_info
     
     # Function to create the schedules based on the selected courses
-    def create_schedules(self, selected_courses):
+    def create_schedules(self, selected_courses, selected_courses_path, courses_info_path):
+        dataManager = FileManager()
+
+        # Validate that all selected course numbers exist in the courses info
+        if not dataManager.validate_course_numbers_exist(selected_courses_path, courses_info_path):
+            print("Error: Some selected courses are invalid.")
+            return []
+        
         scheduleService = ScheduleService()
         return scheduleService.generate_schedules(selected_courses)
     

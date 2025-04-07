@@ -35,6 +35,19 @@ class FileManager:
             if len(course_numbers) > 7:
                 print(f"Warning: Expected no more then 7 course numbers, but found {len(course_numbers)} in '{filename}'.")
                 return []
+            
+            if len(course_numbers) != len(set(course_numbers)):
+                print(f"Warning: Duplicate course numbers found in '{filename}'.")
+                return []
+            
+            for num in course_numbers:
+                if not num.isdigit():
+                    print(f"Warning: Invalid course number '{num}' found in '{filename}'. Only numeric values are allowed.")
+                    return []
+                
+                if not len(num) == 5:
+                    print(f"Warning: Invalid Non 5-digit course number found in '{filename}'.")
+                    return []
 
         except Exception as e:
             print(f"Error reading file '{filename}': {e}")
@@ -45,6 +58,8 @@ class FileManager:
     def read_courses_from_file(self, filename):
         """ Reads a file and converts it into a list of Course objects """
         courses = []
+        seen_courses = set()
+
         if not os.path.exists(filename):
             print(f"Error: File '{filename}' not found.")
             return []
@@ -75,11 +90,24 @@ class FileManager:
 
                 name, course_number, instructor = lines[:3]  # The first three lines are name, number, and instructor
                 
+                # Check course number (ensure it's 5 digits and numeric)
+                if not (course_number.isdigit() and len(course_number) == 5):
+                    print(f"Skipping invalid course number '{course_number}' for course '{name}'. It must be a 5-digit number.")
+                    continue  # Skip this course if the number is invalid
+
+
                 # Ensure no empty values for mandatory fields
                 if not (name and course_number and instructor):
                     print(f"Skipping invalid course '{name}': Missing required fields.")
                     continue
             
+                # Check if the exact course (same number, name, and instructor) already exists
+                course_key = (course_number, name, instructor)
+                if course_key in seen_courses:
+                    print(f"Skipping duplicate course '{name}' ({course_number}) by '{instructor}'.")
+                    continue
+                seen_courses.add(course_key)
+
                 # Separate lessons by type
                 lectures = []
                 exercises = []
@@ -130,6 +158,19 @@ class FileManager:
 
         return courses  # Return the list of courses
 
+    # Validate that selected courses exist in the courses file
+    def validate_course_numbers_exist(self, numbers_filename, courses_filename):
+        """ Checks if course numbers in the selected courses file exist in the courses file. """
+        valid_course_numbers = set(course.code for course in self.read_courses_from_file(courses_filename))
+        selected_course_numbers = self.read_course_numbers_from_file(numbers_filename)
+
+        missing_courses = [num for num in selected_course_numbers if num not in valid_course_numbers]
+        if missing_courses:
+            print(f"Warning: The following course numbers are invalid (not found in course list): {', '.join(missing_courses)}")
+            return False
+        
+        return True
+    
     # Write courses to a file
     def write_courses_to_file(self, file, courses):
         """ Writes a list of courses to a new file in the required format """
