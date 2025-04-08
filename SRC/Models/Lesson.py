@@ -1,10 +1,10 @@
 from SRC.Models.LessonTimes import LessonTimes
 class Lesson:
     def __init__(self, time: LessonTimes = None, lesson_type: str = "", building: int = 0, room: int = 0):
-        self._time = time if time else LessonTimes()  # הזמן של השיעור
-        self._lesson_type = lesson_type  # סוג השיעור (הרצאה, תרגול, מעבדה)
-        self._building = building  # מיקום השיעור
-        self._room = room  # חדר השיעור
+        self._time = time if time else LessonTimes()  # lesson time (day, start time, end time)
+        self._lesson_type = lesson_type  # lecture, exercise, lab
+        self._building = building  # lesson building
+        self._room = room  # lesson room
 
     @property
     def time(self):
