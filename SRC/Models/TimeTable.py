@@ -1,6 +1,6 @@
 class TimeTable:
     def __init__(self, courses: list = None):
-        self._courses = courses if courses else []  # רשימה של קורסים במערכת השעות
+        self._courses = courses if courses else []  # list of courses in the timetable
 
     @property
     def courses(self):

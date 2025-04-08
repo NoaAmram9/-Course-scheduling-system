@@ -5,6 +5,6 @@ class IScheduleService(ABC):
     @abstractmethod
     def generate_schedules(self, courses: list) -> list:
         """
-        מקבלת רשימה של קורסים ומחזירה רשימה של מערכות שעות אפשריות ללא התנגשויות.
+        Receives a list of courses and returns a list of possible schedules without conflicts.
         """
         pass

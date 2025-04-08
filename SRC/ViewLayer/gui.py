@@ -8,23 +8,23 @@ class GUI:
     def __init__(self, controller):
         self.controller = controller
         
-        # יצירת חלון Tkinter
+        # Creat Tkinter
         self.window = tk.Tk()
         self.window.title("System Scheduler")
-        self.window.geometry("400x300")  # גודל החלון
-        self.window.config(bg="#B6B6B4")  # צבע 
-        # יצירת כפתור לטעינת קובץ
+        self.window.geometry("400x300")  # window size
+        self.window.config(bg="#B6B6B4")  # colore
+        # buttoms to load files
         self.load_button = tk.Button(self.window, text="Load file", command=self.load_file)
         self.load_button.pack(pady=10)
         self.load_chosen_courses_button = tk.Button(self.window, text="Load chosen courses file", command=self.load_chosen_courses_file)
         self.load_chosen_courses_button.pack(pady=10)
         
-        # יצירת כפתור לאישור בחירת קורסים
+        # create button too create schedule
         self.select_button = tk.Button(self.window, text="Generate Schedule", command=self.select_courses)
         self.select_button.pack(pady=10)
 
     def load_file(self):
-        """ פותח חלון קובץ וטעינת הקובץ למערכת """   
+#load file to the system
         file_path = filedialog.askopenfilename(filetypes=[("Text files", "*.txt")])
     
         if file_path:
@@ -46,7 +46,7 @@ class GUI:
                 messagebox.showerror("Error", f"Failed to load file: {str(e)}")
 
     def load_chosen_courses_file(self):
-        """ פותח חלון קובץ וטעינת הקובץ למערכת """   
+       #load file to the system
         file_path = filedialog.askopenfilename(filetypes=[("Text files", "*.txt")])
 
         if file_path:
@@ -64,10 +64,10 @@ class GUI:
                 messagebox.showerror("Error", f"Failed to load file: {str(e)}")
 
     def select_courses(self):
-        """ שולח את הקורסים שנבחרו ל-Controller """     
+      # send to controller to select courses   
         # שלח את הקורסים שנבחרו ל-Controller להמשך עיבוד
         self.controller.run("Data/courses.txt", "Data/chosen_courses.txt")
  
     def run(self):
-        """ הפעלת חלון Tkinter """
+      # start the GUI loop
         self.window.mainloop()
