@@ -1,4 +1,5 @@
 import os
+from SRC.Models.Course import Course
 from SRC.Services.FileManager import FileManager
 from SRC.Services.ScheduleService import ScheduleService
 
@@ -46,3 +47,50 @@ class Controller:
     def write_schedule_to_file(self, time_table):
         dataManager = FileManager()
         dataManager.write_schedule_to_file("schedule.txt", time_table)
+    
+    
+    # Function to get the courses from the repository file
+    def get_courses(self):
+        return [
+            Course(
+                name="Introduction to Computer Science",
+                code="CS101",
+                instructor="Dr. Alice",
+                lectures=["Mon 10:00-12:00"],
+                exercises=["Wed 14:00-15:00"],
+                labs=["Thu 10:00-11:00"]
+            ),
+            Course(
+                name="Data Structures",
+                code="CS102",
+                instructor="Prof. Bob",
+                lectures=["Tue 12:00-14:00"],
+                exercises=["Thu 16:00-17:00"],
+                labs=[]
+            ),
+            Course(
+                name="Operating Systems",
+                code="CS201",
+                instructor="Dr. Carol",
+                lectures=["Mon 08:00-10:00"],
+                exercises=["Wed 10:00-11:00"],
+                labs=["Fri 09:00-10:00"]
+            ),
+            Course(
+                name="Algorithms",
+                code="CS202",
+                instructor="Dr. David",
+                lectures=["Tue 10:00-12:00"],
+                exercises=["Thu 12:00-13:00"],
+                labs=[]
+            ),
+            Course(
+                name="Databases",
+                code="CS301",
+                instructor="Prof. Eva",
+                lectures=["Wed 08:00-10:00"],
+                exercises=["Fri 11:00-12:00"],
+                labs=["Mon 14:00-15:00"]
+            ),
+        ]
+    
