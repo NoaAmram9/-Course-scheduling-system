@@ -3,6 +3,7 @@ import shutil
 import tkinter as tk
 from tkinter import filedialog, messagebox
 from tkinter import ttk
+from SRC.ViewLayer.MainPage import MainPage
 
 class GUI:
     def __init__(self, controller):
@@ -23,8 +24,13 @@ class GUI:
         self.select_button = tk.Button(self.window, text="Generate Schedule", command=self.select_courses)
         self.select_button.pack(pady=10)
 
+        # create button to go to main page
+        self.open_main_button = tk.Button(self.window, text="Open Course Selector", command=self.open_main_page)
+        self.open_main_button.pack(pady=10)
+        
+        
     def load_file(self):
-#load file to the system
+        #load file to the system
         file_path = filedialog.askopenfilename(filetypes=[("Text files", "*.txt")])
     
         if file_path:
@@ -67,6 +73,12 @@ class GUI:
       # send to controller to select courses   
         # שלח את הקורסים שנבחרו ל-Controller להמשך עיבוד
         self.controller.run("Data/courses.txt", "Data/chosen_courses.txt")
+ 
+    def open_main_page(self):
+        self.window.destroy()  # סגור את מסך הנחיתה
+        main_page = MainPage(self.controller)
+        main_page.run()  # הפעל את מסך הקורסים
+ 
  
     def run(self):
       # start the GUI loop
