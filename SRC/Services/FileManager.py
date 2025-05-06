@@ -1,6 +1,7 @@
 import re
 import os
 
+from datetime import datetime
 from SRC.Models.Course import Course
 from SRC.Models.LessonTimes import LessonTimes
 from SRC.Models.Lesson import Lesson
@@ -51,7 +52,7 @@ class FileManager:
 
         except Exception as e:
             print(f"Error reading file '{filename}': {e}")
-
+            
         return course_numbers  # Return the list of course numbers
 
     # Read courses from a file
@@ -135,6 +136,30 @@ class FileManager:
                             continue
                             
                         day, start, end, building, room = match.groups()
+                        
+                        try:
+                            day = int(day)  # Convert day to integer
+                            if not (1 <= day <= 6): # Check if day is between 1 and 6 (Sunday to Friday)
+                                raise ValueError("Day must be between 1 and 7.")
+
+                            # Convert times to datetime objects for comparison
+                            start_time = datetime.strptime(start, "%H:%M")
+                            end_time = datetime.strptime(end, "%H:%M")
+
+                            # Define time bounds
+                            earliest = datetime.strptime("08:00", "%H:%M")
+                            latest = datetime.strptime("21:00", "%H:%M")
+
+                            if not (earliest <= start_time < end_time <= latest):
+                                raise ValueError("Time must be between 08:00 and 21:00, and start < end.")
+
+                            # If all checks pass, create the lesson time object
+                            lessonTimes = LessonTimes(start, end, day)
+
+                        except ValueError as e:
+                            print(f"Invalid time slot data in course '{name}': {e} --> '{time_slot}'")
+                            continue
+                        
                         lessonTimes= LessonTimes (start, end, day)  # Create a new lesson times object
                         lesson = Lesson(lessonTimes, lessonType, building, room)  # Create a new lesson object
                         # Store in the correct category
