@@ -4,7 +4,8 @@ import customtkinter as ctk
 import tkinter as tk
 from tkinterdnd2 import DND_FILES, TkinterDnD
 from tkinter import filedialog, messagebox
-from SRC.ViewLayer.MainPage import MainPage
+from SRC.ViewLayer.Layout.MainPage import MainPage
+
 class LandPage:
     def __init__(self, root, controller):
         self.root = root
@@ -114,7 +115,6 @@ class LandPage:
         self.file_label.configure(text=f"Uploaded: {os.path.basename(file_path)}")
         self.file_uploaded = True
         
-
         messagebox.showinfo("Success", f"File saved and loaded successfully:\n{destination_path}")
 
      except Exception as e:
