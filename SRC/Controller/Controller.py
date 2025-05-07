@@ -2,6 +2,10 @@ import os
 from SRC.Models.Course import Course
 from SRC.Services.FileManager import FileManager
 from SRC.Services.ScheduleService import ScheduleService
+import SRC.ViewLayer.View.TimetablesPage as TimetablesPage
+
+from tkinterdnd2 import TkinterDnD
+
 
 class Controller:
     
@@ -11,7 +15,8 @@ class Controller:
         selected_courses = self.get_selected_courses(file_path2) # Get the selected courses from the user
         selected_courses_info = self.selected_courses_info(courses_info, selected_courses) # Get the selected courses info from the repository
         time_table = self.create_schedules(selected_courses_info, file_path2, file_path1) # Create the schedules based on the selected courses
-        self.write_schedule_to_file(time_table) # Write the schedule to an output file
+        self.display_schedule(time_table) # Display the schedule using the TimetableApp class
+        #self.write_schedule_to_file(time_table) # Write the schedule to an output file
     
     # Function to process the repository file with all the courses info       
     def process_repository_file(self, file_path):
@@ -47,6 +52,14 @@ class Controller:
     def write_schedule_to_file(self, time_table):
         dataManager = FileManager()
         dataManager.write_schedule_to_file("schedule.txt", time_table)
+    
+    # todo: change location    
+    def display_schedule(self, time_table):
+        root = TkinterDnD.Tk()
+        TimetablesPage.TimetableApp(root, time_table)
+        # Function to display the schedule using the TimetableApp class
+        root.mainloop()  # <<< This is required to display the GUI window
+
     
     
     # Function to get the courses from the repository file

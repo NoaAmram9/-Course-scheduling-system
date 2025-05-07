@@ -3,7 +3,7 @@ import shutil
 import tkinter as tk
 from tkinter import filedialog, messagebox
 from tkinter import ttk
-from SRC.ViewLayer.MainPage import MainPage
+from SRC.ViewLayer.Layout.MainPage import MainPage
 
 class GUI:
     def __init__(self, controller):
