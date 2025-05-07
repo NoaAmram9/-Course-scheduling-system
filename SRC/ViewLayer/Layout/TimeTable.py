@@ -52,15 +52,17 @@ def draw_timetable_grid(frame, slot_map):
         frame.grid_rowconfigure(r, weight=1)
     for c in range(len(DAYS) + 1):
         frame.grid_columnconfigure(c, weight=1)
+        
 
-    # Header row (Days)
-    tk.Label(frame, text="", bg=ModernUI.COLORS["light"]).grid(row=0, column=0, sticky="nsew")
-    for col, day in enumerate(DAYS, start=1):
-        tk.Label(
-            frame, text=day, bg=ModernUI.COLORS["light"], fg=ModernUI.COLORS["dark"],
-            borderwidth=1, relief="solid", width=15, height=4,
-            font=("Helvetica", 12, "bold")
-        ).grid(row=0, column=col, sticky="nsew")
+    # # Header row (Days) 
+    # In comment because the days should be fixed when scrolling, in contrast to the rest of the timetable.
+    # tk.Label(frame, text="", bg=ModernUI.COLORS["light"]).grid(row=0, column=0, sticky="nsew")
+    # for col, day in enumerate(DAYS, start=1):
+    #     tk.Label(
+    #         frame, text=day, bg=ModernUI.COLORS["light"], fg=ModernUI.COLORS["dark"],
+    #         borderwidth=1, relief="solid", width=15, height=4,
+    #         font=("Helvetica", 12, "bold")
+    #     ).grid(row=0, column=col, sticky="nsew")
 
     # Time + cells
     for row, hour in enumerate(HOURS, start=1):
@@ -107,11 +109,11 @@ def draw_timetable_grid(frame, slot_map):
                 text_widget.insert("end", f"{location}", ("location",))
 
                 # Define tag styles
-                text_widget.tag_configure("name", font=("Helvetica", 9, "bold"))
-                text_widget.tag_configure("code", font=("Helvetica", 8, "italic"))
-                text_widget.tag_configure("type", font=("Helvetica", 7))
-                text_widget.tag_configure("instructor", font=("Helvetica", 7))
-                text_widget.tag_configure("location", font=("Helvetica", 7, "italic"))
+                text_widget.tag_configure("name", font=("Helvetica", 11, "bold"))
+                text_widget.tag_configure("code", font=("Helvetica", 9, "italic"))
+                text_widget.tag_configure("type", font=("Helvetica", 8))
+                text_widget.tag_configure("instructor", font=("Helvetica", 8))
+                text_widget.tag_configure("location", font=("Helvetica", 8, "italic"))
 
                 text_widget.config(state="disabled")  # Make it read-only
                 text_widget.grid(row=row, column=col, sticky="nsew")
@@ -122,3 +124,26 @@ def draw_timetable_grid(frame, slot_map):
                     text="", bg=ModernUI.COLORS["white"],
                     borderwidth=1, relief="solid", width=20, height=8
                 ).grid(row=row, column=col, sticky="nsew")
+                
+# def draw_days_header(self):
+#     """Draw the fixed days header"""
+#     # Clear existing header
+#     for widget in self.days_header.winfo_children():
+#         widget.destroy()
+            
+#     # Configure columns to be responsive
+#     for i in range(len(DAYS) + 1):  # +1 for the time column
+#         self.days_header.grid_columnconfigure(i, weight=1)
+        
+#     # Empty cell in the top-left corner
+#     empty_cell = tk.Label(self.days_header, text="", width=12, height=3, 
+#                          bg=ModernUI.COLORS["light"], borderwidth=1, relief="solid")
+#     empty_cell.grid(row=0, column=0, sticky="nsew", padx=1, pady=1)
+        
+#     # Day headers
+#     for i, day in enumerate(DAYS):
+#         day_label = tk.Label(self.days_header, text=day, width=15, height=4,
+#                            font=("Helvetica", 12, "bold"), 
+#                            bg=ModernUI.COLORS["light"], fg=ModernUI.COLORS["dark"],
+#                            borderwidth=1, relief="solid")
+#         day_label.grid(row=0, column=i+1, sticky="nsew")                
