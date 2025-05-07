@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import ttk, messagebox
+from tkinter import ttk
 
 class ModernUI:
     """Class with modern UI elements and styling"""
@@ -12,13 +12,8 @@ class ModernUI:
         "light": "#ecf0f1",       # Light Gray
         "dark": "#2c3e50",        # Dark Blue/Gray
         "white": "#ffffff",       # White
-        "black": "#000000",       # Black
         "gray": "#95a5a6",        # Medium Gray
-        "selected": "#d5f5e3",    # Light Green for selected items
-        "lecture": "#ffe4e4",     #light pink
-        "lab": "#ffffef",         #light yellow
-        "exercise": "#e8ffff",    #light cyan
-        "light_blue": "#9F9BFF",   #light blue
+        "selected": "#d5f5e3"     # Light Green for selected items
     }
     
     @staticmethod

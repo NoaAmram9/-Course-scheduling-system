@@ -4,7 +4,7 @@ import customtkinter as ctk
 import tkinter as tk
 from tkinterdnd2 import DND_FILES, TkinterDnD
 from tkinter import filedialog, messagebox
-from SRC.ViewLayer.Layout.MainPage import MainPage
+from SRC.ViewLayer.SelectionPageMain import MainPage
 
 class LandPage:
     def __init__(self, root, controller):

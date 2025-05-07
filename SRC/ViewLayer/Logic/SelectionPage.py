@@ -1,12 +1,17 @@
+# main_page.py
 from tkinter import messagebox
-
-
+import tkinter as tk
+from tkinter import ttk
+from Theme.ModernUI import ModernUI
+from Layout.SelectionPage import SelectionPage
 class SelectionPage:
     
-    
-    def __init__(self, controller, details_panel):
+    def __init__(self, controller):
         self.controller = controller
-        self.details_panel = details_panel
+        self._setup_window()
+        self._build_layout()
+        self._load_courses()
+        
     def load_courses(self):
         courses = self.controller.get_courses()  # מחזיר רשימת Course
         self.course_map = {course._code: course for course in courses}
