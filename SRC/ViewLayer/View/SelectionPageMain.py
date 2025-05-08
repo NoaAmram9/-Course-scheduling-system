@@ -19,9 +19,6 @@ class MainPage:
         """
         Initialize the main course selection page.
         This will be called from the LandPage after file upload.
-        
-        Args:
-            controller: The application controller that provides data and business logic
         """
         self.controller = controller
         self.window = tk.Tk()

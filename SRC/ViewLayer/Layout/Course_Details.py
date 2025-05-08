@@ -42,20 +42,20 @@ class CourseDetailsPanel(tk.Frame):
         tk.Label(schedule_frame, text="Schedule:", font=("Calibri", 10, "bold"),
                bg=ModernUI.COLORS["white"], fg=ModernUI.COLORS["dark"]).pack(anchor="w")
         
-        self.lectures_label = tk.Label(schedule_frame, text="• Lectures: ", font=("Calibri", 9),
-                                     bg=ModernUI.COLORS["white"], fg=ModernUI.COLORS["dark"],
-                                     anchor="w")
-        self.lectures_label.pack(fill="x", padx=(10, 0), pady=1)
+        # self.lectures_label = tk.Label(schedule_frame, text="• Lectures: ", font=("Calibri", 9),
+        #                              bg=ModernUI.COLORS["white"], fg=ModernUI.COLORS["dark"],
+        #                              anchor="w")
+        # self.lectures_label.pack(fill="x", padx=(10, 0), pady=1)
         
-        self.exercises_label = tk.Label(schedule_frame, text="• Exercises: ", font=("Calibri", 9),
-                                      bg=ModernUI.COLORS["white"], fg=ModernUI.COLORS["dark"],
-                                      anchor="w")
-        self.exercises_label.pack(fill="x", padx=(10, 0), pady=1)
+        # self.exercises_label = tk.Label(schedule_frame, text="• Exercises: ", font=("Calibri", 9),
+        #                               bg=ModernUI.COLORS["white"], fg=ModernUI.COLORS["dark"],
+        #                               anchor="w")
+        # self.exercises_label.pack(fill="x", padx=(10, 0), pady=1)
         
-        self.labs_label = tk.Label(schedule_frame, text="• Labs: ", font=("Calibri", 9),
-                                 bg=ModernUI.COLORS["white"], fg=ModernUI.COLORS["dark"],
-                                 anchor="w")
-        self.labs_label.pack(fill="x", padx=(10, 0), pady=1)
+        # self.labs_label = tk.Label(schedule_frame, text="• Labs: ", font=("Calibri", 9),
+        #                          bg=ModernUI.COLORS["white"], fg=ModernUI.COLORS["dark"],
+        #                          anchor="w")
+        # self.labs_label.pack(fill="x", padx=(10, 0), pady=1)
         
         # Action button
         self.add_button_frame = ModernUI.create_rounded_button(
@@ -73,18 +73,18 @@ class CourseDetailsPanel(tk.Frame):
         if course:
             self.code_label.config(text=f"Code: {course._code}")
             self.name_label.config(text=f"Name: {course._name}")
-            self.instructor_label.config(text=f"Instructor: {course._instructor}")
+            self.instructor_label.config(text=f"Prof.: {course._instructor}")
             
-            self.lectures_label.config(text=f"• Lectures: {len(course._lectures)}")
-            self.exercises_label.config(text=f"• Exercises: {len(course._exercises)}")
-            self.labs_label.config(text=f"• Labs: {len(course._labs)}")
+            # self.lectures_label.config(text=f"• Lectures: {len(course._lectures)}")
+            # self.exercises_label.config(text=f"• Exercises: {len(course._exercises)}")
+            # self.labs_label.config(text=f"• Labs: {len(course._labs)}")
         else:
             self.code_label.config(text="Code: ")
             self.name_label.config(text="Name: ")
-            self.instructor_label.config(text="Instructor: ")
-            self.lectures_label.config(text="• Lectures: ")
-            self.exercises_label.config(text="• Exercises: ")
-            self.labs_label.config(text="• Labs: ")
+            self.instructor_label.config(text="Prof.: ")
+            # self.lectures_label.config(text="• Lectures: ")
+            # self.exercises_label.config(text="• Exercises: ")
+            # self.labs_label.config(text="• Labs: ")
     
     def set_add_callback(self, callback):
         """Set the callback function for the add button"""
