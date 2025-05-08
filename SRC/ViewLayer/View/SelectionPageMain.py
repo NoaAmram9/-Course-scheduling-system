@@ -1,10 +1,18 @@
+import ctypes
+
+try:
+    ctypes.windll.shcore.SetProcessDpiAwareness(1)  # For Windows 8.1 or later
+except Exception:
+    pass
+
+
 import tkinter as tk
 from tkinter import ttk, messagebox
-from Theme.ModernUI import ModernUI 
-from Layout.Courses_List import CourseListPanel
-from Layout.Course_Details import CourseDetailsPanel
-from Layout.Selected_Courses import SelectedCoursesPanel
-from Logic.Course_Manager import CourseManager
+from SRC.ViewLayer.Theme.ModernUI import ModernUI 
+from SRC.ViewLayer.Layout.Courses_List import CourseListPanel
+from SRC.ViewLayer.Layout.Course_Details import CourseDetailsPanel
+from SRC.ViewLayer.Layout.Selected_Courses import SelectedCoursesPanel
+from SRC.ViewLayer.Logic.Course_Manager import CourseManager
 
 class MainPage:
     def __init__(self, controller):
@@ -51,7 +59,7 @@ class MainPage:
         header_frame.pack(fill="x", pady=(0, 15))
         
         header_label = tk.Label(header_frame, text="Course Selector", 
-                              font=("Helvetica", 18, "bold"),
+                              font=("Calibri", 18, "bold"),
                               bg=ModernUI.COLORS["light"], fg=ModernUI.COLORS["dark"])
         header_label.pack(side="left")
         

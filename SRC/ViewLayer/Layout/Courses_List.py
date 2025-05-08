@@ -1,38 +1,43 @@
 import tkinter as tk
 from tkinter import ttk
-from theme.modern_ui import ModernUI
+from SRC.ViewLayer.Theme.ModernUI import ModernUI
 
 class CourseListPanel(tk.Frame):
     """Panel to display all available courses"""
-    
+
     def __init__(self, parent, bg_color):
         super().__init__(parent, bg=bg_color, padx=5, pady=5)
-        
+
         # Label for courses list
         tk.Label(self, text="Available Courses", 
-               font=("Helvetica", 12, "bold"),
-               bg=bg_color, fg=ModernUI.COLORS["dark"]).pack(anchor="w", pady=(0, 5))
-        
-        # Create treeview for courses
-        self.tree_codes = ttk.Treeview(self, columns=("Code"), 
-                                     show="headings", selectmode="browse")
+                 font=("Calibri", 12, "bold"),
+                 bg=bg_color, fg=ModernUI.COLORS["dark"]).pack(anchor="w", pady=(0, 5))
+
+        # Create a frame to hold both Treeview and Scrollbar side by side
+        tree_frame = tk.Frame(self, bg=bg_color)
+        tree_frame.pack(fill="both", expand=True)
+
+        # Create Treeview for courses
+        self.tree_codes = ttk.Treeview(tree_frame, columns=("Code",), 
+                                       show="headings", selectmode="browse")
         self.tree_codes.heading("Code", text="Course Code")
         self.tree_codes.column("Code", width=150, anchor="center")
-        self.tree_codes.pack(fill="both", expand=True)
-        
-        # Add scrollbar to course codes
-        scrollbar = ttk.Scrollbar(self, orient="vertical", command=self.tree_codes.yview)
+        self.tree_codes.pack(side="left", fill="both", expand=True)
+
+        # Add scrollbar to Treeview
+        scrollbar = ttk.Scrollbar(tree_frame, orient="vertical", command=self.tree_codes.yview)
         scrollbar.pack(side="right", fill="y")
         self.tree_codes.configure(yscrollcommand=scrollbar.set)
-        
+
         # Course mapping and callbacks
         self.course_map = {}
         self.details_callback = None
         self.add_course_callback = None
-        
+
         # Bindings
         self.tree_codes.bind("<ButtonRelease-1>", self.on_course_select)
         self.tree_codes.bind("<Double-1>", self.on_course_double_click)
+
     
     def load_courses(self, courses):
         """Load courses into the treeview"""

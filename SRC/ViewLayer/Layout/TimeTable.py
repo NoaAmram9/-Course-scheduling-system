@@ -59,7 +59,7 @@ def draw_timetable_grid(frame, slot_map):
         tk.Label(
             frame, text=day, bg=ModernUI.COLORS["light"], fg=ModernUI.COLORS["dark"],
             borderwidth=1, relief="solid", width=15, height=4,
-            font=("Helvetica", 12, "bold")
+            font=("Calibri", 12, "bold")
         ).grid(row=0, column=col, sticky="nsew")
 
     # Time + cells
@@ -68,7 +68,7 @@ def draw_timetable_grid(frame, slot_map):
         tk.Label(
             frame, text=f"{hour}:00", bg=ModernUI.COLORS["light"], fg=ModernUI.COLORS["dark"],
             borderwidth=1, relief="solid", width=12, height=3,
-            font=("Helvetica", 11, "bold")
+            font=("Calibri", 11, "bold")
         ).grid(row=row, column=0, sticky="nsew")
 
         # Time slot cells
@@ -94,7 +94,7 @@ def draw_timetable_grid(frame, slot_map):
                 text_widget = tk.Text(
                     frame,
                     bg=bg_color, fg=ModernUI.COLORS["black"],
-                    font=("Helvetica", 10),  # base font
+                    font=("Calibri", 10),  # base font
                     width=22, height=8,
                     wrap="word", borderwidth=1, relief="solid"
                 )
@@ -107,11 +107,11 @@ def draw_timetable_grid(frame, slot_map):
                 text_widget.insert("end", f"{location}", ("location",))
 
                 # Define tag styles
-                text_widget.tag_configure("name", font=("Helvetica", 9, "bold"))
-                text_widget.tag_configure("code", font=("Helvetica", 8, "italic"))
-                text_widget.tag_configure("type", font=("Helvetica", 7))
-                text_widget.tag_configure("instructor", font=("Helvetica", 7))
-                text_widget.tag_configure("location", font=("Helvetica", 7, "italic"))
+                text_widget.tag_configure("name", font=("Calibri", 9, "bold"))
+                text_widget.tag_configure("code", font=("Calibri", 8, "italic"))
+                text_widget.tag_configure("type", font=("Calibri", 7))
+                text_widget.tag_configure("instructor", font=("Calibri", 7))
+                text_widget.tag_configure("location", font=("Calibri", 7, "italic"))
 
                 text_widget.config(state="disabled")  # Make it read-only
                 text_widget.grid(row=row, column=col, sticky="nsew")

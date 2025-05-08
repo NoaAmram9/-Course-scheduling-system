@@ -48,7 +48,7 @@ class ModernUI:
         button_shape = canvas.create_rounded_rectangle(0, 0, width, height, 15, 
                                                     fill=bg_color, outline="")
         button_text = canvas.create_text(width//2, height//2, text=text, 
-                                       fill=fg_color, font=("Helvetica", 10, "bold"))
+                                       fill=fg_color, font=("Calibri", 10, "bold"))
         
         # Hover effects
         def on_enter(e):
@@ -107,7 +107,7 @@ class ModernUI:
                       background=ModernUI.COLORS["light"],
                       foreground=ModernUI.COLORS["dark"],
                       relief="flat",
-                      font=('Helvetica', 10, 'bold'))
+                      font=('Calibri', 10, 'bold'))
         
         style.map("Treeview.Heading",
                 background=[('active', ModernUI.COLORS["gray"])])

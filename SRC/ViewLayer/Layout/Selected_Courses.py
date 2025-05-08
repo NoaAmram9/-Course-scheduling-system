@@ -1,36 +1,40 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
-from theme.modern_ui import ModernUI
+from SRC.ViewLayer.Theme.ModernUI import ModernUI
 
 class SelectedCoursesPanel(tk.Frame):
     """Panel to display selected/traded courses"""
-    
     def __init__(self, parent, bg_color, max_courses=7):
         super().__init__(parent, bg=bg_color, padx=5, pady=5)
         
-        # Maximum number of selectable courses
         self.max_courses = max_courses
         self.selected_course_ids = set()
         self.course_map = {}
         self.remove_callback = None
         
-        # Header for selected courses with counter
+        # Header with course count
         selected_header_frame = tk.Frame(self, bg=bg_color)
         selected_header_frame.pack(fill="x", pady=(0, 5))
         
         self.selected_count_var = tk.StringVar()
         self.selected_count_var.set(f"Selected Courses (0/{self.max_courses})")
+         # Label for courses list
+        tk.Label(self, text="Available Courses", 
+                 font=("Calibri", 12, "bold"),
+                 bg=bg_color, fg=ModernUI.COLORS["dark"]).pack(anchor="w", pady=(0, 5))
+        # tk.Label(selected_header_frame, textvariable=self.selected_count_var, 
+        #          font=("Calibri", 12, "bold"),
+        #          bg=bg_color, fg=ModernUI.COLORS["dark"]).pack(side="left")
         
-        tk.Label(selected_header_frame, textvariable=self.selected_count_var, 
-               font=("Helvetica", 12, "bold"),
-               bg=bg_color, fg=ModernUI.COLORS["dark"]).pack(side="left")
+        # Frame to contain both the Treeview and its scrollbar
+        tree_frame = tk.Frame(self, bg=bg_color)
+        tree_frame.pack(fill="both", expand=True)
         
-        # Selected courses treeview
+        # Treeview setup
         columns = ("Code", "Name", "Instructor", "Lectures", "Exercises", "Labs")
-        self.tree_selected = ttk.Treeview(self, columns=columns, 
-                                        show="headings", selectmode="browse")
+        self.tree_selected = ttk.Treeview(tree_frame, columns=columns, 
+                                          show="headings", selectmode="browse")
         
-        # Configure column headings and widths
         for col in columns:
             self.tree_selected.heading(col, text=col)
             if col == "Name":
@@ -38,14 +42,14 @@ class SelectedCoursesPanel(tk.Frame):
             else:
                 self.tree_selected.column(col, width=80, anchor="center")
         
-        self.tree_selected.pack(fill="both", expand=True)
+        self.tree_selected.pack(side="left", fill="both", expand=True)
         
-        # Add scrollbar to selected courses
-        scrollbar_selected = ttk.Scrollbar(self, orient="vertical", command=self.tree_selected.yview)
+        # Scrollbar placement (to the right of the treeview)
+        scrollbar_selected = ttk.Scrollbar(tree_frame, orient="vertical", command=self.tree_selected.yview)
         scrollbar_selected.pack(side="right", fill="y")
         self.tree_selected.configure(yscrollcommand=scrollbar_selected.set)
         
-        # Bind events
+        # Event binding
         self.tree_selected.bind("<Double-1>", self.on_course_double_click)
     
     def set_course_map(self, course_map):

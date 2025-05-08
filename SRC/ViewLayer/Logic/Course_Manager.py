@@ -26,10 +26,10 @@ class CourseManager:
     
     def load_courses(self):
         """Load courses from the controller"""
-        courses = self.controller.get_courses()
+        courses = self.controller.process_repository_file("Data/courses.txt")
         
         # Create course map
-        course_map = {course._code: course for course in courses}
+        course_map = {course.code: course for course in courses}
         
         # Update components
         self.course_list_panel.load_courses(courses)
@@ -66,6 +66,10 @@ class CourseManager:
         message += "\n".join([f"- {name}" for name in course_names])
         
         messagebox.showinfo("Selection Saved", message)
+        course_code = [course._code for course in selected_courses]
+        self.controller.create_selected_courses_file(course_code, "Data/selected_courses.txt")
+
+        
         
     def get_selected_courses(self):
         """Get the list of selected courses"""

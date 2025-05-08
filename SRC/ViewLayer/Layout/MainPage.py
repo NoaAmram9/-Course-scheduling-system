@@ -51,7 +51,7 @@ class ModernUI:
         button_shape = canvas.create_rounded_rectangle(0, 0, width, height, 15, 
                                                     fill=bg_color, outline="")
         button_text = canvas.create_text(width//2, height//2, text=text, 
-                                       fill=fg_color, font=("Helvetica", 10, "bold"))
+                                       fill=fg_color, font=("Calibri", 10, "bold"))
         
         # Hover effects
         def on_enter(e):
@@ -110,7 +110,7 @@ class ModernUI:
                       background=ModernUI.COLORS["light"],
                       foreground=ModernUI.COLORS["dark"],
                       relief="flat",
-                      font=('Helvetica', 10, 'bold'))
+                      font=('Calibri', 10, 'bold'))
         
         style.map("Treeview.Heading",
                 background=[('active', ModernUI.COLORS["gray"])])
@@ -123,7 +123,7 @@ class CourseDetailsPanel(tk.Frame):
         
         # Title
         self.title_label = tk.Label(self, text="Course Details", 
-                                  font=("Helvetica", 14, "bold"),
+                                  font=("Calibri", 14, "bold"),
                                   bg=bg_color, fg=ModernUI.COLORS["dark"])
         self.title_label.pack(anchor="w", pady=(0, 10))
         
@@ -134,17 +134,17 @@ class CourseDetailsPanel(tk.Frame):
         content_frame.pack(fill="both", expand=True)
         
         # Course details
-        self.code_label = tk.Label(content_frame, text="Code: ", font=("Helvetica", 10, "bold"),
+        self.code_label = tk.Label(content_frame, text="Code: ", font=("Calibri", 10, "bold"),
                                  bg=ModernUI.COLORS["white"], fg=ModernUI.COLORS["dark"],
                                  anchor="w")
         self.code_label.pack(fill="x", padx=10, pady=(10, 5))
         
-        self.name_label = tk.Label(content_frame, text="Name: ", font=("Helvetica", 10),
+        self.name_label = tk.Label(content_frame, text="Name: ", font=("Calibri", 10),
                                  bg=ModernUI.COLORS["white"], fg=ModernUI.COLORS["dark"],
                                  anchor="w", wraplength=250)
         self.name_label.pack(fill="x", padx=10, pady=2)
         
-        self.instructor_label = tk.Label(content_frame, text="Instructor: ", font=("Helvetica", 10),
+        self.instructor_label = tk.Label(content_frame, text="Instructor: ", font=("Calibri", 10),
                                        bg=ModernUI.COLORS["white"], fg=ModernUI.COLORS["dark"],
                                        anchor="w")
         self.instructor_label.pack(fill="x", padx=10, pady=2)
@@ -153,20 +153,20 @@ class CourseDetailsPanel(tk.Frame):
         schedule_frame = tk.Frame(content_frame, bg=ModernUI.COLORS["white"])
         schedule_frame.pack(fill="x", padx=10, pady=5)
         
-        tk.Label(schedule_frame, text="Schedule:", font=("Helvetica", 10, "bold"),
+        tk.Label(schedule_frame, text="Schedule:", font=("Calibri", 10, "bold"),
                bg=ModernUI.COLORS["white"], fg=ModernUI.COLORS["dark"]).pack(anchor="w")
         
-        self.lectures_label = tk.Label(schedule_frame, text="• Lectures: ", font=("Helvetica", 9),
+        self.lectures_label = tk.Label(schedule_frame, text="• Lectures: ", font=("Calibri", 9),
                                      bg=ModernUI.COLORS["white"], fg=ModernUI.COLORS["dark"],
                                      anchor="w")
         self.lectures_label.pack(fill="x", padx=(10, 0), pady=1)
         
-        self.exercises_label = tk.Label(schedule_frame, text="• Exercises: ", font=("Helvetica", 9),
+        self.exercises_label = tk.Label(schedule_frame, text="• Exercises: ", font=("Calibri", 9),
                                       bg=ModernUI.COLORS["white"], fg=ModernUI.COLORS["dark"],
                                       anchor="w")
         self.exercises_label.pack(fill="x", padx=(10, 0), pady=1)
         
-        self.labs_label = tk.Label(schedule_frame, text="• Labs: ", font=("Helvetica", 9),
+        self.labs_label = tk.Label(schedule_frame, text="• Labs: ", font=("Calibri", 9),
                                  bg=ModernUI.COLORS["white"], fg=ModernUI.COLORS["dark"],
                                  anchor="w")
         self.labs_label.pack(fill="x", padx=(10, 0), pady=1)
@@ -233,7 +233,7 @@ class MainPage:
         header_frame.pack(fill="x", pady=(0, 15))
         
         header_label = tk.Label(header_frame, text="Course Selector", 
-                              font=("Helvetica", 18, "bold"),
+                              font=("Calibri", 18, "bold"),
                               bg=ModernUI.COLORS["light"], fg=ModernUI.COLORS["dark"])
         header_label.pack(side="left")
         
@@ -247,7 +247,7 @@ class MainPage:
         
         # Label for courses list
         tk.Label(left_panel, text="Available Courses", 
-               font=("Helvetica", 12, "bold"),
+               font=("Calibri", 12, "bold"),
                bg=ModernUI.COLORS["light"], fg=ModernUI.COLORS["dark"]).pack(anchor="w", pady=(0, 5))
         
        
@@ -283,7 +283,7 @@ class MainPage:
         self.selected_count_var.set("Selected Courses (0/7)")
         
         tk.Label(selected_header_frame, textvariable=self.selected_count_var, 
-               font=("Helvetica", 12, "bold"),
+               font=("Calibri", 12, "bold"),
                bg=ModernUI.COLORS["light"], fg=ModernUI.COLORS["dark"]).pack(side="left")
         
         # Selected courses treeview

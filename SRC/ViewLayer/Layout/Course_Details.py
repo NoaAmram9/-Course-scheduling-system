@@ -1,5 +1,5 @@
 import tkinter as tk
-from theme.modern_ui import ModernUI
+from SRC.ViewLayer.Theme.ModernUI import ModernUI
 
 class CourseDetailsPanel(tk.Frame):
     """Panel to display detailed course information"""
@@ -9,9 +9,9 @@ class CourseDetailsPanel(tk.Frame):
         
         # Title
         self.title_label = tk.Label(self, text="Course Details", 
-                                  font=("Helvetica", 14, "bold"),
+                                  font=("Calibri", 12, "bold"),
                                   bg=bg_color, fg=ModernUI.COLORS["dark"])
-        self.title_label.pack(anchor="w", pady=(0, 10))
+        self.title_label.pack(anchor="w", pady=(0, 5))
         
         # Content Frame with border
         content_frame = tk.Frame(self, bg=ModernUI.COLORS["white"],
@@ -20,17 +20,17 @@ class CourseDetailsPanel(tk.Frame):
         content_frame.pack(fill="both", expand=True)
         
         # Course details
-        self.code_label = tk.Label(content_frame, text="Code: ", font=("Helvetica", 10, "bold"),
+        self.code_label = tk.Label(content_frame, text="Code: ", font=("Calibri", 10, "bold"),
                                  bg=ModernUI.COLORS["white"], fg=ModernUI.COLORS["dark"],
                                  anchor="w")
         self.code_label.pack(fill="x", padx=10, pady=(10, 5))
         
-        self.name_label = tk.Label(content_frame, text="Name: ", font=("Helvetica", 10),
+        self.name_label = tk.Label(content_frame, text="Name: ", font=("Calibri", 10),
                                  bg=ModernUI.COLORS["white"], fg=ModernUI.COLORS["dark"],
                                  anchor="w", wraplength=250)
         self.name_label.pack(fill="x", padx=10, pady=2)
         
-        self.instructor_label = tk.Label(content_frame, text="Instructor: ", font=("Helvetica", 10),
+        self.instructor_label = tk.Label(content_frame, text="Instructor: ", font=("Calibri", 10),
                                        bg=ModernUI.COLORS["white"], fg=ModernUI.COLORS["dark"],
                                        anchor="w")
         self.instructor_label.pack(fill="x", padx=10, pady=2)
@@ -39,20 +39,20 @@ class CourseDetailsPanel(tk.Frame):
         schedule_frame = tk.Frame(content_frame, bg=ModernUI.COLORS["white"])
         schedule_frame.pack(fill="x", padx=10, pady=5)
         
-        tk.Label(schedule_frame, text="Schedule:", font=("Helvetica", 10, "bold"),
+        tk.Label(schedule_frame, text="Schedule:", font=("Calibri", 10, "bold"),
                bg=ModernUI.COLORS["white"], fg=ModernUI.COLORS["dark"]).pack(anchor="w")
         
-        self.lectures_label = tk.Label(schedule_frame, text="• Lectures: ", font=("Helvetica", 9),
+        self.lectures_label = tk.Label(schedule_frame, text="• Lectures: ", font=("Calibri", 9),
                                      bg=ModernUI.COLORS["white"], fg=ModernUI.COLORS["dark"],
                                      anchor="w")
         self.lectures_label.pack(fill="x", padx=(10, 0), pady=1)
         
-        self.exercises_label = tk.Label(schedule_frame, text="• Exercises: ", font=("Helvetica", 9),
+        self.exercises_label = tk.Label(schedule_frame, text="• Exercises: ", font=("Calibri", 9),
                                       bg=ModernUI.COLORS["white"], fg=ModernUI.COLORS["dark"],
                                       anchor="w")
         self.exercises_label.pack(fill="x", padx=(10, 0), pady=1)
         
-        self.labs_label = tk.Label(schedule_frame, text="• Labs: ", font=("Helvetica", 9),
+        self.labs_label = tk.Label(schedule_frame, text="• Labs: ", font=("Calibri", 9),
                                  bg=ModernUI.COLORS["white"], fg=ModernUI.COLORS["dark"],
                                  anchor="w")
         self.labs_label.pack(fill="x", padx=(10, 0), pady=1)

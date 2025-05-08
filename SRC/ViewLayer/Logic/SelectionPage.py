@@ -3,7 +3,7 @@ from tkinter import messagebox
 import tkinter as tk
 from tkinter import ttk
 from Theme.ModernUI import ModernUI
-from Layout.SelectionPage import SelectionPage
+
 class SelectionPage:
     
     def __init__(self, controller):
