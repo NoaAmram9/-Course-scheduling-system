@@ -1,38 +1,3 @@
-# # layout_timetable.py
-
-# import tkinter as tk
-# from SRC.ViewLayer.Logic.TimeTable import DAYS, HOURS
-
-# def draw_timetable_grid(frame, slot_map):
-#     """Draws the timetable grid into the given frame based on the slot_map."""
-#     for widget in frame.winfo_children():
-#         widget.destroy()
-
-#     # Header row: day labels
-#     tk.Label(frame, text="").grid(row=0, column=0)
-#     for col, day in enumerate(DAYS, start=1):
-#         tk.Label(frame, text=day, borderwidth=1, relief="solid", width=15).grid(row=0, column=col)
-
-#     # Time rows + course cells
-#     for row, hour in enumerate(HOURS, start=1):
-#         # Time label
-#         tk.Label(frame, text=f"{hour}:00", borderwidth=1, relief="solid", width=10).grid(row=row, column=0)
-#         # Course cells
-#         for col, day in enumerate(DAYS, start=1):
-#             course = slot_map.get((day, hour))
-#             if course:
-#                 name = course["name"]
-#                 code = course["code"]
-#                 course_type = course["type"]
-#                 instructor = course["instructor"]
-#                 location = course["location"]
-#                 course_info = f"{name} ({code}) \n {course_type} \n {instructor} \n {location}"
-#             else:
-#                 course_info = ""  # If there's no course at this day+hour, just return an empty string.
-            
-#             tk.Label(frame, text=course_info, borderwidth=1, relief="solid", width=15, height=2, bg="white").grid(row=row, column=col) # Creates a visible label and puts it in the grid.
-
-
 # layout_timetable.py
 
 import tkinter as tk
@@ -91,8 +56,7 @@ def draw_timetable_grid(frame, slot_map):
                     "Exercise": ModernUI.COLORS["exercise"],
                 }
                 bg_color = type_colors.get(course_type, ModernUI.COLORS["gray"])
-
-                # Use a Text widget (instead of Label) for better formatting
+                # Create a text widget for the course info
                 text_widget = tk.Text(
                     frame,
                     bg=bg_color, fg=ModernUI.COLORS["black"],
@@ -124,26 +88,4 @@ def draw_timetable_grid(frame, slot_map):
                     text="", bg=ModernUI.COLORS["white"],
                     borderwidth=1, relief="solid", width=20, height=8
                 ).grid(row=row, column=col, sticky="nsew")
-                
-# def draw_days_header(self):
-#     """Draw the fixed days header"""
-#     # Clear existing header
-#     for widget in self.days_header.winfo_children():
-#         widget.destroy()
-            
-#     # Configure columns to be responsive
-#     for i in range(len(DAYS) + 1):  # +1 for the time column
-#         self.days_header.grid_columnconfigure(i, weight=1)
-        
-#     # Empty cell in the top-left corner
-#     empty_cell = tk.Label(self.days_header, text="", width=12, height=3, 
-#                          bg=ModernUI.COLORS["light"], borderwidth=1, relief="solid")
-#     empty_cell.grid(row=0, column=0, sticky="nsew", padx=1, pady=1)
-        
-#     # Day headers
-#     for i, day in enumerate(DAYS):
-#         day_label = tk.Label(self.days_header, text=day, width=15, height=4,
-#                            font=("Helvetica", 12, "bold"), 
-#                            bg=ModernUI.COLORS["light"], fg=ModernUI.COLORS["dark"],
-#                            borderwidth=1, relief="solid")
-#         day_label.grid(row=0, column=i+1, sticky="nsew")                
+             

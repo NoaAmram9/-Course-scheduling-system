@@ -56,7 +56,7 @@ class Controller:
     # todo: change location    
     def display_schedule(self, time_table):
         root = TkinterDnD.Tk()
-        TimetablesPage.TimetableApp(root, time_table)
+        TimetablesPage.TimetablesPage(root, time_table)
         # Function to display the schedule using the TimetableApp class
         root.mainloop()  # <<< This is required to display the GUI window
 

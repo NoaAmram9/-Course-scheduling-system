@@ -1,96 +1,3 @@
-# # view/TimetablesPage.py
-
-# import tkinter as tk
-# from tkinter import messagebox
-# from SRC.ViewLayer.Theme.ModernUI import ModernUI
-# from SRC.ViewLayer.Logic.TimeTable import map_courses_to_slots
-# from SRC.ViewLayer.Layout.TimeTable import draw_timetable_grid
-
-# class TimetableApp:
-#     def __init__(self, root, timetable_options):
-#         self.root = root
-#         self.options = timetable_options
-#         self.current_index = 0
-
-#         self.header = tk.Label(root, text="", font=("Arial", 14))
-#         self.header.pack(pady=10)
-       
-#         # # non scrollable frame
-#         # self.frame = tk.Frame(root)
-#         # self.frame.pack()
-        
-#         # Create a scrollable canvas
-#         canvas = tk.Canvas(root, borderwidth=10, background=ModernUI.COLORS["light"])
-#         scroll_frame = tk.Frame(canvas, background=ModernUI.COLORS["white"])
-#         # scroll_frame.bind("<Configure>", lambda e: canvas.configure(scrollregion=canvas.bbox("all")))
-
-#         # Scrollbar
-#         vsb = tk.Scrollbar(root, orient="vertical", command=canvas.yview)
-#         canvas.configure(yscrollcommand=vsb.set)
-
-#         vsb.pack(side="right", fill="y")
-#         canvas.pack(side="left", fill="both", expand=True)
-
-#         # Put the timetable frame inside the canvas
-#         canvas.create_window((0, 0), window=scroll_frame, anchor="nw")
-
-#         # Set scrolling region
-#         def on_frame_configure(event):
-#             canvas.configure(scrollregion=canvas.bbox("all"))
-
-#         scroll_frame.bind("<Configure>", on_frame_configure)
-
-#         # Store the frame reference
-#         self.frame = scroll_frame
-
-#         # Create the timetable grid
-#         self.navbar = tk.Frame(root)
-#         self.navbar.pack(pady=10)
-
-#         # 'Prev' button
-#         self.prev_button = ModernUI.create_rounded_button(
-#             self.navbar, "Previous", self.show_prev, 
-#             bg_color=ModernUI.COLORS["dark"], width=100)
-#         self.prev_button.pack(side="left", pady=10)
-
-#         # 'Next' button
-#         self.next_button = ModernUI.create_rounded_button(
-#             self.navbar, "Next", self.show_next, 
-#             bg_color=ModernUI.COLORS["dark"], width=100)
-#         self.next_button.pack(side="right", pady=10)
-       
-
-#         self.update_view()
-
-#     # This method updates the timetable view based on the current index.
-#     def update_view(self):
-#         """Update the timetable view based on the current option."""
-#         # If there are no options, show a message and destroy the frame.
-#         if len(self.options) == 0:
-#             messagebox.showinfo("No Timetable Options", "No timetable options available.")
-#             self.root.destroy() # Close the application TODO: change it to stay? empry grid? go back?
-#             return
-#         # If there are options, clear the frame and draw the new timetable.
-#         courses = self.options[self.current_index] # Each option is a list of courses (List<Course>)
-#         slot_map = map_courses_to_slots(courses) # Maps the courses to their respective time slots. func from logic.
-#         draw_timetable_grid(self.frame, slot_map) # Draws the timetable grid based on the slot_map. func from layout.
-#         self.header.config(text=f"Timetable Option {self.current_index + 1} of {len(self.options)}")
-
-    
-#     def show_prev(self):
-#         """Show the previous timetable option."""
-#         if self.current_index > 0:
-#             self.current_index -= 1
-#             self.update_view()
-
-#     def show_next(self):
-#         """Show the next timetable option."""
-#         if self.current_index < len(self.options) - 1:
-#             self.current_index += 1
-#             self.update_view()
-            
-            
-            
 import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
@@ -99,14 +6,17 @@ from SRC.ViewLayer.Logic.TimeTable import map_courses_to_slots, DAYS, HOURS
 from SRC.ViewLayer.Layout.TimeTable import draw_timetable_grid
 
 class TimetablesPage:
-    def __init__(self, root, timetable_options):
+    def __init__(self, root, timetable_options, go_back_callback=None):
         self.root = root
         self.options = timetable_options
         self.current_index = 0
+        self.go_back_callback = go_back_callback
+
         
         # Configure the window to be responsive
         self.root.grid_columnconfigure(0, weight=1)
         self.root.grid_rowconfigure(1, weight=1)
+        self.root.title("Timetables")
         
         # Create a navigation bar at the top
         self.create_nav_bar()
@@ -120,28 +30,37 @@ class TimetablesPage:
     def create_nav_bar(self):
         """Create the navigation bar with prev/next buttons and title"""
         nav_frame = tk.Frame(self.root, bg=ModernUI.COLORS["light"])
-        nav_frame.grid(row=0, column=0, sticky="n", padx=10, pady=20)
+        nav_frame.grid(row=0, column=0, sticky="ew", padx=10, pady=20)
         
         # Configure the nav frame to be responsive
-        nav_frame.grid_columnconfigure(1, weight=1)
+        for i in range(6):  # 0 to 5
+            weight = 1 if i in [1, 5] else 0  # Expand only side spacers
+            nav_frame.grid_columnconfigure(i, weight=weight)
+        
+        # Back button on the far left
+        self.back_button = ModernUI.create_rounded_button(
+            nav_frame, "<", self.go_back,
+            fg_color=ModernUI.COLORS["dark"],  # Dark color for text
+            bg_color=ModernUI.COLORS["light"], width=50)
+        self.back_button.grid(row=0, column=0, padx=10)
         
         # Previous button
         self.prev_button = ModernUI.create_rounded_button(
             nav_frame, "Prev", self.show_prev,
             bg_color=ModernUI.COLORS["dark"], width=50)
-        self.prev_button.grid(row=0, column=0, padx=10)
+        self.prev_button.grid(row=0, column=2, padx=10)
         
         # Title label (timetable option x of y)
         self.title_label = tk.Label(
             nav_frame, text="",
             font=("Helvetica", 12, "bold"), bg=ModernUI.COLORS["light"])
-        self.title_label.grid(row=0, column=1)
+        self.title_label.grid(row=0, column=3)
         
         # Next button
         self.next_button = ModernUI.create_rounded_button(
             nav_frame, "Next", self.show_next,
             bg_color=ModernUI.COLORS["dark"], width=50)
-        self.next_button.grid(row=0, column=2, padx=10)
+        self.next_button.grid(row=0, column=4, padx=10)
     
     def create_timetable_container(self):
         """Create a container for the timetable with a fixed header row"""
@@ -162,6 +81,7 @@ class TimetablesPage:
         self.canvas = tk.Canvas(self.timetable_container, borderwidth=0, highlightthickness=0, 
                               bg=ModernUI.COLORS["white"])
         self.scrollbar = ttk.Scrollbar(self.timetable_container, orient="vertical", command=self.canvas.yview)
+        self.canvas.bind_all("<MouseWheel>", lambda e: self.canvas.yview_scroll(int(-1*(e.delta/120)), "units"))
         self.canvas.configure(yscrollcommand=self.scrollbar.set)
         
         # Grid the canvas and scrollbar
@@ -196,7 +116,7 @@ class TimetablesPage:
             self.days_header.grid_columnconfigure(i, weight=1)
         
         # Empty cell in the top-left corner
-        empty_cell = tk.Label(self.days_header, text="", width=12, height=3, 
+        empty_cell = tk.Label(self.days_header, text="", width=15, height=4, 
                              bg=ModernUI.COLORS["light"], borderwidth=1, relief="solid")
         empty_cell.grid(row=0, column=0, sticky="nsew", padx=1, pady=1)
         
@@ -211,14 +131,48 @@ class TimetablesPage:
     def update_view(self):
         """Update the view to display the current timetable option"""
         if not self.options:
-            messagebox.showinfo("No Timetable Options", "No timetable options available.")
+            # Hide unnecessary UI elements
+            self.prev_button.grid_remove()
+            self.next_button.grid_remove()
+            self.title_label.grid_remove()
+            self.days_header.grid_remove()
+            self.canvas.grid_remove()
+            self.scrollbar.grid_remove()
+
+            # Show a "No timetable available" label
+            if not hasattr(self, "no_data_label"):
+                self.no_data_label = tk.Label(
+                    self.root,
+                    text="No timetable available.",
+                    font=("Helvetica", 14),
+                    bg=ModernUI.COLORS["light"],
+                    fg=ModernUI.COLORS["dark"]
+                )
+                self.no_data_label.grid(row=1, column=0, pady=50)
+            else:
+                self.no_data_label.grid()
             return
+
+        # If previously shown, hide the no-data label
+        if hasattr(self, "no_data_label"):
+            self.no_data_label.grid_remove()
+
+        # Show the UI again if it was hidden before
+        self.prev_button.grid()
+        self.next_button.grid()
+        self.title_label.grid()
+        self.days_header.grid()
+        self.canvas.grid()
+        self.scrollbar.grid()
         
         # Update the title
         self.title_label.config(text=f"Timetable Option {self.current_index + 1} of {len(self.options)}")
         
         # Get timetable for this option
         current_timetable = self.options[self.current_index]
+        
+        # Reset the canvas view to the top
+        self.canvas.yview_moveto(0)
         
         # Map courses to slots
         slot_map = map_courses_to_slots(current_timetable)
@@ -258,3 +212,8 @@ class TimetablesPage:
         if self.current_index < len(self.options) - 1:
             self.current_index += 1
             self.update_view()
+    
+    def go_back(self):
+        """Return to the previous page if callback is provided"""
+        if self.go_back_callback:
+            self.go_back_callback()
