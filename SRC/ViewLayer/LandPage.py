@@ -1,10 +1,17 @@
+import ctypes
+
+try:
+    ctypes.windll.shcore.SetProcessDpiAwareness(1)  # For Windows 8.1 or later
+except Exception:
+    pass
+
 import os
 import shutil
 import customtkinter as ctk
 import tkinter as tk
 from tkinterdnd2 import DND_FILES, TkinterDnD
 from tkinter import filedialog, messagebox
-from SRC.ViewLayer.Layout.MainPage import MainPage
+from SRC.ViewLayer.View.SelectionPageMain import MainPage
 
 class LandPage:
     def __init__(self, root, controller):
@@ -13,11 +20,11 @@ class LandPage:
         self.file_uploaded = False
         self.file_label = None  # Label to show uploaded file name
         self.root.title("Schedule System Creator")
-        self.root.geometry("600x600")
+        self.root.geometry("800x800")
         self.root.config(bg="#FAFAFA")
 
         ctk.set_appearance_mode("light")
-        ctk.set_default_color_theme("blue")
+        ctk.set_default_color_theme("green")
 
         self.build_ui()
 
@@ -26,7 +33,7 @@ class LandPage:
         header = ctk.CTkLabel(
             self.root,
             text="WELCOME TO SCHEDUAL SYSTEM CREATOR",
-            font=("Helvetica", 20, "bold"),
+            font=("Calibri", 20, "bold"),
             text_color="#000",
             fg_color="#F1F1F1",
             corner_radius=10,
@@ -50,7 +57,7 @@ class LandPage:
         self.drop_label = ctk.CTkLabel(
             self.drop_area,
             text="You can drag a .txt file here\nor upload a file.",
-            font=("Helvetica", 14),
+            font=("Calibri", 14),
             text_color="#777"
         )
         self.drop_label.pack(pady=10)
@@ -63,7 +70,7 @@ class LandPage:
         self.upload_button = ctk.CTkButton(
             self.drop_area,
             text="UPLOAD",
-            font=("Helvetica", 14, "bold"),
+            font=("Calibri", 14, "bold"),
             fg_color="#FFFDD0",
             text_color="black",
             hover_color="#FFFACD",
@@ -75,7 +82,7 @@ class LandPage:
         self.file_label = ctk.CTkLabel(
             self.root,
             text="",
-            font=("Helvetica", 12),
+            font=("Calibri", 12),
             text_color="#444"
         )
         self.file_label.pack(pady=(0, 10))
@@ -84,7 +91,7 @@ class LandPage:
         self.send_button = ctk.CTkButton(
             self.root,
             text="SEND.",
-            font=("Helvetica", 14, "bold"),
+            font=("Calibri", 14, "bold"),
             fg_color="#FDECEC",
             text_color="black",
             hover_color="#FCDCDC",
@@ -115,7 +122,7 @@ class LandPage:
         self.file_label.configure(text=f"Uploaded: {os.path.basename(file_path)}")
         self.file_uploaded = True
         
-        messagebox.showinfo("Success", f"File saved and loaded successfully:\n{destination_path}")
+        # messagebox.showinfo("Success", f"File saved and loaded successfully:\n{destination_path}")
 
      except Exception as e:
         messagebox.showerror("Error", f"Failed to save file:\n{str(e)}")
@@ -140,7 +147,7 @@ class LandPage:
                 self.file_uploaded = True
                 
 
-                messagebox.showinfo("Success", f"File saved and loaded successfully:\n{destination_path}")
+                # messagebox.showinfo("Success", f"File saved and loaded successfully:\n{destination_path}")
 
             except Exception as e:
                 messagebox.showerror("Error", f"Failed to load file: {str(e)}")
