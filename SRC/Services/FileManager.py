@@ -251,3 +251,14 @@ class FileManager:
         except Exception as e:
             print(f"Error formatting lessons: {e}")
             return ""
+        
+    def write_course_numbers_to_file(self, filename, course_numbers):
+        """Writes a list of course numbers to a file"""
+        try:
+            with open(filename, "w", encoding="utf-8") as file:
+                for number in course_numbers:
+                    file.write(f"{number}\n")
+            print(f"Course numbers successfully written to '{filename}'.")
+        except Exception as e:
+            print(f"Error writing course numbers to file '{filename}': {e}")
+            

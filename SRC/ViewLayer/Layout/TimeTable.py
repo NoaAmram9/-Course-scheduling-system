@@ -17,6 +17,7 @@ def draw_timetable_grid(frame, slot_map):
         frame.grid_rowconfigure(r, weight=1)
     for c in range(len(DAYS) + 1):
         frame.grid_columnconfigure(c, weight=1)
+
         
 
     # # Header row (Days) 
@@ -29,13 +30,14 @@ def draw_timetable_grid(frame, slot_map):
     #         font=("Helvetica", 12, "bold")
     #     ).grid(row=0, column=col, sticky="nsew")
 
+
     # Time + cells
     for row, hour in enumerate(HOURS, start=1):
         # Time label column
         tk.Label(
             frame, text=f"{hour}:00", bg=ModernUI.COLORS["light"], fg=ModernUI.COLORS["dark"],
             borderwidth=1, relief="solid", width=12, height=3,
-            font=("Helvetica", 11, "bold")
+            font=("Calibri", 11, "bold")
         ).grid(row=row, column=0, sticky="nsew")
 
         # Time slot cells
@@ -60,7 +62,7 @@ def draw_timetable_grid(frame, slot_map):
                 text_widget = tk.Text(
                     frame,
                     bg=bg_color, fg=ModernUI.COLORS["black"],
-                    font=("Helvetica", 10),  # base font
+                    font=("Calibri", 10),  # base font
                     width=22, height=8,
                     wrap="word", borderwidth=1, relief="solid"
                 )
@@ -73,11 +75,13 @@ def draw_timetable_grid(frame, slot_map):
                 text_widget.insert("end", f"{location}", ("location",))
 
                 # Define tag styles
+
                 text_widget.tag_configure("name", font=("Helvetica", 11, "bold"))
                 text_widget.tag_configure("code", font=("Helvetica", 9, "italic"))
                 text_widget.tag_configure("type", font=("Helvetica", 8))
                 text_widget.tag_configure("instructor", font=("Helvetica", 8))
                 text_widget.tag_configure("location", font=("Helvetica", 8, "italic"))
+
 
                 text_widget.config(state="disabled")  # Make it read-only
                 text_widget.grid(row=row, column=col, sticky="nsew")
