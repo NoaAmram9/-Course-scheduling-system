@@ -94,15 +94,15 @@ class MainPage:
         footer_frame = tk.Frame(main_container, bg=ModernUI.COLORS["light"], pady=10)
         footer_frame.pack(fill="x")
         
-        # Create buttons using the custom rounded style
-        load_button_frame = ModernUI.create_rounded_button(
-            footer_frame, "Load Courses", self.load_courses)
-        load_button_frame.pack(side="left", padx=5)
+        # # Create buttons using the custom rounded style
+        # load_button_frame = ModernUI.create_rounded_button(
+        #     footer_frame, "Load Courses", self.load_courses)
+        # load_button_frame.pack(side="left", padx=5)
         
-        remove_button_frame = ModernUI.create_rounded_button(
-            footer_frame, "Remove Selected", self.remove_selected_course,
-            bg_color=ModernUI.COLORS["accent"])
-        remove_button_frame.pack(side="left", padx=5)
+        # remove_button_frame = ModernUI.create_rounded_button(
+        #     footer_frame, "Remove Selected", self.remove_selected_course,
+        #     bg_color=ModernUI.COLORS["accent"])
+        # remove_button_frame.pack(side="left", padx=5)
         
         save_button_frame = ModernUI.create_rounded_button(
             footer_frame, "Save Selection", self.save_selection,

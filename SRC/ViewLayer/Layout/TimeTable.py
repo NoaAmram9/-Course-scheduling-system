@@ -136,7 +136,7 @@ def draw_timetable_grid(frame, slot_map):
     for widget in frame.winfo_children():
         widget.destroy()
 
-    cell_width = 200
+    cell_width = 220
     cell_height = 100
     radius = 12
 
