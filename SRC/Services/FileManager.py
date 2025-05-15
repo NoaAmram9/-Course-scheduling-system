@@ -5,6 +5,7 @@ from datetime import datetime
 from SRC.Models.Course import Course
 from SRC.Models.LessonTimes import LessonTimes
 from SRC.Models.Lesson import Lesson
+from SRC.Models.ValidationError import ValidationError
 
 class FileManager:
     
@@ -59,53 +60,51 @@ class FileManager:
     def read_courses_from_file(self, filename):
         """ Reads a file and converts it into a list of Course objects """
         courses = []
+        errors = []
         seen_courses = set()
 
         if not os.path.exists(filename):
-            print(f"Error: File '{filename}' not found.")
-            return []
+            return [ValidationError(f"File '{filename}' not found.")]
         try:
             with open(filename, "r", encoding="utf-8") as file:
                 content = file.read()   # Read the entire file content
                 
             if not content:
-                print(f"Warning: File '{filename}' is empty.")
-                return []
+                return [ValidationError(f"File '{filename}' is empty.")]
 
             # Split the file into blocks (of courses) using "$$$$" as a separator
             course_blocks = content.split("$$$$")[1:] # ignore the first element (empty string for the first $$$$) 
             
             if not course_blocks or all(block.strip() == "" for block in course_blocks):
-                print(f"Warning: No valid course data found in '{filename}'.")
-                return []
+                return [ValidationError(f"No valid course data found in '{filename}'.")]
             
             # Iterate over each course block
             for block in course_blocks:
                 
                 lines = block.strip().split("\n") # Split into lines
                 
-                if len(lines) < 5:
-                    print("Skipping invalid course block: Less than 5 lines of basic info.")
-                    continue  # Ensure at least course name, course number, and instructor, Lecture, exercise (at least one)
+                if len(lines) < 4:
+                    errors.append(ValidationError(f"Invalid course data: Less than 4 lines of basic info (name, code, instructor, lecture).", context=lines[:1]))
+                    continue  # Ensure at least course name, course number, and instructor, Lecture (at least one)
                 
 
                 name, course_number, instructor = lines[:3]  # The first three lines are name, number, and instructor
                 
                 # Check course number (ensure it's 5 digits and numeric)
                 if not (course_number.isdigit() and len(course_number) == 5):
-                    print(f"Skipping invalid course number '{course_number}' for course '{name}'. It must be a 5-digit number.")
+                    errors.append(ValidationError(f"Invalid course number '{course_number}' for course '{name}'. It must be a 5-digit number."))
                     continue  # Skip this course if the number is invalid
 
 
                 # Ensure no empty values for mandatory fields
                 if not (name and course_number and instructor):
-                    print(f"Skipping invalid course '{name}': Missing required fields.")
+                    errors.append(ValidationError(f"Invalid course '{name}': Missing required fields."))
                     continue
             
                 # Check if the exact course (same number, name, and instructor) already exists
                 course_key = (course_number, name, instructor)
                 if course_key in seen_courses:
-                    print(f"Skipping duplicate course '{name}' ({course_number}) by '{instructor}'.")
+                    errors.append(ValidationError(f"Skipping duplicate course '{name}' ({course_number}) by '{instructor}'."))
                     continue
                 seen_courses.add(course_key)
 
@@ -120,7 +119,7 @@ class FileManager:
                     
                     # If it's not a valid lesson type, skip the line
                     if lessonType not in {"L", "T", "M"}:
-                        print(f"Skipping unknown lesson type '{lessonType}' in course '{name}'")
+                        errors.append(ValidationError(f"Skipping unknown lesson type '{lessonType}' in course '{name}'"))
                         continue
                     
                     # Regular expression pattern for time slots
@@ -132,14 +131,14 @@ class FileManager:
                         match = time_slot_pattern.match(time_slot)  # Check if the line matches the time slot format
                         
                         if not match:
-                            print(f"Skipping invalid time slot format: '{time_slot}' in course '{name}'")
+                            errors.append(ValidationError(f"Skipping invalid time slot format: '{time_slot}' in course '{name}'"))
                             continue
                             
                         day, start, end, building, room = match.groups()
                         
                         try:
                             day = int(day)  # Convert day to integer
-                            if not (1 <= day <= 6): # Check if day is between 1 and 6 (Sunday to Friday)
+                            if not (1 <= day <= 7): # Check if day is between 1 and 7 (Sunday to saturday)
                                 raise ValueError("Day must be between 1 and 7.")
 
                             # Convert times to datetime objects for comparison
@@ -157,7 +156,7 @@ class FileManager:
                             lessonTimes = LessonTimes(start, end, day)
 
                         except ValueError as e:
-                            print(f"Invalid time slot data in course '{name}': {e} --> '{time_slot}'")
+                            errors.append(ValidationError(f"Invalid time slot data in course '{name}': {e} --> '{time_slot}'"))
                             continue
                         
                         lessonTimes= LessonTimes (start, end, day)  # Create a new lesson times object
@@ -170,8 +169,8 @@ class FileManager:
                         elif lessonType == "M":
                             labs.append(lesson)
                     
-                if not (lectures and exercises): # Ensure at least one lecture and one exercise
-                    print(f"Skipping course '{name}': No valid lessons found.")
+                if not (lectures): # Ensure at least one lecture
+                    errors.append(ValidationError(f"Skipping course '{name}': No valid lecture found."))
                     continue
             
                 course = Course(name, course_number, instructor, lectures, exercises, labs)
@@ -179,9 +178,9 @@ class FileManager:
 
 
         except Exception as e:
-            print(f"Error reading file '{filename}': {e}")
-
-        return courses  # Return the list of courses
+            return [ValidationError(f"Error reading file '{filename}': {e}")] 
+        # return courses, errors
+        return errors if errors else courses  # Return the list of courses/errors if any
 
     # Validate that selected courses exist in the courses file
     def validate_course_numbers_exist(self, numbers_filename, courses_filename):
