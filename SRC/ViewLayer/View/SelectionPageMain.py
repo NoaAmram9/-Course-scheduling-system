@@ -13,6 +13,7 @@ from SRC.ViewLayer.Layout.Courses_List import CourseListPanel
 from SRC.ViewLayer.Layout.Course_Details import CourseDetailsPanel
 from SRC.ViewLayer.Layout.Selected_Courses import SelectedCoursesPanel
 from SRC.ViewLayer.Logic.Course_Manager import CourseManager
+from SRC.ViewLayer.View.TimetablesPage import TimeTable
 
 class MainPage:
     def __init__(self, controller):
@@ -116,6 +117,9 @@ class MainPage:
     def save_selection(self):
         """Save the current course selection"""
         self.course_manager.save_selection()
+        self.root.withdraw()  # Hide the window instead of destroying it
+        time_table = TimeTable(self.controller)
+        time_table.run()
     
     def get_selected_courses(self):
         """Get the list of selected courses"""
