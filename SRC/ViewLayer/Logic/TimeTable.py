@@ -1,7 +1,7 @@
 # logic_timetable.py
 # This file contains the logic for mapping courses to time slots in a timetable.
 
-DAYS = ["Sunday" ,"Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
+DAYS = ["Sunday" ,"Monday", "Tuesday", "Wednesday", "Thursday", "Friday","Saturday"]
 HOURS = list(range(8, 22))  # 8:00 to 21:00 (the range excluses the upper bound)
 
 def map_courses_to_slots(timetable):

@@ -1,3 +1,5 @@
+
+
 import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
@@ -6,13 +8,14 @@ from SRC.ViewLayer.Logic.TimeTable import map_courses_to_slots, DAYS, HOURS
 from SRC.ViewLayer.Layout.TimeTable import draw_timetable_grid
 
 class TimetablesPage:
-    def __init__(self, root, timetable_options, go_back_callback=None):
+    def __init__(self, root, controller, go_back_callback=None):
         self.root = root
-        self.options = timetable_options
+        self.controller = controller
+        self.options = controller.get_all_options("Data/courses.txt","Data/selected_courses.txt")
         self.current_index = 0
         self.go_back_callback = go_back_callback
 
-        
+        root.state("zoomed")  # מסך מלא
         # Configure the window to be responsive
         self.root.grid_columnconfigure(0, weight=1)
         self.root.grid_rowconfigure(1, weight=1)
@@ -75,7 +78,7 @@ class TimetablesPage:
         self.days_header.grid(row=0, column=0, sticky="ew")
         
         # Draw fixed day headers
-        self.draw_days_header()
+        # self.draw_days_header()
         
         # Scrollable timetable area
         self.canvas = tk.Canvas(self.timetable_container, borderwidth=0, highlightthickness=0, 
@@ -214,6 +217,6 @@ class TimetablesPage:
             self.update_view()
     
     def go_back(self):
-        """Return to the previous page if callback is provided"""
-        if self.go_back_callback:
-            self.go_back_callback()
+     """Return to the previous page if callback is provided"""
+     if self.go_back_callback:
+        self.go_back_callback()

@@ -1,5 +1,7 @@
 import ctypes
 
+
+
 try:
     ctypes.windll.shcore.SetProcessDpiAwareness(1)  # For Windows 8.1 or later
 except Exception:
@@ -13,6 +15,7 @@ from SRC.ViewLayer.Layout.Courses_List import CourseListPanel
 from SRC.ViewLayer.Layout.Course_Details import CourseDetailsPanel
 from SRC.ViewLayer.Layout.Selected_Courses import SelectedCoursesPanel
 from SRC.ViewLayer.Logic.Course_Manager import CourseManager
+from SRC.ViewLayer.View.TimetablesPage  import TimetablesPage
 
 class MainPage:
     def __init__(self, controller):
@@ -36,7 +39,8 @@ class MainPage:
         
         # Create the UI layout
         self._create_layout()
-        
+      
+
         # Create the course manager that connects all components
         self.course_manager = CourseManager(
             controller, 
@@ -44,7 +48,7 @@ class MainPage:
             self.details_panel,
             self.selected_courses_panel
         )
-    
+        self.window.protocol("WM_DELETE_WINDOW", self.on_close)
     def _create_layout(self):
         """Create the UI layout with all panels and components"""
         # Main container with padding
@@ -113,14 +117,37 @@ class MainPage:
         """Remove the currently selected course"""
         self.course_manager.remove_selected_course()
     
+    # def save_selection(self):
+    #  """Save the current course selection and open the timetable page."""
+    #  self.course_manager.save_selection()
+    #  self.window.withdraw()  # הסתרת חלון הבחירה
+    #  time_table = TimeTable(self.controller, parent=self)  # העברת הפניה להחזרה
+    #  time_table.run()
     def save_selection(self):
-        """Save the current course selection"""
+        """Save the current course selection and go to timetable page"""
         self.course_manager.save_selection()
+
+        # צור חלון חדש מסוג Toplevel
+        timetable_window = tk.Toplevel(self.window)
+
+        # העבר את רשימת הקורסים שנבחרו
+        selected_courses = self.get_selected_courses()
+
+        # צור את TimetablesPage עם callback שנסגר את החלון
+        def go_back_callback():
+            timetable_window.destroy()  # סגור את חלון לוח הזמנים
+
+        TimetablesPage(timetable_window, self.controller, go_back_callback)
     
     def get_selected_courses(self):
         """Get the list of selected courses"""
         return self.course_manager.get_selected_courses()
-    
+    def on_close(self):
+     """Handle window close event"""
+     # אפשר להוסיף כאן שאלת אישור אם רוצים:
+     if messagebox.askokcancel("Exit", "Are you sure you want to exit?"):
+        self.window.destroy()
+
     def run(self):
         """Run the application"""
         # Load courses initially

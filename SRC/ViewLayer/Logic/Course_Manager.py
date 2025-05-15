@@ -65,7 +65,7 @@ class CourseManager:
         message = f"You have selected {len(course_names)} courses:\n\n"
         message += "\n".join([f"- {name}" for name in course_names])
         
-        messagebox.showinfo("Selection Saved", message)
+        # messagebox.showinfo("Selection Saved", message)
         course_code = [course._code for course in selected_courses]
         self.controller.create_selected_courses_file(course_code, "Data/selected_courses.txt")
 

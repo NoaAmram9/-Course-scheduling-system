@@ -16,6 +16,8 @@ class CourseListPanel(tk.Frame):
         # Create a frame to hold both Treeview and Scrollbar side by side
         tree_frame = tk.Frame(self, bg=bg_color)
         tree_frame.pack(fill="both", expand=True)
+        
+        
 
         # Create Treeview for courses
         self.tree_codes = ttk.Treeview(tree_frame, columns=("Code",), 

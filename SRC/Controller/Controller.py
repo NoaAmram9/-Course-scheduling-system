@@ -15,7 +15,7 @@ class Controller:
         selected_courses = self.get_selected_courses(file_path2) # Get the selected courses from the user
         selected_courses_info = self.selected_courses_info(courses_info, selected_courses) # Get the selected courses info from the repository
         time_table = self.create_schedules(selected_courses_info, file_path2, file_path1) # Create the schedules based on the selected courses
-        self.display_schedule(time_table) # Display the schedule using the TimetableApp class
+        # self.display_schedule(time_table) # Display the schedule using the TimetableApp class
         #self.write_schedule_to_file(time_table) # Write the schedule to an output file
     
     # Function to process the repository file with all the courses info       
@@ -65,4 +65,12 @@ class Controller:
     def create_selected_courses_file(self, selected_courses, file_path):
         dataManager = FileManager()
         dataManager.write_course_numbers_to_file(file_path, selected_courses)
+    
+    def get_all_options(self, file_path1, file_path2):
+        courses_info = self.process_repository_file(file_path1) # Process the repository file with all the courses info
+        selected_courses = self.get_selected_courses(file_path2) # Get the selected courses from the user
+        selected_courses_info = self.selected_courses_info(courses_info, selected_courses) # Get the selected courses info from the repository
+        time_table = self.create_schedules(selected_courses_info, file_path2, file_path1) # Create the schedules based on the selected courses
+        return time_table
+       
     
