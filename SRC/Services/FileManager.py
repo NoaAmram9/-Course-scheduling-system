@@ -139,7 +139,7 @@ class FileManager:
                         
                         try:
                             day = int(day)  # Convert day to integer
-                            if not (1 <= day <= 6): # Check if day is between 1 and 6 (Sunday to Friday)
+                            if not (1 <= day <= 7): # Check if day is between 1 and 6 (Sunday to Friday)
                                 raise ValueError("Day must be between 1 and 7.")
 
                             # Convert times to datetime objects for comparison
