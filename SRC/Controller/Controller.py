@@ -73,4 +73,5 @@ class Controller:
         time_table = self.create_schedules(selected_courses_info, file_path2, file_path1) # Create the schedules based on the selected courses
         return time_table
        
+
     

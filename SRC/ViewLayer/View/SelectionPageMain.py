@@ -17,6 +17,7 @@ from SRC.ViewLayer.Layout.Selected_Courses import SelectedCoursesPanel
 from SRC.ViewLayer.Logic.Course_Manager import CourseManager
 from SRC.ViewLayer.View.TimetablesPage  import TimetablesPage
 
+
 class MainPage:
     def __init__(self, controller):
         """
@@ -138,6 +139,7 @@ class MainPage:
             timetable_window.destroy()  # סגור את חלון לוח הזמנים
 
         TimetablesPage(timetable_window, self.controller, go_back_callback)
+
     
     def get_selected_courses(self):
         """Get the list of selected courses"""

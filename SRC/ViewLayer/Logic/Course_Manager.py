@@ -25,6 +25,8 @@ class CourseManager:
         self.load_courses()
     
     def load_courses(self):
+        
+        
         """Load courses from the controller"""
         courses = self.controller.process_repository_file("Data/courses.txt")
         
