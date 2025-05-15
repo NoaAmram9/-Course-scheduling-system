@@ -84,9 +84,9 @@ class FileManager:
                 
                 lines = block.strip().split("\n") # Split into lines
                 
-                if len(lines) < 5:
-                    print("Skipping invalid course block: Less than 5 lines of basic info.")
-                    continue  # Ensure at least course name, course number, and instructor, Lecture, exercise (at least one)
+                if len(lines) < 4:
+                    print(f"Skipping invalid course {lines[:1]}: Less than 4 lines of basic info (name, code, instructor, lecture).")
+                    continue  # Ensure at least course name, course number, and instructor, Lecture (at least one)
                 
 
                 name, course_number, instructor = lines[:3]  # The first three lines are name, number, and instructor
@@ -139,7 +139,7 @@ class FileManager:
                         
                         try:
                             day = int(day)  # Convert day to integer
-                            if not (1 <= day <= 7): # Check if day is between 1 and 6 (Sunday to Friday)
+                            if not (1 <= day <= 7): # Check if day is between 1 and 7 (Sunday to saturday)
                                 raise ValueError("Day must be between 1 and 7.")
 
                             # Convert times to datetime objects for comparison
@@ -170,8 +170,8 @@ class FileManager:
                         elif lessonType == "M":
                             labs.append(lesson)
                     
-                if not (lectures and exercises): # Ensure at least one lecture and one exercise
-                    print(f"Skipping course '{name}': No valid lessons found.")
+                if not (lectures): # Ensure at least one lecture
+                    print(f"Skipping course '{name}': No valid lecture found.")
                     continue
             
                 course = Course(name, course_number, instructor, lectures, exercises, labs)
