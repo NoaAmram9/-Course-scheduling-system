@@ -7,15 +7,28 @@ class CourseListPanel(tk.Frame):
 
     def __init__(self, parent, bg_color):
         super().__init__(parent, bg=bg_color, padx=5, pady=5)
-
+        self.all_courses = []  # Full unfiltered list
         # Label for courses list
         tk.Label(self, text="Available Courses", 
                  font=("Calibri", 12, "bold"),
                  bg=bg_color, fg=ModernUI.COLORS["dark"]).pack(anchor="w", pady=(0, 5))
+    # # Search box
+    #     search_frame = tk.Frame(self, bg=bg_color)
+    #     search_frame.pack(fill="x", pady=(0, 5))
 
+    #     tk.Label(search_frame, text="Search:", bg=bg_color, fg=ModernUI.COLORS["dark"]).pack(side="left")
+
+    #     self.search_var = tk.StringVar()
+    #     search_entry = tk.Entry(search_frame, textvariable=self.search_var, width=25)
+    #     search_entry.pack(side="left", padx=(5, 0))
+    #     self.search_var.trace_add("write", lambda *args: self.filter_courses())
         # Create a frame to hold both Treeview and Scrollbar side by side
         tree_frame = tk.Frame(self, bg=bg_color)
         tree_frame.pack(fill="both", expand=True)
+        
+          
+
+       
 
         # Create Treeview for courses
         self.tree_codes = ttk.Treeview(tree_frame, columns=("Code",), 
@@ -40,6 +53,7 @@ class CourseListPanel(tk.Frame):
 
     
     def load_courses(self, courses):
+        
         """Load courses into the treeview"""
         # Clear existing items
         for row in self.tree_codes.get_children():
@@ -55,7 +69,8 @@ class CourseListPanel(tk.Frame):
                 iid=course._code,
                 values=(course._code,)
             )
-    
+        self.all_courses = courses  # Store the full list
+        print(f"[DEBUG] Loaded {len(courses)} valid courses.")
     def set_details_callback(self, callback):
         """Set callback function for showing course details"""
         self.details_callback = callback
@@ -86,3 +101,31 @@ class CourseListPanel(tk.Frame):
     def unmark_course_as_selected(self, course_code):
         """Remove selected marking from a course"""
         self.tree_codes.item(course_code, tags=())
+    
+    def filter_courses(self, *args):
+        search_text = self.search_var.get().lower().strip()
+        print(f"[DEBUG] Filtering for: '{search_text}'")
+
+        # Clear Treeview
+        for row in self.tree_codes.get_children():
+            self.tree_codes.delete(row)
+
+        # Filter logic
+        if not search_text:
+            filtered_courses = self.all_courses
+        else:
+            filtered_courses = [
+                course for course in self.all_courses
+                if search_text in course._code.lower()
+                or search_text in course._name.lower()
+            ]
+
+        # Insert filtered results
+        for course in filtered_courses:
+            if not self.tree_codes.exists(course._code):  # avoid duplicates
+                self.tree_codes.insert(
+                    "", tk.END,
+                    iid=course._code,
+                    values=(course._code,)
+                )
+
