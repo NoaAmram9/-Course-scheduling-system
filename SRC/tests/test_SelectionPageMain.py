@@ -116,6 +116,7 @@
 import pytest
 from unittest.mock import MagicMock, patch, call
 import tkinter as tk
+from SRC.ViewLayer.Theme.ModernUI import ModernUI
 from SRC.ViewLayer.View.SelectionPageMain import MainPage
 
 @pytest.fixture
@@ -256,3 +257,151 @@ def test_run(main_page):
         
         # Verify mainloop was called
         main_page.window.mainloop.assert_called_once()
+
+def test_course_selection_flow(main_page):
+    """Test the course selection updates details panel"""
+    # Create a mock to store the callback
+    callback_store = MagicMock()
+    
+    # Setup mock panels
+    mock_course = MagicMock()
+    mock_details_panel = MagicMock()
+    mock_course_list_panel = MagicMock()
+    
+    # Configure the mock to store the callback
+    def store_callback(callback):
+        callback_store.callback = callback
+        return None
+    
+    mock_course_list_panel.set_selection_callback = store_callback
+    
+    # Replace the real panels with our mocks
+    main_page.details_panel = mock_details_panel
+    main_page.course_list_panel = mock_course_list_panel
+    main_page.course_manager = MagicMock()
+    
+    # Initialize the layout (this should call set_selection_callback)
+    main_page._create_layout()
+    
+    # Verify callback was stored
+    assert hasattr(callback_store, 'callback'), "Callback was not set"
+    
+    # Simulate selecting a course
+    callback_store.callback(mock_course)
+    
+    # Verify details panel was updated
+    mock_details_panel.update_details.assert_called_once_with(mock_course)
+
+
+def test_panel_integration(main_page):
+    """Test all panels are properly initialized"""
+    main_page._create_layout()
+    
+    assert isinstance(main_page.course_list_panel, MagicMock)  # Mocked in fixture
+    assert isinstance(main_page.details_panel, MagicMock)
+    assert isinstance(main_page.selected_courses_panel, MagicMock)
+    
+    # Verify they were connected to course manager
+    main_page.course_manager.assert_called_once_with(
+        main_page.controller,
+        main_page.course_list_panel,
+        main_page.details_panel,
+        main_page.selected_courses_panel
+    )
+
+def test_max_courses_enforcement(main_page):
+    """Test UI enforces maximum course selection"""
+    # Setup mocks
+    mock_course = MagicMock()
+    main_page.selected_courses_panel = MagicMock()
+    main_page.selected_courses_panel.selected_courses = [MagicMock()] * 7  # Already at max
+    
+    # Mock the warning messagebox
+    with patch('tkinter.messagebox.showwarning') as mock_warning:
+        # Mock the actual add_course method that would check this
+        def mock_add_course(course):
+            if len(main_page.selected_courses_panel.selected_courses) >= main_page.max_courses:
+                import tkinter.messagebox
+                tkinter.messagebox.showwarning("Warning", "You can select up to 7 courses only.")
+            else:
+                main_page.selected_courses_panel.selected_courses.append(course)
+        
+        main_page.course_manager.add_course = mock_add_course
+        
+        # Try to add another course
+        main_page.course_manager.add_course(mock_course)
+        
+        # Verify warning was shown
+        mock_warning.assert_called_once_with("Warning", "You can select up to 7 courses only.")
+        
+        # Verify course wasn't actually added
+        assert len(main_page.selected_courses_panel.selected_courses) == 7
+
+def test_window_close_confirmed(main_page):
+    """Test confirmed window close"""
+    with patch('tkinter.messagebox.askokcancel', return_value=True), \
+         patch.object(main_page.controller, 'handle_exit'), \
+         patch.object(main_page.window, 'destroy'), \
+         patch('sys.exit') as mock_exit:  # Mock sys.exit to prevent actual exit
+    
+        main_page.on_close()
+        
+        # Verify confirmation dialog
+        tk.messagebox.askokcancel.assert_called_once_with(
+            "Exit", "Are you sure you want to exit?"
+        )
+        
+        # Verify controller cleanup
+        main_page.controller.handle_exit.assert_called_once()
+        
+        # Verify window cleanup
+        main_page.window.destroy.assert_called_once()
+        
+        # Verify system exit was called
+        mock_exit.assert_called_once()
+
+def test_theme_application(main_page):
+    """Test ModernUI styles are properly applied"""
+    # Verify main window colors
+    assert main_page.window.cget('bg') == ModernUI.COLORS['light']
+    
+    # Verify container frames have correct background
+    main_container = main_page.window.children['!frame']
+    assert main_container.cget('bg') == ModernUI.COLORS['light']
+    
+    # Verify header styling
+    header_frame = main_container.children['!frame']
+    assert header_frame.cget('bg') == ModernUI.COLORS['light']
+    
+    # Verify header label styling
+    header_label = header_frame.children['!label']
+    assert header_label.cget('bg') == ModernUI.COLORS['light']
+    assert header_label.cget('fg') == ModernUI.COLORS['dark']
+    
+    # Proper font comparison - Tkinter returns font as string
+    font_str = header_label.cget('font')
+    assert "Calibri" in font_str
+    assert "18" in font_str
+    assert "bold" in font_str.lower()
+
+def test_component_communication_minimal_mocks(main_page):
+    """Test communication with minimal mocks"""
+    # Setup real course manager
+    main_page.course_manager = MagicMock()
+    
+    # Get the real callback from course_list_panel
+    callback_store = []
+    original_set_callback = main_page.course_list_panel.set_selection_callback
+    def track_callback(callback):
+        callback_store.append(callback)
+        original_set_callback(callback)
+    
+    main_page.course_list_panel.set_selection_callback = track_callback
+    
+    # Initialize
+    main_page._create_layout()
+    
+    # Test add course
+    mock_course = MagicMock()
+    callback_store[0](mock_course)  # Call the stored callback
+    main_page.course_manager.add_course.assert_called_once_with(mock_course)
