@@ -1,11 +1,16 @@
-
-
+# timetables page
 import tkinter as tk
-from tkinter import ttk
-from tkinter import messagebox
+from tkinter import ttk, messagebox, filedialog
+import tempfile
+import os
+
+from reportlab.platypus import SimpleDocTemplate, PageBreak
+from reportlab.lib.pagesizes import landscape, A4
 from SRC.ViewLayer.Theme.ModernUI import ModernUI
 from SRC.ViewLayer.Logic.TimeTable import map_courses_to_slots, DAYS, HOURS
 from SRC.ViewLayer.Layout.TimeTable import draw_timetable_grid
+from SRC.ViewLayer.Logic.Pdf_Exporter import generate_pdf_from_data
+
 
 class TimetablesPage:
     def __init__(self, root, controller, go_back_callback=None):
@@ -36,7 +41,7 @@ class TimetablesPage:
         nav_frame.grid(row=0, column=0, sticky="ew", padx=10, pady=20)
         
         # Configure the nav frame to be responsive
-        for i in range(6):  # 0 to 5
+        for i in range(7):  # 0 to 5
             weight = 1 if i in [1, 5] else 0  # Expand only side spacers
             nav_frame.grid_columnconfigure(i, weight=weight)
         
@@ -64,6 +69,12 @@ class TimetablesPage:
             nav_frame, "Next", self.show_next,
             bg_color=ModernUI.COLORS["dark"], width=50)
         self.next_button.grid(row=0, column=4, padx=10)
+        
+        # Export button (for printing)
+        self.export_button = ModernUI.create_rounded_button(
+            nav_frame, "Export PDF", self.export_pdf_dialog,
+            bg_color=ModernUI.COLORS["dark"], width=100)
+        self.export_button.grid(row=0, column=6, padx=10)
     
     def create_timetable_container(self):
         """Create a container for the timetable with a fixed header row"""
@@ -84,7 +95,20 @@ class TimetablesPage:
         self.canvas = tk.Canvas(self.timetable_container, borderwidth=0, highlightthickness=0, 
                               bg=ModernUI.COLORS["white"])
         self.scrollbar = ttk.Scrollbar(self.timetable_container, orient="vertical", command=self.canvas.yview)
-        self.canvas.bind_all("<MouseWheel>", lambda e: self.canvas.yview_scroll(int(-1*(e.delta/120)), "units"))
+        # def on_mouse_wheel(event):
+        #     if str(self.canvas) in self.canvas.tk.call('winfo', 'children', '.'):
+        #         self.canvas.yview_scroll(int(-1 * (event.delta / 120)), "units")
+
+        # self.canvas.bind_all("<MouseWheel>", on_mouse_wheel)
+        def on_mouse_wheel(event):
+            try:
+                if self.canvas.winfo_exists():
+                    self.canvas.yview_scroll(int(-1 * (event.delta / 120)), "units")
+            except tk.TclError:
+                pass  # Avoid crash if the canvas is destroyed during the event
+        self.canvas.bind_all("<MouseWheel>", on_mouse_wheel)
+        self.canvas.bind("<Destroy>", lambda e: self.canvas.unbind_all("<MouseWheel>"))
+        # Bind the mouse wheel event to scroll the canvas
         self.canvas.configure(yscrollcommand=self.scrollbar.set)
         
         # Grid the canvas and scrollbar
@@ -203,6 +227,20 @@ class TimetablesPage:
         else:
             self.next_button.config(bg=ModernUI.COLORS["gray"])  # Use gray color for disabled
             self.next_button.unbind("<Button-1>")
+
+    def save_canvas_as_image(self):
+        self.root.update()
+        x = self.canvas.winfo_rootx()
+        y = self.canvas.winfo_rooty()
+        w = self.canvas.winfo_width()
+        h = self.canvas.winfo_height()
+
+        bbox = (x, y, x + w, y + h)
+        temp_image_path = os.path.join(tempfile.gettempdir(), "timetable_capture.png")
+        image = ImageGrab.grab(bbox)
+        image.save(temp_image_path)
+
+        return temp_image_path
     
     def show_prev(self):
         """Show the previous timetable option"""
@@ -220,3 +258,49 @@ class TimetablesPage:
      """Return to the previous page if callback is provided"""
      if self.go_back_callback:
         self.go_back_callback()
+ 
+    # def export_current_timetable_pdf(self):
+    #     file_path = filedialog.asksaveasfilename(defaultextension=".pdf", filetypes=[("PDF files", "*.pdf")])
+    #     if not file_path:
+    #         return
+
+    #     current_timetable = self.options[self.current_index]
+    #     slot_map = map_courses_to_slots(current_timetable)
+
+    #     try:
+    #         generate_pdf_from_data(file_path, slot_map, title=f"Timetable Option {self.current_index + 1}")
+    #         # messagebox.showinfo("Success", f"Timetable exported to {file_path}")
+    #     except Exception as e:
+    #         messagebox.showerror("Error", f"Failed to export PDF: {e}")
+
+    def export_pdf_dialog(self):
+        choice = messagebox.askquestion("Export PDF", "Do you want to export all timetable options?\nChoose Yes for all, No for current.")
+        file_path = filedialog.asksaveasfilename(defaultextension=".pdf", filetypes=[("PDF files", "*.pdf")])
+        if not file_path:
+            return
+
+        try:
+            # export all timetable options to pdf file
+            if choice == 'yes':
+                doc = SimpleDocTemplate(file_path, pagesize=landscape(A4))
+                all_elements = []
+
+                for idx, timetable in enumerate(self.options):
+                    slot_map = map_courses_to_slots(timetable)
+                    title = f"{idx + 1}"
+                    # Calling a function that returns elements of a time table
+                    elements = generate_pdf_from_data(None, slot_map, title, return_elements=True)
+                    all_elements.extend(elements)
+                    all_elements.append(PageBreak())
+
+                doc.build(all_elements)
+            # export only the current timetable to pdf file
+            else:
+                current_timetable = self.options[self.current_index]
+                slot_map = map_courses_to_slots(current_timetable)
+                generate_pdf_from_data(file_path, slot_map, self.current_index + 1)
+
+            os.startfile(file_path) # open the file when done create it
+
+        except Exception as e:
+            messagebox.showerror("Error", f"Failed to export PDF: {e}")

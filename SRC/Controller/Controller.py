@@ -1,11 +1,7 @@
-import os
-from SRC.Models.Course import Course
 from SRC.Services.FileManager import FileManager
 from SRC.Services.ScheduleService import ScheduleService
 import SRC.ViewLayer.View.TimetablesPage as TimetablesPage
-
 from tkinterdnd2 import TkinterDnD
-
 
 class Controller:
     
@@ -68,10 +64,22 @@ class Controller:
     
     def get_all_options(self, file_path1, file_path2):
         courses_info = self.process_repository_file(file_path1) # Process the repository file with all the courses info
+       
         selected_courses = self.get_selected_courses(file_path2) # Get the selected courses from the user
         selected_courses_info = self.selected_courses_info(courses_info, selected_courses) # Get the selected courses info from the repository
         time_table = self.create_schedules(selected_courses_info, file_path2, file_path1) # Create the schedules based on the selected courses
         return time_table
-       
+    
+    def handle_exit(self):
+        """
+        Handle the exit of the application.
+        This method is called when the application is about to exit.
+        delete the temporary files
+        
+        """
+        file_path1 = "Data/selected_courses.txt"
+        file_path2 = "Data/courses.txt"
+        dataManager = FileManager()
+        dataManager.delete_temp_files(file_path1, file_path2)
 
     

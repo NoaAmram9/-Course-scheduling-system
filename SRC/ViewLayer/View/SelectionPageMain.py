@@ -7,7 +7,7 @@ try:
 except Exception:
     pass
 
-
+import sys
 import tkinter as tk
 from tkinter import ttk, messagebox
 from SRC.ViewLayer.Theme.ModernUI import ModernUI 
@@ -126,19 +126,20 @@ class MainPage:
     #  time_table.run()
     def save_selection(self):
         """Save the current course selection and go to timetable page"""
-        self.course_manager.save_selection()
+        if self.course_manager.save_selection():
+            # If the selection was saved successfully, open the timetable page
 
-        # צור חלון חדש מסוג Toplevel
-        timetable_window = tk.Toplevel(self.window)
+            # create a new Toplevel window for the timetable
+            timetable_window = tk.Toplevel(self.window)
 
-        # העבר את רשימת הקורסים שנבחרו
-        selected_courses = self.get_selected_courses()
+            # העבר את רשימת הקורסים שנבחרו
+            selected_courses = self.get_selected_courses()
 
-        # צור את TimetablesPage עם callback שנסגר את החלון
-        def go_back_callback():
-            timetable_window.destroy()  # סגור את חלון לוח הזמנים
+            # צור את TimetablesPage עם callback שנסגר את החלון
+            def go_back_callback():
+                timetable_window.destroy()  # סגור את חלון לוח הזמנים
 
-        TimetablesPage(timetable_window, self.controller, go_back_callback)
+            TimetablesPage(timetable_window, self.controller, go_back_callback)
 
     
     def get_selected_courses(self):
@@ -146,9 +147,12 @@ class MainPage:
         return self.course_manager.get_selected_courses()
     def on_close(self):
      """Handle window close event"""
-     # אפשר להוסיף כאן שאלת אישור אם רוצים:
+        # Make sure to ask for confirmation before closing
      if messagebox.askokcancel("Exit", "Are you sure you want to exit?"):
-        self.window.destroy()
+            self.controller.handle_exit()  # Call the controller's exit method
+            self.window.quit()     # exit the loop
+            self.window.destroy()  # destroy the window
+            sys.exit()             # exit the program
 
     def run(self):
         """Run the application"""
