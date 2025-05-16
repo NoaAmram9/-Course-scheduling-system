@@ -70,7 +70,7 @@ class CourseListPanel(tk.Frame):
                 values=(course._code,)
             )
         self.all_courses = courses  # Store the full list
-        print(f"[DEBUG] Loaded {len(courses)} valid courses.")
+        # print(f"[DEBUG] Loaded {len(courses)} valid courses.")
     def set_details_callback(self, callback):
         """Set callback function for showing course details"""
         self.details_callback = callback

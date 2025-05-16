@@ -1,12 +1,7 @@
-import os
-from SRC.Models.Course import Course
 from SRC.Services.FileManager import FileManager
 from SRC.Services.ScheduleService import ScheduleService
 import SRC.ViewLayer.View.TimetablesPage as TimetablesPage
-from SRC.Models.ValidationError import ValidationError
-
 from tkinterdnd2 import TkinterDnD
-
 
 class Controller:
     
