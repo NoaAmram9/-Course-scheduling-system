@@ -179,7 +179,7 @@ class FileManager:
 
         except Exception as e:
             return [ValidationError(f"Error reading file '{filename}': {e}")] 
-        # return courses, errors
+        
         return errors if errors else courses  # Return the list of courses/errors if any
 
     # Validate that selected courses exist in the courses file
@@ -258,7 +258,15 @@ class FileManager:
             with open(filename, "w", encoding="utf-8") as file:
                 for number in course_numbers:
                     file.write(f"{number}\n")
-            print(f"Course numbers successfully written to '{filename}'.")
+            # print(f"Course numbers successfully written to '{filename}'.")
         except Exception as e:
             print(f"Error writing course numbers to file '{filename}': {e}")
-            
+    
+    def delete_temp_files(self, filename1, filename2):
+        """Delete temporary files created during the process"""
+        temp_files = [filename1, filename2]
+        for file in temp_files:
+            if os.path.exists(file):
+                 os.remove(file)
+            # else:
+            #     print(f"Temporary file '{file}' not found.")

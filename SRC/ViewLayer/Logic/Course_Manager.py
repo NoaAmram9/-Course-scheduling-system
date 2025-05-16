@@ -60,7 +60,7 @@ class CourseManager:
         selected_courses = self.selected_courses_panel.get_selected_courses()
         if not selected_courses:
             messagebox.showinfo("No Courses", "You haven't selected any courses yet.")
-            return
+            return False
             
         # This is a placeholder - you would implement your actual save functionality here
         course_names = [course._name for course in selected_courses]
@@ -70,7 +70,7 @@ class CourseManager:
         # messagebox.showinfo("Selection Saved", message)
         course_code = [course._code for course in selected_courses]
         self.controller.create_selected_courses_file(course_code, "Data/selected_courses.txt")
-
+        return True
         
         
     def get_selected_courses(self):
