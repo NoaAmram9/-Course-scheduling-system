@@ -104,7 +104,7 @@ class FileManager:
                 # Check if the exact course (same number, name, and instructor) already exists
                 course_key = (course_number, name, instructor)
                 if course_key in seen_courses:
-                    errors.append(ValidationError(f"Skipping duplicate course '{name}' ({course_number}) by '{instructor}'."))
+                    errors.append(ValidationError(f"duplicate course '{name}' ({course_number}) by '{instructor}'."))
                     continue
                 seen_courses.add(course_key)
 
@@ -119,7 +119,7 @@ class FileManager:
                     
                     # If it's not a valid lesson type, skip the line
                     if lessonType not in {"L", "T", "M"}:
-                        errors.append(ValidationError(f"Skipping unknown lesson type '{lessonType}' in course '{name}'"))
+                        errors.append(ValidationError(f"Unknown lesson type '{lessonType}' in course '{name}'"))
                         continue
                     
                     # Regular expression pattern for time slots
@@ -131,7 +131,7 @@ class FileManager:
                         match = time_slot_pattern.match(time_slot)  # Check if the line matches the time slot format
                         
                         if not match:
-                            errors.append(ValidationError(f"Skipping invalid time slot format: '{time_slot}' in course '{name}'"))
+                            errors.append(ValidationError(f"Invalid time slot format: '{time_slot}' in course '{name}'"))
                             continue
                             
                         day, start, end, building, room = match.groups()
@@ -170,7 +170,7 @@ class FileManager:
                             labs.append(lesson)
                     
                 if not (lectures): # Ensure at least one lecture
-                    errors.append(ValidationError(f"Skipping course '{name}': No valid lecture found."))
+                    errors.append(ValidationError(f"Course '{name}': No valid lecture found."))
                     continue
             
                 course = Course(name, course_number, instructor, lectures, exercises, labs)
@@ -201,7 +201,7 @@ class FileManager:
         try: 
                 for course in courses:                    
                     if not course.name or not course.code or not course.instructor or not course.lectures:
-                        print(f"Skipping incomplete course '{course.name}' during writing.")
+                        print(f"Incomplete course '{course.name}' during writing.")
                         continue
                 
                     # Write Course Name, Course Number, and Instructor
