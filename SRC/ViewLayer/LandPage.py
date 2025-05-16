@@ -12,6 +12,7 @@ import tkinter as tk
 from tkinterdnd2 import DND_FILES, TkinterDnD
 from tkinter import filedialog, messagebox
 from SRC.ViewLayer.View.SelectionPageMain import MainPage
+from SRC.Models.ValidationError import ValidationError
 
 class LandPage:
     def __init__(self, root, controller):
@@ -153,13 +154,24 @@ class LandPage:
                 messagebox.showerror("Error", f"Failed to load file: {str(e)}")
 
     def send_action(self):
+    # Check if a file has been uploaded
      if not self.file_uploaded:
         messagebox.showwarning("Missing File", "Please upload a .txt file before proceeding.")
         return
+     # Process the repository file to check for errors
+     data = self.controller.process_repository_file("Data/courses.txt")
+     # Check for validation errors
+     if all(isinstance(x, ValidationError) for x in data):
+        # Collect all error messages
+        error_messages = "\n".join(str(error) for error in data)
+        
+        # Show all errors in one message box
+        messagebox.showwarning("Invalid Course File", f"The following errors were found:\n\n{error_messages}")
+        return
+     # If no errors, proceed to the main page
      self.root.withdraw()  # Hide the window instead of destroying it
      main_page = MainPage(self.controller)
      main_page.run()
-
 
 
     def run(self):
