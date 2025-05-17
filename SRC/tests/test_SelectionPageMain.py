@@ -1,118 +1,3 @@
-# import pytest
-# from unittest.mock import MagicMock, patch
-# from SRC.ViewLayer.View.SelectionPageMain import MainPage
-# import customtkinter as ctk
-
-# @pytest.fixture
-# def main_page():
-#     root = ctk.CTk()  # Ensure a root context for customtkinter widgets
-#     mock_controller = MagicMock()
-#     page = MainPage(mock_controller)
-#     yield page
-#     root.destroy()
-
-# # 1. UI COMPONENT EXISTENCE
-
-# def test_ui_components_exist(main_page):
-#     assert hasattr(main_page, "course_list_panel")
-#     assert hasattr(main_page, "details_panel")  
-#     assert hasattr(main_page, "selected_courses_panel")
-
-# # 2. BUTTON FUNCTIONALITY
-
-# def test_load_button_calls_controller_load(main_page):
-#     main_page.course_manager.load_courses = MagicMock()
-#     main_page.load_courses()
-#     main_page.course_manager.load_courses.assert_called_once()
-
-# def test_remove_button_calls_controller_remove(main_page):
-#     main_page.course_manager.remove_selected_course = MagicMock()
-#     main_page.remove_selected_course()
-#     main_page.course_manager.remove_selected_course.assert_called_once()
-
-# def test_save_button_calls_controller_save(main_page):
-#     main_page.course_manager.save_selection = MagicMock()
-#     main_page.save_selection()
-#     main_page.course_manager.save_selection.assert_called_once()
-
-# # 3. MAX 7 COURSE SELECTION CONSTRAINT
-
-# def test_add_course_up_to_7_allowed(main_page):
-#     with patch("tkinter.messagebox.showwarning") as mock_warning:
-#         for i in range(7):
-#             course = MagicMock()
-#             main_page.selected_courses_panel.selected_courses = list(range(i))
-#             main_page.selected_courses_panel.add_course = MagicMock(
-#                 side_effect=lambda c: main_page.selected_courses_panel.selected_courses.append(c)
-#             )
-#             main_page.selected_courses_panel.add_course(course)
-#             assert course in main_page.selected_courses_panel.selected_courses
-#         mock_warning.assert_not_called()
-
-# def test_add_course_more_than_7_shows_warning(main_page):
-#     course = MagicMock()
-#     main_page.selected_courses_panel.selected_courses = list(range(7))
-#     with patch("tkinter.messagebox.showwarning") as mock_warning:
-#         # Mock actual logic
-#         def fake_add(c):
-#             if len(main_page.selected_courses_panel.selected_courses) >= 7:
-#                 from tkinter import messagebox
-#                 messagebox.showwarning("Warning", "You can select up to 7 courses only.")
-#             else:
-#                 main_page.selected_courses_panel.selected_courses.append(c)
-#         main_page.selected_courses_panel.add_course = fake_add
-#         main_page.selected_courses_panel.add_course(course)
-#         mock_warning.assert_called_once()
-
-# # 4. COURSE DETAILS DISPLAY
-
-# def test_on_course_selected_updates_details_panel(main_page):
-#     # Mock course object with a name
-#     mock_course = MagicMock(name="Test Course")
-#     mock_course._code = "TEST123"
-    
-#     # Set up a mock details callback
-#     mock_details_callback = MagicMock()
-#     main_page.course_list_panel.set_details_callback(mock_details_callback)
-    
-#     # Load the course into the treeview
-#     main_page.course_list_panel.load_courses([mock_course])
-    
-#     # Simulate selecting the course
-#     main_page.course_list_panel.on_course_select(None)  # Simulate selecting the course
-    
-#     # Assert the callback was called with the correct course
-#     mock_details_callback.assert_called_with(mock_course)
-
-# # ------------------------------------------------------------------------------------------
-# # 5. ADD AND REMOVE COURSE INTEGRATION
-
-# # def test_add_course_adds_to_selected_list(main_page)
-
-# def test_remove_course_removes_from_selected_list(main_page):
-#     course = MagicMock()
-#     main_page.selected_courses_panel.selected_courses = [course]
-#     with patch.object(main_page.selected_courses_panel, "update_display") as mock_update:
-#         main_page.remove_course(course)
-#         assert course not in main_page.selected_courses_panel.selected_courses
-#         mock_update.assert_called_once()
-
-# # 6. SAVE COURSE SELECTION OUTPUT
-
-# def test_save_selection_logic(main_page):
-#     with patch.object(main_page.course_manager, "save_selection") as mock_save:
-#         main_page.save_selection()
-#         mock_save.assert_called_once()
-
-# # 7. TREEVIEW STYLE SETUP
-
-# @patch("SRC.ViewLayer.MainPage.ModernUI.configure_treeview_style")
-# def test_treeview_style_applied(mock_style):
-#     root = ctk.CTk()
-#     _ = MainPage(MagicMock())
-#     mock_style.assert_called_once()
-#     root.destroy()
-
 import pytest
 from unittest.mock import MagicMock, patch, call
 import tkinter as tk
@@ -157,6 +42,25 @@ def test_load_courses(main_page):
     main_page.load_courses()
     main_page.course_manager.load_courses.assert_called_once()
 
+
+def test_on_course_selected_updates_details_panel(main_page):
+    # Mock course object with a name
+    mock_course = MagicMock(name="Test Course")
+    mock_course._code = "TEST123"
+    
+    # Set up a mock details callback
+    mock_details_callback = MagicMock()
+    main_page.course_list_panel.set_details_callback(mock_details_callback)
+    
+    # Load the course into the treeview
+    main_page.course_list_panel.load_courses([mock_course])
+    
+    # Simulate selecting the course
+    main_page.course_list_panel.on_course_select(None)  # Simulate selecting the course
+    
+    # Assert the callback was called with the correct course
+    mock_details_callback.assert_called_with(mock_course)
+
 def test_remove_selected_course(main_page):
     """Test removing selected course delegates to course manager"""
     main_page.remove_selected_course()
@@ -184,7 +88,10 @@ def test_remove_selected_course(main_page):
             
 #             # Check if the TimetablesPage was created
 #             mock_timetable_page.assert_called_once()
-
+def test_save_selection_logic(main_page):
+    with patch.object(main_page.course_manager, "save_selection") as mock_save:
+        main_page.save_selection()
+        mock_save.assert_called_once()
 
 def test_save_selection_failure(main_page):
     """Test failed save selection doesn't open timetable page"""

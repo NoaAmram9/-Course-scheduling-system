@@ -1,0 +1,2 @@
+with open("encoding_error.bin", "wb") as f:
+    f.write(b'\x80\x81\x82\x83')
