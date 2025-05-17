@@ -7,7 +7,7 @@ HOURS = list(range(8, 22))  # 8:00 to 21:00 (the range excluses the upper bound)
 def map_courses_to_slots(timetable):
     """Maps each course to its time slots in the form {(day, hour): course}."""
     slot_map = {} 
-    courses = timetable.courses  # Assuming timetable has a 'courses' attribute that is a list of Course objects.
+    courses = timetable.courses 
 
     for course in courses:
         for lesson_type, lesson_list in [("Lecture", course.lectures),

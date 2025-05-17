@@ -19,7 +19,7 @@ class LandPage:
         self.root = root
         self.controller = controller
         self.file_uploaded = False
-        self.file_label = None  # Label to show uploaded file name
+        self.file_label = None 
         self.root.title("Schedule System Creator")
         self.root.geometry("800x800")
         self.root.config(bg="#FAFAFA")
@@ -101,6 +101,16 @@ class LandPage:
             width=100
         )
         self.send_button.place(relx=1.0, rely=1.0, anchor="se", x=-20, y=-20)
+        # === FOOTER / COPYRIGHT ===
+        footer_label = ctk.CTkLabel(
+            self.root,
+            text="All rights reserved to the SchedSquad team.",
+            font=("Calibri", 10),
+            text_color="#888",
+            fg_color="#FAFAFA"
+        )
+        footer_label.pack(side="bottom", pady=10)
+
 
     def handle_drop(self, event):
      file_path = event.data.strip("{}")
@@ -114,16 +124,14 @@ class LandPage:
         save_dir = os.path.join(os.path.dirname(__file__), '..', '..', 'Data')
         os.makedirs(save_dir, exist_ok=True)
 
-        # Set a fixed name for the saved file
+        # Set a name for the saved file
         filename = "courses.txt"
         destination_path = os.path.join(save_dir, filename)
 
-        # Copy the dragged file into your project
+        # Copy the dragged file into this project
         shutil.copy(file_path, destination_path)
         self.file_label.configure(text=f"Uploaded: {os.path.basename(file_path)}")
         self.file_uploaded = True
-        
-        # messagebox.showinfo("Success", f"File saved and loaded successfully:\n{destination_path}")
 
      except Exception as e:
         messagebox.showerror("Error", f"Failed to save file:\n{str(e)}")
@@ -134,7 +142,7 @@ class LandPage:
     
         if file_path:
             try:
-                # Define the destination directory in your project
+                # Define the destination directory
                 save_dir = os.path.join(os.path.dirname(__file__), '..', '..', 'Data')
                 os.makedirs(save_dir, exist_ok=True)  # Ensure the directory exists
 
@@ -146,10 +154,6 @@ class LandPage:
                 shutil.copy(file_path, destination_path)
                 self.file_label.configure(text=f"Uploaded: {os.path.basename(file_path)}")
                 self.file_uploaded = True
-                
-
-                # messagebox.showinfo("Success", f"File saved and loaded successfully:\n{destination_path}")
-
             except Exception as e:
                 messagebox.showerror("Error", f"Failed to load file: {str(e)}")
 

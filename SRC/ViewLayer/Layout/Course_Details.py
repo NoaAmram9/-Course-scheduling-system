@@ -39,8 +39,8 @@ class CourseDetailsPanel(tk.Frame):
         schedule_frame = tk.Frame(content_frame, bg=ModernUI.COLORS["white"])
         schedule_frame.pack(fill="x", padx=10, pady=5)
         
-        tk.Label(schedule_frame, text="Schedule:", font=("Calibri", 10, "bold"),
-               bg=ModernUI.COLORS["white"], fg=ModernUI.COLORS["dark"]).pack(anchor="w")
+        # tk.Label(schedule_frame, text="Schedule:", font=("Calibri", 10, "bold"),
+        #        bg=ModernUI.COLORS["white"], fg=ModernUI.COLORS["dark"]).pack(anchor="w")
         
         # self.lectures_label = tk.Label(schedule_frame, text="• Lectures: ", font=("Calibri", 9),
         #                              bg=ModernUI.COLORS["white"], fg=ModernUI.COLORS["dark"],
@@ -60,7 +60,7 @@ class CourseDetailsPanel(tk.Frame):
         # Action button
         self.add_button_frame = ModernUI.create_rounded_button(
             self, "Add Course", self.add_course, 
-            bg_color=ModernUI.COLORS["secondary"], width=200)
+            bg_color=ModernUI.COLORS["ligth_pink"], width=200)
         self.add_button_frame.pack(pady=10)
         
         # Reference to the selected course

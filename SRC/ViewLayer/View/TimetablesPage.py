@@ -20,7 +20,7 @@ class TimetablesPage:
         self.current_index = 0
         self.go_back_callback = go_back_callback
 
-        root.state("zoomed")  # מסך מלא
+        root.state("zoomed") 
         # Configure the window to be responsive
         self.root.grid_columnconfigure(0, weight=1)
         self.root.grid_rowconfigure(1, weight=1)
@@ -95,11 +95,13 @@ class TimetablesPage:
         self.canvas = tk.Canvas(self.timetable_container, borderwidth=0, highlightthickness=0, 
                               bg=ModernUI.COLORS["white"])
         self.scrollbar = ttk.Scrollbar(self.timetable_container, orient="vertical", command=self.canvas.yview)
+        
         # def on_mouse_wheel(event):
         #     if str(self.canvas) in self.canvas.tk.call('winfo', 'children', '.'):
         #         self.canvas.yview_scroll(int(-1 * (event.delta / 120)), "units")
 
         # self.canvas.bind_all("<MouseWheel>", on_mouse_wheel)
+        
         def on_mouse_wheel(event):
             try:
                 if self.canvas.winfo_exists():
@@ -166,7 +168,7 @@ class TimetablesPage:
             self.canvas.grid_remove()
             self.scrollbar.grid_remove()
 
-            # Show a "No timetable available" label
+            # "No timetable available" label
             if not hasattr(self, "no_data_label"):
                 self.no_data_label = tk.Label(
                     self.root,

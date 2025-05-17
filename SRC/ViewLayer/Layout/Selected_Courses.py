@@ -132,7 +132,7 @@ class SelectedCoursesPanel(tk.Frame):
         """Get a list of all selected course objects"""
         selected_courses = []
         for item in self.tree_selected.get_children():
-            course_code = item  # The iid is the course code
+            course_code = item  
             if course_code in self.course_map:
                 selected_courses.append(self.course_map[course_code])
         return selected_courses

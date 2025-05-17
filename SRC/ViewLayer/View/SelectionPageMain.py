@@ -107,7 +107,7 @@ class MainPage:
         
         save_button_frame = ModernUI.create_rounded_button(
             footer_frame, "Save Selection", self.save_selection,
-            bg_color=ModernUI.COLORS["secondary"])
+            bg_color=ModernUI.COLORS["ligth_pink"])
         save_button_frame.pack(side="right", padx=5)
     
     def load_courses(self):
@@ -121,23 +121,20 @@ class MainPage:
     # def save_selection(self):
     #  """Save the current course selection and open the timetable page."""
     #  self.course_manager.save_selection()
-    #  self.window.withdraw()  # הסתרת חלון הבחירה
-    #  time_table = TimeTable(self.controller, parent=self)  # העברת הפניה להחזרה
+    #  self.window.withdraw()
+    #  time_table = TimeTable(self.controller, parent=self)  
     #  time_table.run()
     def save_selection(self):
         """Save the current course selection and go to timetable page"""
         if self.course_manager.save_selection():
             # If the selection was saved successfully, open the timetable page
-
             # create a new Toplevel window for the timetable
             timetable_window = tk.Toplevel(self.window)
-
-            # העבר את רשימת הקורסים שנבחרו
+        
             selected_courses = self.get_selected_courses()
 
-            # צור את TimetablesPage עם callback שנסגר את החלון
             def go_back_callback():
-                timetable_window.destroy()  # סגור את חלון לוח הזמנים
+                timetable_window.destroy()  
 
             TimetablesPage(timetable_window, self.controller, go_back_callback)
 

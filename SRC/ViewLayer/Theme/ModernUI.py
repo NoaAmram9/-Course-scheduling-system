@@ -10,7 +10,8 @@ class ModernUI:
         "secondary": "#36F6A9",   # Green
         "accent": "#FF1313",      # Red
         "light": "#ecf0f1",       # Light Gray
-        "dark": "#2c3e50",        # Dark Blue/Gray
+        # "dark": "#2c3e50",        # Dark Blue/Gray
+        "dark": "#625D5D",        # Dark Blue/Gray
         "white": "#ffffff",       # White
         "black": "#000000",       # Black
         "gray": "#95a5a6",        # Medium Gray
@@ -19,6 +20,7 @@ class ModernUI:
         "lab": "#ffffef",         #light yellow
         "exercise": "#e8ffff",    #light cyan
         "light_blue": "#9F9BFF",   #light blue
+        "ligth_pink" : "#FFDAB9", #light pink
     }
     
     @staticmethod
