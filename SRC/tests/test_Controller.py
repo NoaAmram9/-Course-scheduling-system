@@ -216,4 +216,4 @@ def test_schedule_performance():
     duration = time.time() - start_time
 
     assert duration < 10
-    assert len(schedules) > 0
+    assert len(schedules) == 16384

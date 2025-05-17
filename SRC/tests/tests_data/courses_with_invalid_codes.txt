@@ -1,0 +1,10 @@
+$$$$
+Course Name
+1234A
+Instructor Name
+L S,5,10:00,16:00,605,061
+$$$$
+Course Name 2
+123
+Instructor Name
+L S,1,14:00,16:00,1401,4
