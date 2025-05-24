@@ -1,0 +1,89 @@
+/* === Base Widget === */
+QWidget {
+    background-color: #F9FAFB;
+    font-family: "Segoe UI", Calibri, sans-serif;
+    font-size: 14px;
+    color: #333;
+}
+
+/* === Header === */
+QLabel#HeaderLabel {
+    background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+                                      stop:0 rgb(188, 197, 245), stop:1 rgb(241, 160, 176));
+    font-size: 24px;
+    font-weight: bold;
+    color: white;
+    border-radius: 16px;
+    padding: 18px;
+    margin: 20px;
+    qproperty-alignment: AlignCenter;
+    
+}
+
+/* === Drop Area === */
+QFrame#DropFrame {
+    background-color: #FFFFFF;
+    border: 2px dashed #D0D0D0;
+    border-radius: 16px;
+    padding: 24px;
+    margin: 10px;
+    
+}
+
+QLabel#DropLabel {
+    color: #666;
+    font-size: 15px;
+    font-style: italic;
+    qproperty-alignment: AlignCenter;
+}
+
+/* === Upload Button === */
+QPushButton#UploadButton {
+    background-color:rgb(237, 217, 136);
+    color: #222;
+    min-height: 40px;         
+    min-width: 120px;        
+    border: none;
+    border-radius: 22px;
+    padding: 10px 24px;
+    font-size: 15px;
+    font-weight: 600;
+    
+}
+QPushButton#UploadButton:hover {
+    background-color: #FFE97F;
+}
+
+/* === File Label === */
+QLabel#FileLabel {
+    color: #555;
+    font-size: 13px;
+    margin-top: 10px;
+    qproperty-alignment: AlignCenter;
+}
+
+/* === Send Button === */
+QPushButton#SendButton {
+    background-color:rgb(126, 250, 211);
+    color: #000;
+    border: none;
+    min-height: 40px;         
+    min-width: 120px;         
+    border-radius: 30px; 
+    padding: 10px 24px;
+    font-size: 15px;
+    font-weight: 600;
+    margin: 15px 0;
+}
+QPushButton#SendButton:hover {
+    background-color: #ABECD6;
+}
+
+/* === Footer === */
+QLabel#FooterLabel {
+    color: #999;
+    font-size: 11px;
+    margin-top: 20px;
+    qproperty-alignment: AlignCenter;
+    font-style: italic;
+}
