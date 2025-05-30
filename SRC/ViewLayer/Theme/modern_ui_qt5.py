@@ -169,3 +169,9 @@ class ModernUIQt5:
                 margin: 2px 0px;
             }}
         """
+    # @staticmethod
+    # def get_Land_Page_stylesheet():
+    #     """Get stylesheet for Landpage"""
+    #     return f"""
+            
+    #     """
