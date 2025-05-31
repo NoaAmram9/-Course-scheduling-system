@@ -74,7 +74,7 @@ class ExcelManager(FileManager):
             return (tokens[0], "")
         
         return ("", "")
-    def read_courses_from_excel(self, file_path: str) -> list[Course]:
+    def read_courses_from_file(self, file_path: str) -> list[Course]:
         df = pd.read_excel(file_path)
 
         column_mapping = {
@@ -113,7 +113,6 @@ class ExcelManager(FileManager):
             instructors = [inst.strip() for inst in instructors_str.split(',') if inst.strip()]
             weekly_hours = max(0, end_hour - start_hour)
 
-            # ✅ Updated: derive group code and group course using shared prefix
             group_code = int(code.split('-')[-1]) if '-' in code and code.split('-')[-1].isdigit() else 0
             main_code = code.split('-')[0] if '-' in code else code
             course_key = f"{main_code}_{name}"

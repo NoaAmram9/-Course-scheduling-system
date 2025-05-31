@@ -10,7 +10,7 @@ from SRC.Services.ExcelManager import ExcelManager
 
 def debug_excel_parsing(file_path):
     manager = ExcelManager()
-    courses = manager.read_courses_from_excel(file_path)
+    courses = manager.read_courses_from_file(file_path)
 
     for course in courses:
         print(f"\n📘 Course: {course._name} ({course._code})")

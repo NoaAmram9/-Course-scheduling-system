@@ -49,7 +49,7 @@ class TimetablesPageQt5(QMainWindow):
 
         # Fetch all possible timetable options using the controller
         # These paths "Data/courses.txt" and "Data/selected_courses.txt" might be parameters to the controller method
-        self.options = controller.get_all_options("Data/courses.txt", "Data/selected_courses.txt")
+        self.options = controller.get_all_options("Data/courses.xlsx", "Data/selected_courses.txt")
 
         self.current_index = 0  # Index to keep track of the currently displayed timetable option
 

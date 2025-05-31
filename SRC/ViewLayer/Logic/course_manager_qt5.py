@@ -20,7 +20,7 @@ class CourseManagerQt5:
     
     def load_courses(self):
         """Load courses from the repository file using the controller"""
-        courses = self.controller.process_repository_file("Data/courses.txt")
+        courses = self.controller.read_courses_from_file("Data/courses.xlsx")
         course_map = {course.code: course for course in courses}
         
         self.course_list_panel.load_courses(courses)
