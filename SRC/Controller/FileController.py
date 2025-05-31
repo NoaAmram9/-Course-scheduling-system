@@ -41,14 +41,75 @@ class FileController:
         scheduleService = ScheduleService()
         return scheduleService.generate_schedules(selected_courses, limit=1000)
     
-    def get_all_options(self, file_path1, file_path2):
-        courses_info = self.read_courses_from_file(file_path1) # Process the repository file with all the courses info
+    # def get_all_options(self, file_path1, file_path2):         
+    #     courses_info = self.read_courses_from_file(file_path1)
+    #     selected_courses = self.get_selected_courses(file_path2)
+    #     selected_courses_info = self.selected_courses_info(courses_info, selected_courses)
+        
+    #     try:
+    #         schedule_service = ScheduleService()
+            
+    #         # צור generator שיכול לטעון הכל
+    #         schedule_generator = schedule_service.generate_schedules_progressive(
+    #             selected_courses_info, 
+    #             limit=None  # ללא הגבלה
+    #         )
+            
+    #         # טען במנות של 1000
+    #         batch = []
+    #         for timetable in schedule_generator:
+    #             batch.append(timetable)
+                
+    #             # כשמגיעים ל-1000, החזר את המנה
+    #             if len(batch) >= 1000:
+    #                 yield batch
+    #                 batch = []  # איפוס למנה הבאה
+            
+    #         # החזר את המנה האחרונה (אם יש פחות מ-1000)
+    #         if batch:
+    #             yield batch
+                        
+    #     except Exception as e:
+    #         print(f"Error in generator: {str(e)}")
+    #         return
 
-        selected_courses = self.get_selected_courses(file_path2) # Get the selected courses from the user
-        selected_courses_info = self.selected_courses_info(courses_info, selected_courses) # Get the selected courses info from the repository
-        time_table = self.create_schedules(selected_courses_info) # Create the schedules based on the selected courses
-        return time_table
-    
+    def get_all_options(self, file_path1, file_path2, batch_size=100):
+        """
+        Returns batches of timetables instead of individual timetables
+        This replaces the old method that returned individual timetables
+        """
+        courses_info = self.read_courses_from_file(file_path1)
+        selected_courses = self.get_selected_courses(file_path2)
+        selected_courses_info = self.selected_courses_info(courses_info, selected_courses)
+        
+        try:
+            schedule_service = ScheduleService()
+            
+            # Get the progressive generator (no limit)
+            schedule_generator = schedule_service.generate_schedules_progressive(
+                selected_courses_info,  
+                limit=None  # עכשיו זה עובד כי תיקנו את הפונקציה
+            )
+            
+            # Collect into batches
+            batch = []
+            for timetable in schedule_generator:
+                batch.append(timetable)
+                
+                # When batch is full, yield it
+                if len(batch) >= batch_size:
+                    yield batch
+                    batch = []  # Reset for next batch
+                    
+            # Yield final batch if it has any items
+            if batch:
+                yield batch
+                            
+        except Exception as e:
+            print(f"Error in batch generator: {str(e)}")
+            return []  # החזר רשימה ריקה במקום None
+
+       
     def handle_exit(self):
         """
         Handle the exit of the application.
