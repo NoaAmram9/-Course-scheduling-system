@@ -24,7 +24,7 @@ def map_courses_to_slots(timetable):
                         "name": course.name,
                         "code": course.code,
                         "type": lesson_type,
-                        "instructor": course.instructor,
+                        #"instructor": course.instructor,
                         "location": f"{lesson.building}-{lesson.room}" 
                     }
 

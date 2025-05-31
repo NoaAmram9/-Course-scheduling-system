@@ -109,34 +109,42 @@ class MainPageQt5(QMainWindow):
         """Load courses from the controller"""
         self.course_manager.load_courses()
         
+    # def save_selection(self):
+    #     """Save the current course selection and go to timetable page"""
+    #     if self.course_manager.save_selection():
+            
+    #         # Create timetable window - Fix: pass self.controller instead of self
+    #         from SRC.ViewLayer.View.TimetablesPage import TimetablesPage
+            
+    #         self.timetable_window = TimetablesPage(self.controller, self)  
+    #         self.timetable_window.show()
     def save_selection(self):
         """Save the current course selection and go to timetable page"""
         if self.course_manager.save_selection():
-            # Import tkinter for the timetables page
-            import tkinter as tk
-            from SRC.ViewLayer.View.TimetablesPage import TimetablesPage
-            
-            # Create a new tkinter root window for the timetables page
-            timetable_root = tk.Tk()
-            
-            # Create callback function to return to PyQt5 main page
-            def go_back_to_main():
-                timetable_root.destroy()  # Close tkinter window
-                self.show()  # Show PyQt5 window again
-            
-            # Hide the current PyQt5 window
-            self.hide()
-            
-            # Create the timetables page with correct parameters
-            self.timetable_window = TimetablesPage(
-                root=timetable_root,           # tkinter root window
-                controller=self.controller,    # your controller
-                go_back_callback=go_back_to_main  # callback to return
-            )
-            
-            # Start the tkinter event loop
-            timetable_root.mainloop()
-            
+            self.show_timetables()    
+    def show_timetables(self):
+        """Show the timetables page"""
+        # Import the PyQt5 timetables page
+        from SRC.ViewLayer.View.Timetables_qt5 import TimetablesPageQt5
+        
+        # Create callback function to return to course selection
+        def go_back_to_selection():
+            if self.timetables_window:
+                self.timetables_window.close()
+                self.timetables_window = None
+            self.show()  # Show the course selection window again
+        
+        # Hide the current window
+        self.hide()
+        
+        # Create the timetables window
+        self.timetables_window = TimetablesPageQt5(
+            controller=self.controller,
+            go_back_callback=go_back_to_selection
+        )
+        
+        # Show the timetables window
+        self.timetables_window.show()       
     def get_selected_courses(self):
         """Get the list of selected courses"""
         return self.course_manager.get_selected_courses()

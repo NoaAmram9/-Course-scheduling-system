@@ -62,7 +62,7 @@ class CourseDetailsPanelQt5(QWidget):
         if course:
             self.code_label.setText(f"Code: {course._code}")
             self.name_label.setText(f"Name: {course._name}")
-            self.instructor_label.setText(f"Prof.: {course._instructor}")
+            #self.instructor_label.setText(f"Prof.: {course._instructor}")
         else:
             self.code_label.setText("Code: ")
             self.name_label.setText("Name: ")

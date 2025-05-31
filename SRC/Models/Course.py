@@ -1,6 +1,6 @@
 class Course:
       
-    def __init__(self, name: str = "", code: str = "", semester: int = 0, lectures: list = None, exercises: list = None, labs: list = None, departmentHours: list = None, reinforcement: list = None, traning: list = None, notes:str = ""):
+    def __init__(self, name: str = "", code: str = "", semester: int = 0, lectures: list = None, exercises: list = None, labs: list = None, departmentHours: list = None, reinforcement: list = None, training: list = None, notes:str = ""):
         self._name = name  # course name
         self._code = code  # course number
         self._semester = semester  # course semester
@@ -9,7 +9,7 @@ class Course:
         self._labs = labs if labs is not None else []  # list of labs in the course
         self._departmentHours = departmentHours if departmentHours is not None else []  # department hours
         self._reinforcement = reinforcement if reinforcement is not None else []  # reinforcement sessions
-        self._traning = traning if traning is not None else []  # training sessions
+        self._training = training if training is not None else []  # training sessions
         self._notes =  notes  
 
     @property
@@ -77,11 +77,11 @@ class Course:
         self._reinforcement = value
 
     @property
-    def traning(self):
-        return self._traning
+    def training(self):
+        return self._training
 
-    @traning.setter
-    def traning(self, value):
-        self._traning = value
+    @training.setter
+    def training(self, value):
+        self._training = value
   
 

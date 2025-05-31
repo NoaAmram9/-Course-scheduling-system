@@ -48,8 +48,8 @@ def generate_pdf_from_data(file_path, slot_map, title, return_elements=False):
         for day in DAYS:
             cell = slot_map.get((day, hour))
             if cell:
-                # Build the cell content with course name, code, type, instructor, and location
-                text = f"<b>{cell['name']}</b> ({cell['code']})<br/>{cell['type']}<br/>{cell['instructor']}<br/>{cell['location']}"
+                # Build the cell content with course name, code, type, instructor, and location !#{cell['instructor']}<br/>
+                text = f"<b>{cell['name']}</b> ({cell['code']})<br/>{cell['type']}<br/>{cell['location']}"
                 para = Paragraph(text, cell_style)
             else:
                 para = Paragraph("", cell_style)  # Empty cell

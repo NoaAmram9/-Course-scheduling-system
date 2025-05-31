@@ -86,7 +86,7 @@ class SelectedCoursesPanelQt5(QWidget):
             labs = len(course._labs)
             
             item = QTreeWidgetItem([
-                course._code, course._name, course._instructor,
+                course._code, course._name, 
                 str(lectures), str(exercises), str(labs)
             ])
             item.setData(0, Qt.UserRole, course_code)
