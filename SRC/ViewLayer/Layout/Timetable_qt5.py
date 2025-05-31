@@ -4,8 +4,63 @@ from PyQt5.QtWidgets import (QWidget, QGridLayout, QLabel, QFrame,
 from PyQt5.QtCore import Qt, QSize
 from PyQt5.QtGui import QFont, QPalette
 
-from SRC.ViewLayer.Logic.Timetable_qt5 import (DAYS, HOURS, get_lesson_type_color_class, 
-                                           format_course_info, get_tooltip_text)
+# Import from your logic file
+from SRC.ViewLayer.Logic.TimeTable import DAYS, HOURS
+
+
+def get_lesson_type_color_class(lesson_type):
+    """Return CSS class name based on lesson type"""
+    type_classes = {
+        "Lecture": "lectureCell",
+        "Lab": "labCell", 
+        "Exercise": "exerciseCell"
+    }
+    return type_classes.get(lesson_type, "defaultCell")
+
+
+def format_course_info(course_data):
+    """Format course information for display in cell"""
+    lines = []
+    
+    # Course code (first line)
+    if course_data.get("code"):
+        lines.append(course_data["code"])
+    
+    # Course name (second line, truncated if too long)
+    if course_data.get("name"):
+        name = course_data["name"]
+        if len(name) > 20:
+            name = name[:17] + "..."
+        lines.append(name)
+    
+    # Lesson type (third line)
+    if course_data.get("type"):
+        lines.append(course_data["type"])
+    
+    # Location (fourth line)
+    if course_data.get("location"):
+        lines.append(course_data["location"])
+    
+    return '\n'.join(lines)
+
+
+def get_tooltip_text(course_data):
+    """Generate tooltip text with full course details"""
+    tooltip_parts = []
+    
+    if course_data.get("name"):
+        tooltip_parts.append(f"Course: {course_data['name']}")
+    
+    if course_data.get("code"):
+        tooltip_parts.append(f"Code: {course_data['code']}")
+    
+    if course_data.get("type"):
+        tooltip_parts.append(f"Type: {course_data['type']}")
+    
+    if course_data.get("location"):
+        tooltip_parts.append(f"Location: {course_data['location']}")
+    
+    return '\n'.join(tooltip_parts)
 
 
 class TimetableGridWidget(QWidget):
@@ -64,7 +119,6 @@ class TimetableGridWidget(QWidget):
         cell = QFrame()
         cell.setObjectName("emptyCell")
         cell.setFixedSize(180, 80)
-        cell.setFrameStyle(QFrame.StyledPanel)
         return cell
     
     def create_day_header_cell(self, day):
@@ -80,7 +134,6 @@ class TimetableGridWidget(QWidget):
         label = QLabel(day)
         label.setObjectName("dayHeaderLabel")
         label.setAlignment(Qt.AlignCenter)
-        label.setFont(QFont("Helvetica", 12, QFont.Bold))
         
         layout.addWidget(label)
         cell.setLayout(layout)
@@ -100,7 +153,6 @@ class TimetableGridWidget(QWidget):
         label = QLabel(time_text)
         label.setObjectName("timeCellLabel")
         label.setAlignment(Qt.AlignCenter)
-        label.setFont(QFont("Helvetica", 11, QFont.Bold))
         
         layout.addWidget(label)
         cell.setLayout(layout)
@@ -127,23 +179,21 @@ class TimetableGridWidget(QWidget):
             course_text = format_course_info(course_data)
             lines = course_text.split('\n')
             
-            # Course name (bold, slightly larger)
+            # Course code/name (bold, slightly larger)
             if lines:
                 name_label = QLabel(lines[0])
                 name_label.setObjectName("courseNameLabel")
                 name_label.setAlignment(Qt.AlignCenter)
                 name_label.setWordWrap(True)
-                name_label.setFont(QFont("Helvetica", 10, QFont.Bold))
                 layout.addWidget(name_label)
                 
-                # Other information (smaller font)
+                # Other information
                 if len(lines) > 1:
                     info_text = '\n'.join(lines[1:])
                     info_label = QLabel(info_text)
                     info_label.setObjectName("courseCellLabel")
                     info_label.setAlignment(Qt.AlignCenter)
                     info_label.setWordWrap(True)
-                    info_label.setFont(QFont("Helvetica", 9))
                     layout.addWidget(info_label)
             
             # Set tooltip with detailed information
@@ -196,7 +246,6 @@ class CompactTimetableWidget(QWidget):
             label = QLabel(abbreviated_day)
             label.setObjectName("dayHeaderLabel")
             label.setAlignment(Qt.AlignCenter)
-            label.setFont(QFont("Helvetica", 10, QFont.Bold))
             
             layout.addWidget(label)
             day_cell.setLayout(layout)
@@ -216,7 +265,6 @@ class CompactTimetableWidget(QWidget):
             label = QLabel(f"{hour}:00")
             label.setObjectName("timeCellLabel")
             label.setAlignment(Qt.AlignCenter)
-            label.setFont(QFont("Helvetica", 9, QFont.Bold))
             
             layout.addWidget(label)
             time_cell.setLayout(layout)
@@ -252,7 +300,6 @@ class CompactTimetableWidget(QWidget):
                 code_label = QLabel(course_code)
                 code_label.setObjectName("courseNameLabel")
                 code_label.setAlignment(Qt.AlignCenter)
-                code_label.setFont(QFont("Helvetica", 8, QFont.Bold))
                 layout.addWidget(code_label)
             
             if lesson_type:
@@ -260,16 +307,12 @@ class CompactTimetableWidget(QWidget):
                 type_abbrev = {
                     "Lecture": "LEC",
                     "Lab": "LAB", 
-                    "Exercise": "EX",
-                    "Department Hours": "DEPT",
-                    "Reinforcement": "REINF",
-                    "Training": "TRAIN"
+                    "Exercise": "EX"
                 }.get(lesson_type, lesson_type[:4])
                 
                 type_label = QLabel(type_abbrev)
                 type_label.setObjectName("courseCellLabel")
                 type_label.setAlignment(Qt.AlignCenter)
-                type_label.setFont(QFont("Helvetica", 7))
                 layout.addWidget(type_label)
             
             # Full tooltip for details

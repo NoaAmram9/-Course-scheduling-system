@@ -199,6 +199,124 @@ class ModernUIQt5:
                 font-family: 'Segoe UI', Arial, sans-serif;
             }}
             
+            /* Timetable Grid Container */
+            QWidget#timetableGrid {{
+                background-color: {ModernUIQt5.COLORS["white"]};
+                border: 2px solid {ModernUIQt5.COLORS["timetable_border"]};
+                border-radius: 12px;
+                padding: 10px;
+            }}
+            
+            QWidget#compactTimetableGrid {{
+                background-color: {ModernUIQt5.COLORS["white"]};
+                border: 2px solid {ModernUIQt5.COLORS["timetable_border"]};
+                border-radius: 8px;
+                padding: 5px;
+            }}
+            
+            /* Header Cells */
+            QFrame#dayHeader {{
+                background-color: {ModernUIQt5.COLORS["timetable_header"]};
+                border: 2px solid {ModernUIQt5.COLORS["primary"]};
+                border-radius: 8px;
+                margin: 1px;
+            }}
+            
+            QLabel#dayHeaderLabel {{
+                color: {ModernUIQt5.COLORS["dark"]};
+                font-size: 12px;
+                font-weight: bold;
+                padding: 5px;
+            }}
+            
+            /* Time Column Cells */
+            QFrame#timeCell {{
+                background-color: {ModernUIQt5.COLORS["timetable_header"]};
+                border: 2px solid {ModernUIQt5.COLORS["secondary"]};
+                border-radius: 8px;
+                margin: 1px;
+            }}
+            
+            QLabel#timeCellLabel {{
+                color: {ModernUIQt5.COLORS["dark"]};
+                font-size: 11px;
+                font-weight: bold;
+                padding: 5px;
+            }}
+            
+            /* Empty Cells */
+            QFrame#emptyCell {{
+                background-color: {ModernUIQt5.COLORS["white"]};
+                border: 1px solid {ModernUIQt5.COLORS["timetable_border"]};
+                border-radius: 6px;
+                margin: 1px;
+            }}
+            
+            /* Course Cells by Type */
+            QFrame#lectureCell {{
+                background-color: {ModernUIQt5.COLORS["lecture"]};
+                border: 2px solid #ffcccc;
+                border-radius: 8px;
+                margin: 1px;
+            }}
+            
+            QFrame#labCell {{
+                background-color: {ModernUIQt5.COLORS["lab"]};
+                border: 2px solid #ffffcc;
+                border-radius: 8px;
+                margin: 1px;
+            }}
+            
+            QFrame#exerciseCell {{
+                background-color: {ModernUIQt5.COLORS["exercise"]};
+                border: 2px solid #ccffff;
+                border-radius: 8px;
+                margin: 1px;
+            }}
+            
+            QFrame#defaultCell {{
+                background-color: {ModernUIQt5.COLORS["light"]};
+                border: 2px solid {ModernUIQt5.COLORS["gray"]};
+                border-radius: 8px;
+                margin: 1px;
+            }}
+            
+            /* Course Cell Labels */
+            QLabel#courseNameLabel {{
+                color: {ModernUIQt5.COLORS["dark"]};
+                font-size: 10px;
+                font-weight: bold;
+                padding: 2px;
+            }}
+            
+            QLabel#courseCellLabel {{
+                color: {ModernUIQt5.COLORS["dark"]};
+                font-size: 9px;
+                font-weight: normal;
+                padding: 1px;
+            }}
+            
+            /* Hover Effects for Course Cells */
+            QFrame#lectureCell:hover {{
+                background-color: {ModernUIQt5.adjust_color(ModernUIQt5.COLORS["lecture"], -10)};
+                border-color: #ff9999;
+            }}
+            
+            QFrame#labCell:hover {{
+                background-color: {ModernUIQt5.adjust_color(ModernUIQt5.COLORS["lab"], -10)};
+                border-color: #ffff99;
+            }}
+            
+            QFrame#exerciseCell:hover {{
+                background-color: {ModernUIQt5.adjust_color(ModernUIQt5.COLORS["exercise"], -10)};
+                border-color: #99ffff;
+            }}
+            
+            QFrame#defaultCell:hover {{
+                background-color: {ModernUIQt5.adjust_color(ModernUIQt5.COLORS["light"], -15)};
+                border-color: {ModernUIQt5.COLORS["primary"]};
+            }}
+            
             /* Navigation Frame */
             QFrame#navFrame {{
                 background-color: {ModernUIQt5.COLORS["white"]};
@@ -242,11 +360,6 @@ class ModernUIQt5:
             }}
             QPushButton#navButton:pressed {{
                 background-color: {ModernUIQt5.adjust_color(ModernUIQt5.COLORS["primary"], -40)};
-            }}
-            QPushButton#navButton[disabled="true"] {{
-                background-color: {ModernUIQt5.COLORS["gray"]};
-                color: {ModernUIQt5.COLORS["white"]};
-                opacity: 0.6;
             }}
             
             QPushButton#exportButton {{
@@ -312,97 +425,35 @@ class ModernUIQt5:
                 background-color: {ModernUIQt5.COLORS["primary"]};
             }}
             
-            /* Timetable Widget */
-            QWidget#timetableWidget {{
-                background-color: {ModernUIQt5.COLORS["white"]};
-                border-radius: 8px;
-            }}
-            
-            /* Timetable Grid Styling */
-            QTableWidget#timetableGrid {{
-                background-color: {ModernUIQt5.COLORS["white"]};
-                border: 1px solid {ModernUIQt5.COLORS["timetable_border"]};
-                border-radius: 8px;
-                gridline-color: {ModernUIQt5.COLORS["timetable_border"]};
-                font-size: 10px;
-                selection-background-color: {ModernUIQt5.COLORS["course_selected"]};
-            }}
-            
-            QTableWidget#timetableGrid::item {{
-                border: 1px solid {ModernUIQt5.COLORS["timetable_border"]};
-                padding: 4px;
-                text-align: center;
-            }}
-            
-            QTableWidget#timetableGrid::item:hover {{
-                background-color: {ModernUIQt5.COLORS["timetable_hover"]};
-            }}
-            
-            /* Header Styling */
-            QHeaderView::section {{
-                background-color: {ModernUIQt5.COLORS["timetable_header"]};
-                color: {ModernUIQt5.COLORS["dark"]};
-                border: 1px solid {ModernUIQt5.COLORS["timetable_border"]};
-                padding: 8px;
-                font-weight: bold;
-                font-size: 11px;
-                text-align: center;
-            }}
-            
-            /* Time Slot Styling */
-            QLabel#timeSlot {{
-                background-color: {ModernUIQt5.COLORS["time_slot_bg"]};
-                color: {ModernUIQt5.COLORS["dark"]};
-                border: 1px solid {ModernUIQt5.COLORS["timetable_border"]};
-                padding: 8px;
-                font-weight: bold;
-                font-size: 10px;
-                text-align: center;
-            }}
-            
-            /* Course Cell Styling */
-            QLabel#courseCell {{
-                border: 1px solid {ModernUIQt5.COLORS["timetable_border"]};
-                padding: 4px;
-                font-size: 9px;
-                font-weight: 500;
-                text-align: center;
+            /* Tooltips */
+            QToolTip {{
+                background-color: {ModernUIQt5.COLORS["dark"]};
+                color: {ModernUIQt5.COLORS["white"]};
+                border: 1px solid {ModernUIQt5.COLORS["gray"]};
                 border-radius: 4px;
-            }}
-            
-            /* Lecture Cell */
-            QLabel#lectureCell {{
-                background-color: {ModernUIQt5.COLORS["lecture"]};
-                color: {ModernUIQt5.COLORS["dark"]};
-                border: 2px solid #ffcccc;
-            }}
-            
-            /* Lab Cell */
-            QLabel#labCell {{
-                background-color: {ModernUIQt5.COLORS["lab"]};
-                color: {ModernUIQt5.COLORS["dark"]};
-                border: 2px solid #ffffcc;
-            }}
-            
-            /* Exercise Cell */
-            QLabel#exerciseCell {{
-                background-color: {ModernUIQt5.COLORS["exercise"]};
-                color: {ModernUIQt5.COLORS["dark"]};
-                border: 2px solid #ccffff;
-            }}
-            
-            /* Empty Cell */
-            QLabel#emptyCell {{
-                background-color: {ModernUIQt5.COLORS["white"]};
-                border: 1px solid {ModernUIQt5.COLORS["timetable_border"]};
-            }}
-            
-            /* Hover Effects */
-            QLabel#courseCell:hover {{
-                transform: scale(1.02);
-                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                padding: 5px;
+                font-size: 10px;
             }}
         """
+
+    # Also add this helper method to your ModernUIQt5 class
+    @staticmethod
+    def style_timetable_frame(frame, frame_type="empty"):
+        """Apply specific styling to timetable frames based on type"""
+        if frame_type.lower() == "lecture":
+            frame.setObjectName("lectureCell")
+        elif frame_type.lower() == "lab":
+            frame.setObjectName("labCell")
+        elif frame_type.lower() == "exercise":
+            frame.setObjectName("exerciseCell")
+        elif frame_type.lower() == "day_header":
+            frame.setObjectName("dayHeader")
+        elif frame_type.lower() == "time_cell":
+            frame.setObjectName("timeCell")
+        else:
+            frame.setObjectName("emptyCell")
+        
+        return frame
     
     @staticmethod
     def create_timetable_button(text, style="primary", icon=None):

@@ -25,7 +25,7 @@ def map_courses_to_slots(timetable):
                         "name": course.name,
                         "code": course.code,
                         "type": lesson_type,
-                        "instructor": course.instructor,
+                        #"instructor": course.instructor,
                         "location": f"{lesson.building}-{lesson.room}"
                     }
     
@@ -75,13 +75,13 @@ def format_course_info(course_data):
     if course_data.get("location"):
         lines.append(course_data["location"])
     
-    # Instructor (abbreviated for space)
-    if course_data.get("instructor"):
-        instructor = course_data["instructor"]
-        # Abbreviate long instructor names
-        if len(instructor) > 15:
-            instructor = instructor[:12] + "..."
-        lines.append(instructor)
+    # # Instructor (abbreviated for space)
+    # if course_data.get("instructor"):
+    #     instructor = course_data["instructor"]
+    #     # Abbreviate long instructor names
+    #     if len(instructor) > 15:
+    #         instructor = instructor[:12] + "..."
+    #     lines.append(instructor)
     
     return '\n'.join(lines)
 
@@ -104,9 +104,9 @@ def get_tooltip_text(course_data):
     if course_data.get("type"):
         tooltip_parts.append(f"Type: {course_data['type']}")
     
-    # Instructor
-    if course_data.get("instructor"):
-        tooltip_parts.append(f"Instructor: {course_data['instructor']}")
+    # # Instructor
+    # if course_data.get("instructor"):
+    #     tooltip_parts.append(f"Instructor: {course_data['instructor']}")
     
     # Location
     if course_data.get("location"):

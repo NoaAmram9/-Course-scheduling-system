@@ -13,7 +13,7 @@ from SRC.ViewLayer.Logic.TimeTable import map_courses_to_slots, DAYS, HOURS
 from SRC.ViewLayer.Layout.Timetable_qt5 import TimetableGridWidget
 from SRC.ViewLayer.Logic.Pdf_Exporter import generate_pdf_from_data
 from SRC.ViewLayer.Theme.modern_ui_qt5 import ModernUIQt5
-
+from pathlib import Path
 class TimetablesPageQt5(QMainWindow):
     def __init__(self, controller, go_back_callback=None):
         super().__init__()
@@ -21,7 +21,7 @@ class TimetablesPageQt5(QMainWindow):
         self.go_back_callback = go_back_callback
         self.options = controller.get_all_options("Data/courses.txt", "Data/selected_courses.txt")
         self.current_index = 0
-        
+        #self.apply_stylesheet()
         self.init_ui()
         self.update_view()
     
@@ -48,7 +48,16 @@ class TimetablesPageQt5(QMainWindow):
         
         # Create timetable container
         self.create_timetable_container(main_layout)
-    
+    def apply_stylesheet(self):
+        # __file__ is the path to this Python file (LandPageView.py)
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+        qss_path = Path(__file__).resolve().parent.parent / "Theme" / "styles.qss"
+
+        if os.path.exists(qss_path):
+            with open(qss_path, "r", encoding="utf-8") as file:
+                self.setStyleSheet(file.read())
+        else:
+            print(f"Warning: QSS file not found at {qss_path}")
     def create_nav_bar(self, parent_layout):
         """Create the navigation bar with prev/next buttons and title"""
         nav_frame = QFrame()
