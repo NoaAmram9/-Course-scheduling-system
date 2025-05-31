@@ -40,7 +40,7 @@ class LandPageView(QWidget):
         self.drop_frame.setFixedSize(400, 200)
         drop_layout = QVBoxLayout(self.drop_frame)
 
-        self.drop_label = QLabel("You can drag a .txt file here\nor upload a file.")
+        self.drop_label = QLabel("You can drag a .txt or .xlsx file here\nor upload a file.")
         self.drop_label.setObjectName("DropLabel")
         drop_layout.addWidget(self.drop_label)
 
@@ -75,15 +75,17 @@ class LandPageView(QWidget):
         self.setLayout(layout)
 
     def dragEnterEvent(self, event: QDragEnterEvent):
-        if event.mimeData().hasUrls() and any(url.toLocalFile().endswith(".txt") for url in event.mimeData().urls()):
-            event.acceptProposedAction()
-        else:
-            event.ignore()
+        if event.mimeData().hasUrls():
+            for url in event.mimeData().urls():
+                if url.toLocalFile().endswith((".txt", ".xlsx")):
+                    event.acceptProposedAction()
+                    return
+        event.ignore()
 
     def dropEvent(self, event: QDropEvent):
         for url in event.mimeData().urls():
             path = url.toLocalFile()
-            if path.endswith(".txt"):
+            if path.endswith((".txt", ".xlsx")):
                 self.uploaded_path = path
                 self.file_label.setText(f"Uploaded: {os.path.basename(path)}")
                 self.file_uploaded.emit(path)
