@@ -6,7 +6,7 @@ from SRC.ViewLayer.Logic.course_manager_qt5 import CourseManagerQt5
 from SRC.ViewLayer.Layout.course_list_panel_qt5 import CourseListPanelQt5
 from SRC.ViewLayer.Layout.course_details_panel_qt5 import CourseDetailsPanelQt5
 from SRC.ViewLayer.Layout.selected_courses_panel_qt5 import SelectedCoursesPanelQt5
-from SRC.ViewLayer.Theme.modern_ui_qt5 import ModernUIQt5
+from SRC.ViewLayer.Theme.ModernUIQt5 import ModernUIQt5
 
 class MainPageQt5(QMainWindow):
     def __init__(self, controller):

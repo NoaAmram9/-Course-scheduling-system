@@ -1,0 +1,37 @@
+/* Shared Base Styles */
+QWidget {
+    background-color: #ecf0f1;
+    color: #2c3e50;
+    font-family: "Segoe UI", sans-serif;
+    font-size: 14px;
+}
+
+QPushButton {
+    border-radius: 10px;
+    padding: 6px 12px;
+    min-height: 30px;
+    font-weight: bold;
+}
+
+QPushButton:hover {
+    background-color: #2980b9;
+}
+
+QLineEdit, QTextEdit, QComboBox {
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 4px 8px;
+    background-color: white;
+}
+
+/* Scrollbars */
+QScrollBar:vertical, QScrollBar:horizontal {
+    background: transparent;
+    width: 8px;
+    height: 8px;
+}
+
+QScrollBar::handle {
+    background: #bdc3c7;
+    border-radius: 4px;
+}

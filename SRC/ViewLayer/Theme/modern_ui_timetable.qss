@@ -1,0 +1,280 @@
+/* Timetable Page Specific Styles */
+QFrame#TimetableGrid {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 10px;
+}
+
+QLabel.TimeSlotLabel {
+    background-color: #ffffff;
+    border-bottom: 1px solid #dee2e6;
+    padding: 4px;
+    font-weight: bold;
+    text-align: center;
+}
+
+QLabel.TimetableHeaderLabel {
+    background-color: #e9ecef;
+    border: 1px solid #dee2e6;
+    padding: 6px;
+    font-weight: bold;
+    text-align: center;
+}
+
+QLabel.CourseCell {
+    border-radius: 8px;
+    padding: 4px;
+    color: #2c3e50;
+    font-size: 13px;
+}
+
+QLabel.CourseCell[courseType="lecture"] {
+    background-color: #ffe4e4;
+}
+
+QLabel.CourseCell[courseType="lab"] {
+    background-color: #ffffef;
+}
+
+QLabel.CourseCell[courseType="exercise"] {
+    background-color: #e8ffff;
+}
+
+QLabel.CourseCell:hover {
+    background-color: #f1f3f4;
+    border: 1px solid #adb5bd;
+}
+
+/* Main Window Styling */
+QMainWindow {
+    background-color: #f5f5f5; /* timetable_bg */
+    font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+/* Timetable Grid Container */
+QWidget#timetableGrid,
+QWidget#compactTimetableGrid {
+    background-color: #ffffff; /* white */
+    border: 2px solid #cccccc; /* timetable_border */
+    border-radius: 12px;
+    padding: 10px;
+}
+
+/* Header Cells */
+QFrame#dayHeader {
+    background-color: #e0e0e0; /* timetable_header */
+    border: 2px solid #007bff; /* primary */
+    border-radius: 8px;
+    margin: 1px;
+}
+
+QLabel#dayHeaderLabel {
+    color: #333333; /* dark */
+    font-size: 12px;
+    font-weight: bold;
+    padding: 5px;
+}
+
+/* Time Column Cells */
+QFrame#timeCell {
+    background-color: #e0e0e0; /* timetable_header */
+    border: 2px solid #6c757d; /* secondary */
+    border-radius: 8px;
+    margin: 1px;
+}
+
+QLabel#timeCellLabel {
+    color: #333333; /* dark */
+    font-size: 11px;
+    font-weight: bold;
+    padding: 5px;
+}
+
+/* Empty Cells */
+QFrame#emptyCell {
+    background-color: #ffffff; /* white */
+    border: 1px solid #cccccc; /* timetable_border */
+    border-radius: 6px;
+    margin: 1px;
+}
+
+/* Course Cells by Type */
+QFrame#lectureCell {
+    background-color: #ffe4e4;; /* lecture */
+    border: 2px solid #ffcccc;
+    border-radius: 8px;
+    margin: 1px;
+}
+
+QFrame#labCell {
+    background-color: #ffffcc; /* lab */
+    border: 2px solid #ffffcc;
+    border-radius: 8px;
+    margin: 1px;
+}
+
+QFrame#exerciseCell {
+    background-color: #e0f7fa; /* exercise */
+    border: 2px solid #ccffff;
+    border-radius: 8px;
+    margin: 1px;
+}
+
+QFrame#defaultCell {
+    background-color: #f8f9fa; /* light */
+    border: 2px solid #6c757d; /* gray */
+    border-radius: 8px;
+    margin: 1px;
+}
+
+/* Course Cell Labels */
+QLabel#courseNameLabel,
+QLabel#courseCellLabel {
+    color:rgb(235, 191, 191); /* dark */
+    font-size: 10px;
+    font-weight: bold;
+    padding: 2px;
+}
+
+/* Hover Effects for Course Cells */
+QFrame#lectureCell:hover {
+    background-color: #ffcdd2; /* adjusted lecture */
+    border-color: #ff9999;
+}
+
+QFrame#labCell:hover {
+    background-color: #fff9c4; /* adjusted lab */
+    border-color: #ffff99;
+}
+
+QFrame#exerciseCell:hover {
+    background-color: #b2ebf2; /* adjusted exercise */
+    border-color: #99ffff;
+}
+
+QFrame#defaultCell:hover {
+    background-color: #e2e6ea; /* adjusted light */
+    border-color: #007bff; /* primary */
+}
+
+/* Navigation Frame */
+QFrame#navFrame {
+    background-color: #ffffff; /* white */
+    border: 2px solid #cccccc; /* timetable_border */
+    border-radius: 12px;
+    padding: 15px;
+    margin: 5px;
+}
+
+/* Navigation Buttons */
+QPushButton#backButton {
+    background-color: #17a2b8; /* info */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 12px;
+    padding: 10px 15px;
+    min-height: 20px;
+}
+
+QPushButton#backButton:hover {
+    background-color: #138496; /* adjusted info */
+}
+
+QPushButton#backButton:pressed {
+    background-color: #117a8b; /* further adjusted info */
+}
+
+QPushButton#navButton {
+    background-color: #007bff; /* primary */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 11px;
+    padding: 8px 12px;
+    min-height: 20px;
+}
+
+QPushButton#navButton:hover {
+    background-color: #0069d9; /* adjusted primary */
+}
+
+QPushButton#navButton:pressed {
+    background-color: #005cbf; /* further adjusted primary */
+}
+
+QPushButton#exportButton {
+    background-color: #28a745; /* success */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 11px;
+    padding: 8px 12px;
+    min-height: 20px;
+}
+
+QPushButton#exportButton:hover {
+    background-color: #218838; /* adjusted success */
+}
+
+QPushButton#exportButton:pressed {
+    background-color: #1e7e34; /* further adjusted success */
+}
+
+/* Title Label */
+QLabel#titleLabel {
+    color: #333333; /* dark */
+    font-size: 16px;
+    font-weight: bold;
+    padding: 5px 10px;
+    background-color: #e0e0e0; /* timetable_header */
+    border-radius: 6px;
+    border: 1px solid #cccccc; /* timetable_border */
+}
+
+/* No Data Label */
+QLabel#noDataLabel {
+    color: #6c757d; /* gray */
+    font-size: 18px;
+    font-weight: 500;
+    padding: 40px;
+    background-color: #ffffff; /* white */
+    border: 2px dashed #cccccc; /* timetable_border */
+    border-radius: 12px;
+}
+
+/* Scroll Area */
+QScrollArea#scrollArea {
+    border: 2px solid #cccccc; /* timetable_border */
+    border-radius: 12px;
+    background-color: #ffffff; /* white */
+}
+
+QScrollArea#scrollArea QScrollBar:vertical {
+    background-color: #f5f5f5; /* timetable_bg */
+    width: 12px;
+    border-radius: 6px;
+}
+
+QScrollArea#scrollArea QScrollBar::handle:vertical {
+    background-color: #6c757d; /* gray */
+    border-radius: 6px;
+    min-height: 20px;
+}
+
+QScrollArea#scrollArea QScrollBar::handle:vertical:hover {
+    background-color: #007bff; /* primary */
+}
+
+/* Tooltips */
+QToolTip {
+    background-color: #333333; /* dark */
+    color: #ffffff; /* white */
+    border: 1px solid #6c757d; /* gray */
+    border-radius: 4px;
+    padding: 5px;
+    font-size: 10px;
+}
