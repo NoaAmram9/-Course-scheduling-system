@@ -12,11 +12,6 @@ class TimeTable:
     def courses(self, value):
         self._courses = value
     
-    @property
-    def preferences(self):
-        return self._preferences
-    
-    @Preferences.setter
-    def Preferences(self, value):
-        self._preferences=value
+
+   
     
