@@ -10,7 +10,8 @@ from SRC.ViewLayer.Theme.ModernUI import ModernUI
 from SRC.ViewLayer.Logic.TimeTable import map_courses_to_slots, DAYS, HOURS
 from SRC.ViewLayer.Layout.TimeTable import draw_timetable_grid
 from SRC.ViewLayer.Logic.Pdf_Exporter import generate_pdf_from_data
-
+from SRC.ViewLayer.Layout.PreferencesMenu import PreferencesMenu
+from SRC.ViewLayer.Logic.PreferencesSorter import sort_timetables
 
 class TimetablesPage:
     def __init__(self, root, controller, go_back_callback=None):
@@ -75,6 +76,10 @@ class TimetablesPage:
             nav_frame, "Export PDF", self.export_pdf_dialog,
             bg_color=ModernUI.COLORS["dark"], width=100)
         self.export_button.grid(row=0, column=6, padx=10)
+        
+        self.dropdown = PreferencesMenu(nav_frame, self.apply_display_sort)
+        
+        self.dropdown.grid(row=1, column=3, padx=10)
     
     def create_timetable_container(self):
         """Create a container for the timetable with a fixed header row"""
@@ -306,3 +311,10 @@ class TimetablesPage:
 
         except Exception as e:
             messagebox.showerror("Error", f"Failed to export PDF: {e}")
+
+    def apply_display_sort(self, display_option, sort_order):
+        print("display by: ", display_option, "in: ", sort_order)
+        # כאן אפשר למיין או לשנות תצוגה בהתאם לשתי הבחירות
+        boolean_order = sort_order == "Ascending"
+        sort_timetables(self.options, display_option, boolean_order)
+        self.update_view()
