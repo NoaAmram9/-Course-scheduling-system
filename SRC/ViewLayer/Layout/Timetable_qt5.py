@@ -177,13 +177,13 @@ class TimetableGridWidget(QWidget):
     def create_empty_header_cell(self):
         cell = QFrame()  # Create a new QFrame
         cell.setObjectName("emptyCell")  # Set object name for QSS styling
-        cell.setFixedSize(180, 80)  # Set a fixed size for this cell
+        cell.setFixedSize(150, 90)  # Set a fixed size for this cell
         return cell
 
     def create_day_header_cell(self, day):
         cell = QFrame()  # Create a new QFrame
         cell.setObjectName("dayHeader")  # Set object name for QSS styling
-        cell.setFixedSize(180, 80)  # Set a fixed size
+        cell.setFixedSize(150, 90)  # Set a fixed size
 
         # Use a QVBoxLayout to center the label within the frame
         layout = QVBoxLayout()
@@ -211,7 +211,7 @@ class TimetableGridWidget(QWidget):
         """
         cell = QFrame()  # Create a new QFrame
         cell.setObjectName("timeCell")  # Set object name for QSS styling
-        cell.setFixedSize(180, 80)  # Set a fixed size
+        cell.setFixedSize(150, 90)  # Set a fixed size
 
         # Use a QVBoxLayout to center the label within the frame
         layout = QVBoxLayout()
@@ -228,7 +228,7 @@ class TimetableGridWidget(QWidget):
 
     def create_course_cell(self, course_data):
         cell = QFrame()  # Create a new QFrame
-        cell.setFixedSize(180, 80)  # Set a fixed size for the cell
+        cell.setFixedSize(150, 90)  # Set a fixed size for the cell
 
         layout = QVBoxLayout()  # Layout for the cell's content
         layout.setContentsMargins(6, 6, 6, 6) # Margins inside the cell

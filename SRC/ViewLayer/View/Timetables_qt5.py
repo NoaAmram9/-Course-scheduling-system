@@ -84,6 +84,7 @@ class TimetablesPageQt5(QMainWindow):
         
         # Create status bar
         TimetableUIComponents.create_status_bar(main_layout, self)
+        self.setStyleSheet(ModernUIQt5.get_timetable_stylesheet())
 
     def create_timetable_container(self, parent_layout):
         """Create scrollable timetable container"""
@@ -107,6 +108,7 @@ class TimetablesPageQt5(QMainWindow):
         self.no_data_label.setObjectName("noDataLabel")
         self.no_data_label.setAlignment(Qt.AlignCenter)
         parent_layout.addWidget(self.no_data_label)
+        self.setStyleSheet(ModernUIQt5.get_timetable_stylesheet())
     
     
     ############קריאה ל-Worker - מה שמציג את המערכות############

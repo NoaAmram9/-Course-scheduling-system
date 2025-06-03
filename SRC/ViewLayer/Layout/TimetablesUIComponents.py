@@ -2,6 +2,8 @@
 
 from PyQt5.QtWidgets import QFrame, QVBoxLayout, QHBoxLayout, QPushButton, QLabel, QProgressBar
 from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QPixmap 
+from SRC.ViewLayer.Theme.ModernUIQt5 import ModernUIQt5
 
 class TimetableUIComponents:
 
@@ -32,6 +34,7 @@ class TimetableUIComponents:
         loading_layout.addWidget(instance.progress_bar)
 
         loading_frame.setLayout(loading_layout)
+        
         instance.loading_frame = loading_frame
         parent.addWidget(loading_frame)
 
@@ -78,50 +81,71 @@ class TimetableUIComponents:
 
         top_nav.addStretch()
 
+        # Export + Jump Buttons Group (all in the same row)
+        export_jump_group = QHBoxLayout()
+
         # Export button
         instance.export_button = QPushButton("📄 Export PDF")
         instance.export_button.setObjectName("exportButton")
         instance.export_button.setFixedSize(120, 40)
         instance.export_button.clicked.connect(instance.export_pdf_dialog)
-        top_nav.addWidget(instance.export_button)
+        export_jump_group.addWidget(instance.export_button)
 
-        # Bottom row - auto-display controls
-        auto_nav = QHBoxLayout()
-        auto_nav.addStretch()
-
+        # Jump Label
         jump_label = QLabel("Jump to:")
         jump_label.setObjectName("jumpLabel")
-        auto_nav.addWidget(jump_label)
+        jump_label.setFixedHeight(40)
+        export_jump_group.addWidget(jump_label)
 
+        # Jump First
         instance.jump_first_button = QPushButton("⏮ First")
         instance.jump_first_button.setObjectName("jumpButton")
         instance.jump_first_button.setFixedSize(70, 30)
         instance.jump_first_button.clicked.connect(instance.jump_to_first)
-        auto_nav.addWidget(instance.jump_first_button)
+        export_jump_group.addWidget(instance.jump_first_button)
 
+        # Jump Last
         instance.jump_last_button = QPushButton("⏭ Last")
         instance.jump_last_button.setObjectName("jumpButton")
         instance.jump_last_button.setFixedSize(70, 30)
         instance.jump_last_button.clicked.connect(instance.jump_to_last)
-        auto_nav.addWidget(instance.jump_last_button)
+        export_jump_group.addWidget(instance.jump_last_button)
 
+        top_nav.addLayout(export_jump_group)
+
+        # Final assembly
         nav_layout.addLayout(top_nav)
-        nav_layout.addLayout(auto_nav)
         nav_frame.setLayout(nav_layout)
         parent_layout.addWidget(nav_frame)
+  
     @staticmethod
     def create_status_bar(parent_layout, instance):
         """Create status bar with additional information"""
         status_frame = QFrame()
         status_frame.setObjectName("statusFrame")
         status_layout = QHBoxLayout()
+        status_layout.setContentsMargins(10, 5, 10, 5)
+        status_layout.setSpacing(10)
 
+        # Left label
         instance.status_label = QLabel("Ready")
         instance.status_label.setObjectName("statusLabel")
         status_layout.addWidget(instance.status_label)
 
         status_layout.addStretch()
 
+        # Logo in the center
+        logo_label = QLabel()
+        logo_label.setObjectName("logoLabel")
+        logo_pixmap = QPixmap("Data/logo.png")  
+        logo_pixmap = logo_pixmap.scaled(80, 80, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+        logo_label.setPixmap(logo_pixmap)
+        logo_label.setAlignment(Qt.AlignCenter)
+        status_layout.addWidget(logo_label)
+
+        status_layout.addStretch()
+
+        # Right loading rate
         instance.loading_rate_label = QLabel("")
         instance.loading_rate_label.setObjectName("loadingRateLabel")
         status_layout.addWidget(instance.loading_rate_label)

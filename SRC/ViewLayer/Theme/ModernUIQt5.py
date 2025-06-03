@@ -14,7 +14,7 @@ class ModernUIQt5:
         "white": "#ffffff",
         "black": "#000000",
         "gray": "#95a5a6",
-        "selected": "#d5f5e3",
+        "selected": "#D9B382",
         "lecture": "#ffe4e4",
         "lab": "#ffffef",
         "exercise": "#e8ffff",
@@ -65,19 +65,26 @@ class ModernUIQt5:
         return base + "\n" + selection
     
     
-        
     @staticmethod
     def get_timetable_stylesheet():
         base = ModernUIQt5._load_stylesheet("modern_ui_base.qss")
         timetable = ModernUIQt5._load_stylesheet("modern_ui_timetable.qss")
-        return base + "\n" + timetable
+        navbar = ModernUIQt5._load_stylesheet("NavBars_ui.qss")
+        return base + "\n" + timetable + "\n" + navbar
+
+    @staticmethod
+    def get_navbars_stylesheet():
+        """Load and combine base + selection styles"""
+        base = ModernUIQt5._load_stylesheet("modern_ui_base.qss")
+        navbar = ModernUIQt5._load_stylesheet("NavBars_ui.qss")
+        return base + "\n" + navbar
     
     @staticmethod
     def _load_stylesheet(filename):
         """Load a QSS file from the theme folder"""
         try:
             path = os.path.join(os.path.dirname(__file__), filename)
-            with open(path, "r") as f:
+            with open(path, "r", encoding="utf-8") as f:
                 return f.read()
         except Exception as e:
             print(f"Failed to load {filename}: {e}")

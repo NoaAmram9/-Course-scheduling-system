@@ -1,281 +1,132 @@
-/* Timetable Page Specific Styles */
-QFrame#TimetableGrid {
-    background-color: #f8f9fa;
-    border: 1px solid #dee2e6;
-    border-radius: 10px;
-}
-
-QLabel.TimeSlotLabel {
-    background-color: #ffffff;
-    border-bottom: 1px solid #dee2e6;
-    padding: 4px;
-    font-weight: bold;
-    text-align: center;
-}
-
-QLabel.TimetableHeaderLabel {
-    background-color: #e9ecef;
-    border: 1px solid #dee2e6;
-    padding: 6px;
-    font-weight: bold;
-    text-align: center;
-}
-
-QLabel.CourseCell {
-    border-radius: 8px;
-    padding: 4px;
-    color:rgb(149, 181, 213);
-    font-size: 13px;
-}
-
-QLabel.CourseCell[courseType="lecture"] {
-    background-color: #ffe4e4;
-}
-
-QLabel.CourseCell[courseType="lab"] {
-    background-color: #ffffef;
-}
-
-QLabel.CourseCell[courseType="exercise"] {
-    background-color: #e8ffff;
-}
-
-QLabel.CourseCell:hover {
-    background-color: #f1f3f4;
-    border: 1px solid #adb5bd;
-}
-
-/* Main Window Styling */
+/* בסיס */
 QMainWindow {
-    background-color: #f5f5f5; /* timetable_bg */
-    font-family: 'Segoe UI', Arial, sans-serif;
-}
-
-/* Timetable Grid Container */
-QWidget#timetableGrid,
-QWidget#compactTimetableGrid {
-    background-color: #ffffff; /* white */
-    border: 2px solid #cccccc; /* timetable_border */
-    border-radius: 12px;
-    padding: 10px;
-}
-
-/* Header Cells */
-QFrame#dayHeader {
-    background-color: #e0e0e0; /* timetable_header */
-    border: 2px solidrgb(234, 158, 195); /* primary */
-    border-radius: 8px;
-    margin: 1px;
-}
-
-QLabel#dayHeaderLabel {
-    color: #333333; /* dark */
-    font-size: 12px;
-    font-weight: bold;
-    padding: 5px;
-}
-
-/* Time Column Cells */
-QFrame#timeCell {
-    background-color: #e0e0e0; /* timetable_header */
-    border: 2px solidrgb(254, 178, 250); /* secondary */
-    border-radius: 8px;
-    margin: 1px;
-}
-
-QLabel#timeCellLabel {
-    color:rgb(41, 36, 36); /* dark */
-    font-size: 11px;
-    font-weight: bold;
-    padding: 3px;
-}
-
-/* Empty Cells */
-QFrame#emptyCell {
-    background-color: #ffffff; /* white */
-    border: 1px solid #cccccc; /* timetable_border */
+    background-color: #f9f9fb;
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 14px;
+    color: #333;
     border-radius: 6px;
-    margin: 1px;
+    padding: 6px;
 }
 
-/* Course Cells by Type */
-QFrame#lectureCell {
-    background-color: #ffe4e4;; /* lecture */
-    border: 2px solid #ffcccc;
+/* סרגל ניווט עליון */
+#navBar {
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 12px;
+    border: 1px solid #ddd;
+}
+
+#titleLabel {
+    font-size: 18px;
+    font-weight: bold;
+    color: #2a2a2a;
+}
+
+/* אזור תצוגה גלילה */
+#scrollArea {
+    border: none;
+    background: transparent;
+}
+
+/* מיכל לוחות זמנים */
+#timetableWidgetContainer {
+    background-color: #ffffff;
+    border-radius: 16px;
+    border: 1px solid #ddd;
+
+}
+
+/* תווית שאין נתונים */
+#noDataLabel {
+    color: #777;
+    font-style: italic;
+    padding: 30px;
+    font-size: 16px;
+}
+
+/* סרגל טעינה */
+#loadingFrame {
+    background-color: #f2f2f2;
+    border-radius: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+}
+
+/* סרגל התקדמות */
+QProgressBar {
+    height: 16px;
     border-radius: 8px;
-    margin: 1px;
+    background-color: #e6e6e6;
+}
+
+QProgressBar::chunk {
+    background-color: #4a90e2;
+    border-radius: 8px;
+}
+
+/* כפתורים כלליים */
+QPushButton {
+    background-color: #4a90e2;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-weight: bold;
+}
+
+QPushButton:hover {
+    background-color: #357ABD;
+}
+
+QPushButton:pressed {
+    background-color: #2C5FA3;
+}
+
+QPushButton[disabled="true"] {
+    background-color: #cccccc;
+    color: #888;
+}
+
+/* כפתור עצור/הפעל */
+#autoDisplayButton {
+    background-color: #7ed6df;
+}
+
+#autoDisplayButton:hover {
+    background-color: #63cdda;
+}
+
+/* תוויות סטטוס */
+#statusLabel {
+    font-size: 14px;
+    color: #555;
+}
+
+#progressLabel, #loadingRateLabel {
+    font-size: 12px;
+    color: #888;
+}
+QFrame#lectureCell {
+    background-color: #EFD8C5; /* בז' חם, טבעי */
+    border-radius: 10px;
+    border: 1px solid #C9A66B; /* חום מדברי בינוני */
 }
 
 QFrame#labCell {
-    background-color: #ffffcc; /* lab */
-    border: 2px solid #ffffcc;
-    border-radius: 8px;
-    margin: 1px;
+    background-color: #E6C1A5; /* אפרסק בהיר / כתום מדברי */
+    border-radius: 10px;
+    border: 1px solid #B1774F; /* חום־כתום רך */
 }
 
 QFrame#exerciseCell {
-    background-color: #e0f7fa; /* exercise */
-    border: 2px solid #ccffff;
-    border-radius: 8px;
-    margin: 1px;
+    background-color: #D9B382; /* חמרה מדברית */
+    border-radius: 10px;
+    border: 1px solid #996633; /* חום כהה קלאסי */
 }
 
 QFrame#defaultCell {
-    background-color: #f8f9fa; /* light */
-    border: 2px solidrgba(202, 88, 174, 0.53); /* gray */
-    border-radius: 8px;
-    margin: 1px;
-}
-
-/* Course Cell Labels */
-QLabel#courseNameLabel,
-QLabel#courseCellLabel {
-    color:rgb(53, 51, 51); /* dark */
-    font-size: 10px;
-    font-weight: bold;
-    padding: 2px;
-}
-
-/* Hover Effects for Course Cells */
-QFrame#lectureCell:hover {
-    background-color: #ffcdd2; /* adjusted lecture */
-    border-color: #ff9999;
-}
-
-QFrame#labCell:hover {
-    background-color: #fff9c4; /* adjusted lab */
-    border-color: #ffff99;
-}
-
-QFrame#exerciseCell:hover {
-    background-color: #b2ebf2; /* adjusted exercise */
-    border-color: #99ffff;
-}
-
-QFrame#defaultCell:hover {
-    background-color: #e2e6ea; /* adjusted light */
-    border-color: #007bff; /* primary */
-}
-
-/* Navigation Frame */
-QFrame#navFrame {
-    background-color: #ffffff; /* white */
-    border: 2px solid #cccccc; /* timetable_border */
-    border-radius: 12px;
-    padding: 15px;
-    margin: 5px;
-}
-
-/* Navigation Buttons */
-QPushButton#backButton {
-    background-color: #17a2b8; /* info */
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-weight: bold;
-    font-size: 12px;
-    padding: 10px 15px;
-    min-height: 20px;
-}
-
-QPushButton#backButton:hover {
-    background-color: #138496; /* adjusted info */
-}
-
-QPushButton#backButton:pressed {
-    background-color: #117a8b; /* further adjusted info */
-}
-
-QPushButton#navButton {
-    background-color: #007bff; /* primary */
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-weight: bold;
-    font-size: 11px;
-    padding: 8px 12px;
-    min-height: 20px;
-}
-
-QPushButton#navButton:hover {
-    background-color: #0069d9; /* adjusted primary */
-}
-
-QPushButton#navButton:pressed {
-    background-color: #005cbf; /* further adjusted primary */
-}
-
-QPushButton#exportButton {
-    background-color: #28a745; /* success */
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-weight: bold;
-    font-size: 11px;
-    padding: 8px 12px;
-    min-height: 20px;
-}
-
-QPushButton#exportButton:hover {
-    background-color: #218838; /* adjusted success */
-}
-
-QPushButton#exportButton:pressed {
-    background-color: #1e7e34; /* further adjusted success */
-}
-
-/* Title Label */
-QLabel#titleLabel {
-    color: #333333; /* dark */
-    font-size: 16px;
-    font-weight: bold;
-    padding: 5px 10px;
-    background-color: #e0e0e0; /* timetable_header */
-    border-radius: 6px;
-    border: 1px solid #cccccc; /* timetable_border */
-}
-
-/* No Data Label */
-QLabel#noDataLabel {
-    color: #6c757d; /* gray */
-    font-size: 18px;
-    font-weight: 500;
-    padding: 40px;
-    background-color: #ffffff; /* white */
-    border: 2px dashed #cccccc; /* timetable_border */
-    border-radius: 12px;
-}
-
-/* Scroll Area */
-QScrollArea#scrollArea {
-    border: 2px solid #cccccc; /* timetable_border */
-    border-radius: 12px;
-    background-color: #ffffff; /* white */
-}
-
-QScrollArea#scrollArea QScrollBar:vertical {
-    background-color: #f5f5f5; /* timetable_bg */
-    width: 12px;
-    border-radius: 6px;
-}
-
-QScrollArea#scrollArea QScrollBar::handle:vertical {
-    background-color: #6c757d; /* gray */
-    border-radius: 6px;
-    min-height: 20px;
-}
-
-QScrollArea#scrollArea QScrollBar::handle:vertical:hover {
-    background-color: #007bff; /* primary */
-}
-
-/* Tooltips */
-QToolTip {
-    background-color: #333333; /* dark */
-    color: #ffffff; /* white */
-    border: 1px solid #6c757d; /* gray */
-    border-radius: 4px;
-    padding: 5px;
-    font-size: 10px;
+    background-color: #F5F0E6; /* בז' בהיר מאוד */
+    border-radius: 10px;
+    border: 1px solid #BFAF9B; /* בז' מדברי רגוע */
 }
 
