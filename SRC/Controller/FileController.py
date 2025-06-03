@@ -88,7 +88,7 @@ class FileController:
             # Get the progressive generator (no limit)
             schedule_generator = schedule_service.generate_schedules_progressive(
                 selected_courses_info,  
-                limit=None  # עכשיו זה עובד כי תיקנו את הפונקציה
+                limit=None # No limit, to get all possible schedules
             )
             
             # Collect into batches
@@ -107,7 +107,7 @@ class FileController:
                             
         except Exception as e:
             print(f"Error in batch generator: {str(e)}")
-            return []  # החזר רשימה ריקה במקום None
+            return []  # החזר רשימה ריקה במקום 
 
        
     def handle_exit(self):

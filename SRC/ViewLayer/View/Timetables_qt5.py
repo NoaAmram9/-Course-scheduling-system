@@ -21,7 +21,7 @@ from SRC.ViewLayer.Layout.Timetable_qt5 import TimetableGridWidget
 from SRC.ViewLayer.Logic.Pdf_Exporter import generate_pdf_from_data
 from SRC.ViewLayer.Theme.ModernUIQt5 import ModernUIQt5
 from SRC.ViewLayer.View.TimeTableWorker import TimetableWorker
-
+from SRC.ViewLayer.Layout.TimetablesUIComponents import TimetableUIComponents
 
 class TimetablesPageQt5(QMainWindow):
     """
@@ -31,10 +31,11 @@ class TimetablesPageQt5(QMainWindow):
     # Custom signals
     new_timetable_ready = pyqtSignal()
     
-    def __init__(self, controller, go_back_callback=None):
+    def __init__(self, controller, go_back_callback):
         super().__init__()
         self.controller = controller
         self.go_back_callback = go_back_callback
+        self._is_exiting_from_back = False
         
         # Timetable data management
         self.all_options = []  # All loaded timetables
@@ -71,168 +72,18 @@ class TimetablesPageQt5(QMainWindow):
         main_layout = QVBoxLayout(central_widget)
         main_layout.setContentsMargins(15, 15, 15, 15)
         main_layout.setSpacing(20)
-
         # Create loading indicator with progress
-        self.create_enhanced_loading_indicator(main_layout)
-        
+        TimetableUIComponents.create_enhanced_nav_bar(main_layout, self)
+         
         # Create navigation bar with auto-display controls
-        self.create_enhanced_nav_bar(main_layout)
+        TimetableUIComponents.create_enhanced_loading_indicator(main_layout, self)
         
         # Create timetable container
         self.create_timetable_container(main_layout)
+    
         
         # Create status bar
-        self.create_status_bar(main_layout)
-    
-    def create_enhanced_loading_indicator(self, parent_layout):
-        """Create enhanced loading progress indicator"""
-        self.loading_frame = QFrame()
-        self.loading_frame.setObjectName("loadingFrame")
-        loading_layout = QVBoxLayout()
-        
-        # Top row - status and controls
-        top_row = QHBoxLayout()
-        
-        self.loading_label = QLabel("Loading timetables...")
-        self.loading_label.setObjectName("loadingLabel")
-        
-        self.progress_label = QLabel("0 options loaded")
-        self.progress_label.setObjectName("progressLabel")
-        
-        # Loading control buttons
-        self.pause_button = QPushButton("⏸ Pause Loading")
-        self.pause_button.setObjectName("controlButton")
-        self.pause_button.setFixedSize(120, 40)
-        self.pause_button.clicked.connect(self.toggle_loading)
-        
-        self.stop_button = QPushButton("⏹ Stop Loading")
-        self.stop_button.setObjectName("controlButton")
-        self.stop_button.setFixedSize(120, 40)
-        self.stop_button.clicked.connect(self.stop_background_loading)
-        
-        top_row.addWidget(self.loading_label)
-        top_row.addStretch()
-        top_row.addWidget(self.progress_label)
-        top_row.addWidget(self.pause_button)
-        top_row.addWidget(self.stop_button)
-        
-        # Progress bar
-        self.progress_bar = QProgressBar()
-        self.progress_bar.setObjectName("progressBar")
-        self.progress_bar.setVisible(False)  # Hidden until we know total count
-        
-        loading_layout.addLayout(top_row)
-        loading_layout.addWidget(self.progress_bar)
-        
-        self.loading_frame.setLayout(loading_layout)
-        parent_layout.addWidget(self.loading_frame)
-
-    def create_enhanced_nav_bar(self, parent_layout):
-        """Create enhanced navigation bar with auto-display controls"""
-        nav_frame = QFrame()
-        nav_frame.setObjectName("navFrame")
-        nav_layout = QVBoxLayout()
-        nav_layout.setSpacing(10)
-        nav_layout.setContentsMargins(10, 10, 10, 10)
-
-        # Top row - main navigation
-        top_nav = QHBoxLayout()
-        
-        # Back button
-        self.back_button = QPushButton("← Back to Course Selection")
-        self.back_button.setObjectName("backButton")
-        self.back_button.setFixedSize(200, 40)
-        self.back_button.clicked.connect(self.go_back)
-        top_nav.addWidget(self.back_button)
-
-        top_nav.addStretch()
-
-        # Manual navigation buttons
-        self.prev_button = QPushButton("◄ Previous") 
-        self.prev_button.setObjectName("navButton")
-        self.prev_button.setFixedSize(100, 40)
-        self.prev_button.clicked.connect(self.show_prev)
-        top_nav.addWidget(self.prev_button)
-
-        # Title label
-        self.title_label = QLabel("Loading...")
-        self.title_label.setObjectName("titleLabel")
-        self.title_label.setAlignment(Qt.AlignCenter)
-        self.title_label.setMinimumWidth(300)
-        top_nav.addWidget(self.title_label)
-
-        # Next button
-        self.next_button = QPushButton("Next ►")
-        self.next_button.setObjectName("navButton")
-        self.next_button.setFixedSize(100, 40)
-        self.next_button.clicked.connect(self.show_next)
-        top_nav.addWidget(self.next_button)
-
-        top_nav.addStretch()
-
-        # Export button
-        self.export_button = QPushButton("📄 Export PDF")
-        self.export_button.setObjectName("exportButton")
-        self.export_button.setFixedSize(120, 40)
-        self.export_button.clicked.connect(self.export_pdf_dialog)
-        top_nav.addWidget(self.export_button)
-
-        # Bottom row - auto-display controls
-        auto_nav = QHBoxLayout()
-        
-        # Auto display toggle
-        self.auto_display_button = QPushButton("▶ Start Auto Display")
-        self.auto_display_button.setObjectName("autoButton")
-        self.auto_display_button.setFixedSize(150, 35)
-        self.auto_display_button.clicked.connect(self.toggle_auto_display)
-        auto_nav.addWidget(self.auto_display_button)
-        
-        # Speed controls
-        speed_label = QLabel("Speed:")
-        speed_label.setObjectName("speedLabel")
-        auto_nav.addWidget(speed_label)
-        
-        self.speed_slow_button = QPushButton("Slow (5s)")
-        self.speed_slow_button.setObjectName("speedButton")
-        self.speed_slow_button.setFixedSize(80, 30)
-        self.speed_slow_button.clicked.connect(lambda: self.set_display_speed(5000))
-        auto_nav.addWidget(self.speed_slow_button)
-        
-        self.speed_normal_button = QPushButton("Normal (3s)")
-        self.speed_normal_button.setObjectName("speedButton")
-        self.speed_normal_button.setFixedSize(90, 30)
-        self.speed_normal_button.clicked.connect(lambda: self.set_display_speed(3000))
-        auto_nav.addWidget(self.speed_normal_button)
-        
-        self.speed_fast_button = QPushButton("Fast (1s)")
-        self.speed_fast_button.setObjectName("speedButton")
-        self.speed_fast_button.setFixedSize(80, 30)
-        self.speed_fast_button.clicked.connect(lambda: self.set_display_speed(1000))
-        auto_nav.addWidget(self.speed_fast_button)
-        
-        auto_nav.addStretch()
-        
-        # Jump to controls
-        jump_label = QLabel("Jump to:")
-        jump_label.setObjectName("jumpLabel")
-        auto_nav.addWidget(jump_label)
-        
-        self.jump_first_button = QPushButton("⏮ First")
-        self.jump_first_button.setObjectName("jumpButton")
-        self.jump_first_button.setFixedSize(70, 30)
-        self.jump_first_button.clicked.connect(self.jump_to_first)
-        auto_nav.addWidget(self.jump_first_button)
-        
-        self.jump_last_button = QPushButton("⏭ Last")
-        self.jump_last_button.setObjectName("jumpButton")
-        self.jump_last_button.setFixedSize(70, 30)
-        self.jump_last_button.clicked.connect(self.jump_to_last)
-        auto_nav.addWidget(self.jump_last_button)
-
-        nav_layout.addLayout(top_nav)
-        nav_layout.addLayout(auto_nav)
-        nav_frame.setLayout(nav_layout)
-        parent_layout.addWidget(nav_frame)
+        TimetableUIComponents.create_status_bar(main_layout, self)
 
     def create_timetable_container(self, parent_layout):
         """Create scrollable timetable container"""
@@ -257,25 +108,8 @@ class TimetablesPageQt5(QMainWindow):
         self.no_data_label.setAlignment(Qt.AlignCenter)
         parent_layout.addWidget(self.no_data_label)
     
-    def create_status_bar(self, parent_layout):
-        """Create status bar with additional information"""
-        status_frame = QFrame()
-        status_frame.setObjectName("statusFrame")
-        status_layout = QHBoxLayout()
-        
-        self.status_label = QLabel("Ready")
-        self.status_label.setObjectName("statusLabel")
-        status_layout.addWidget(self.status_label)
-        
-        status_layout.addStretch()
-        
-        self.loading_rate_label = QLabel("")
-        self.loading_rate_label.setObjectName("loadingRateLabel")
-        status_layout.addWidget(self.loading_rate_label)
-        
-        status_frame.setLayout(status_layout)
-        parent_layout.addWidget(status_frame)
     
+    ############קריאה ל-Worker - מה שמציג את המערכות############
     def start_background_loading(self):
         """Start the background worker thread"""
         if self.worker is not None:
@@ -335,9 +169,9 @@ class TimetablesPageQt5(QMainWindow):
     
     def on_new_batch_loaded(self, new_batch):
         """Handle new batch of timetable options loaded by worker"""
-        if not new_batch:  # אם הבאצ' ריק, אל תעשה כלום
+        if not new_batch:  # If no new options, do nothing
             return
-            
+        
         self.all_options.extend(new_batch)
         
         # If this is the first batch, show the first timetable
@@ -349,7 +183,7 @@ class TimetablesPageQt5(QMainWindow):
         self.update_button_states()
         self.status_label.setText(f"Loaded {len(self.all_options)} timetables")
         
-        # אם נמצאים במצב auto display ועדיין לא התחלנו, התחל עכשיו
+
         if self.auto_display_enabled and not self.display_timer.isActive():
             self.display_timer.start(self.display_interval)
             
@@ -362,7 +196,7 @@ class TimetablesPageQt5(QMainWindow):
             self.progress_bar.setVisible(True)
             self.progress_label.setText(f"{current} of {total} options loaded")
         else:
-            # אם אין total ידוע, הסתר את ה-progress bar והראה רק מספר
+            # If total is unknown, just show current count
             self.progress_bar.setVisible(False)
             self.progress_label.setText(f"{current} options loaded")
             
@@ -400,33 +234,8 @@ class TimetablesPageQt5(QMainWindow):
         self.loading_frame.hide()
         self.status_label.setText("Loading failed")
     
-    # Auto-display functionality
-    def toggle_auto_display(self):
-        """Toggle automatic sequential display of timetables"""
-        if not self.all_options and not self.is_loading:
-            QMessageBox.information(self, "No Timetables", "No timetables available for auto display.")
-            return
-        
-        if not self.all_options and self.is_loading:
-            QMessageBox.information(self, "Loading", "Waiting for timetables to load. Auto display will start automatically.")
-            return
-        
-        if self.auto_display_enabled:
-            self.stop_auto_display()
-        else:
-            self.start_auto_display()
-    
-    def start_auto_display(self):
-        """Start automatic sequential display"""
-        self.auto_display_enabled = True
-        self.auto_display_button.setText("⏸ Stop Auto Display")
-        self.display_timer.start(self.display_interval)
-        self.status_label.setText("Auto display started")
-        
-        # Disable manual navigation during auto display
-        self.prev_button.setEnabled(False)
-        self.next_button.setEnabled(False)
-    
+
+    #####למחוק
     def stop_auto_display(self):
         """Stop automatic sequential display"""
         self.auto_display_enabled = False
@@ -436,7 +245,7 @@ class TimetablesPageQt5(QMainWindow):
         
         # Re-enable manual navigation
         self.update_button_states()
-    
+    ######למחוק
     def auto_next_timetable(self):
         """Automatically advance to next timetable"""
         if not self.all_options:
@@ -450,26 +259,7 @@ class TimetablesPageQt5(QMainWindow):
         # Update status
         self.status_label.setText(f"Auto display: {self.current_index + 1} of {len(self.all_options)}")
     
-    def set_display_speed(self, interval_ms):
-        """Set the interval for auto display"""
-        self.display_interval = interval_ms
-        if self.auto_display_enabled:
-            self.display_timer.stop()
-            self.display_timer.start(self.display_interval)
-        
-        # Update button styles to show active speed
-        for btn in [self.speed_slow_button, self.speed_normal_button, self.speed_fast_button]:
-            btn.setProperty("active", False)
-            btn.style().unpolish(btn)
-            btn.style().polish(btn)
-        
-        # Mark active button
-        if interval_ms == 5000:
-            self.speed_slow_button.setProperty("active", True)
-        elif interval_ms == 3000:
-            self.speed_normal_button.setProperty("active", True)
-        elif interval_ms == 1000:
-            self.speed_fast_button.setProperty("active", True)
+ 
     
     def jump_to_first(self):
         """Jump to first timetable"""
@@ -571,12 +361,12 @@ class TimetablesPageQt5(QMainWindow):
     
     def go_back(self):
         """Handle back button - stop auto display first"""
-        self.stop_auto_display()
+    
+        self.stop_background_loading()  # עצור טעינה אם יש
         if self.go_back_callback:
             self.go_back_callback()
-        else:
-            self.close()
     
+   
     def export_pdf_dialog(self):
         """Handle PDF export with all current options"""
         if not self.all_options:
@@ -609,7 +399,6 @@ class TimetablesPageQt5(QMainWindow):
                 # Export all loaded options
                 doc = SimpleDocTemplate(file_path, pagesize=landscape(A4))
                 all_elements = []
-
                 for idx, timetable_courses in enumerate(self.all_options):
                     slot_map = map_courses_to_slots(timetable_courses)
                     title = f"Timetable Option {idx + 1}"
@@ -648,34 +437,75 @@ class TimetablesPageQt5(QMainWindow):
         except Exception as e:
             QMessageBox.critical(self, "Export Error", f"Failed to export PDF:\n{str(e)}")
 
-               
+    def handle_back(self):
+        self._is_exiting_from_back = True
+        self.close()  # זה יפעיל את closeEvent
+
+          
+                
+    # def closeEvent(self, event):
+    #     """Handle window close event - stop all background processes"""
+        
+    #     self.stop_background_loading()
+
+    #     # המתן שה-worker יסתיים לפני סגירה
+    #     if self.worker is not None:
+    #         if self.worker.isRunning(): # בדוק אם ה-worker עדיין רץ
+    #             self.worker.stop()      # בקש ממנו לעצור
+    #             if not self.worker.wait(2000): # המתן עד 2 שניות
+    #                 # אם הוא לא סיים תוך 2 שניות, נסה לסיים בכוח
+    #                 print("Worker did not stop gracefully, attempting to terminate.")
+    #                 self.worker.terminate()
+    #                 self.worker.wait(500) # המתנה קצרה לאחר terminate
+
+    #     # הצג תמיד שאלת אישור כאשר לוחצים על "X"
+    #     reply = QMessageBox.question(
+    #             self, 'Exit', 'Are you sure you want to exit?',
+    #             QMessageBox.Yes | QMessageBox.No, QMessageBox.No
+    #         )
+
+    #     if reply == QMessageBox.Yes:
+    #             if hasattr(self.controller, 'handle_exit') and callable(self.controller.handle_exit):
+    #                 self.controller.handle_exit()
+    #             event.accept()
+    #     else:
+    #             self.start_background_loading()  # Restart loading if user cancels
+    #             event.ignore()
                 
     def closeEvent(self, event):
-        """Handle window close event - stop all background processes"""
-        self.stop_auto_display()
+        """Handle window close event - distinguish between Back and X buttons"""
+
+        # אם חזרנו דרך כפתור BACK
+        if getattr(self, "_is_exiting_from_back", False):
+            if self.go_back_callback:
+                self.go_back_callback()
+            event.accept()
+            return  # לא לבצע שום דבר נוסף
+
+        # אחרת - סוגרים דרך X או סגירה רגילה
+
+        # עצור תהליכי רקע
         self.stop_background_loading()
 
         # המתן שה-worker יסתיים לפני סגירה
         if self.worker is not None:
-            if self.worker.isRunning(): # בדוק אם ה-worker עדיין רץ
-                self.worker.stop()      # בקש ממנו לעצור
-                if not self.worker.wait(2000): # המתן עד 2 שניות
-                    # אם הוא לא סיים תוך 2 שניות, נסה לסיים בכוח
+            if self.worker.isRunning():
+                self.worker.stop()
+                if not self.worker.wait(2000):
                     print("Worker did not stop gracefully, attempting to terminate.")
                     self.worker.terminate()
-                    self.worker.wait(500) # המתנה קצרה לאחר terminate
+                    self.worker.wait(500)
 
-        # הצג תמיד שאלת אישור כאשר לוחצים על "X"
+        # הצג תיבת אישור
         reply = QMessageBox.question(
-                self, 'Exit', 'Are you sure you want to exit?',
-                QMessageBox.Yes | QMessageBox.No, QMessageBox.No
-            )
+            self, 'Exit', 'Are you sure you want to exit?',
+            QMessageBox.Yes | QMessageBox.No, QMessageBox.No
+        )
 
         if reply == QMessageBox.Yes:
-                if hasattr(self.controller, 'handle_exit') and callable(self.controller.handle_exit):
-                    self.controller.handle_exit()
-                event.accept()
+            if hasattr(self.controller, 'handle_exit') and callable(self.controller.handle_exit):
+                self.controller.handle_exit()
+            event.accept()
         else:
-                self.start_background_loading()  # Restart loading if user cancels
-                event.ignore()
-                
+            self.start_background_loading()
+            event.ignore()

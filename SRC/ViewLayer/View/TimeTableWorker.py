@@ -3,75 +3,78 @@ import time
 
 class TimetableWorker(QThread):
     """
-    Worker thread for loading timetables in the background
+    This class runs in the background and loads timetable options without freezing the app.
+    It works in a separate thread, so the GUI stays responsive.
     """
-    new_options_available = pyqtSignal(list)  # Emits batch of new timetables
-    loading_progress = pyqtSignal(int, int)   # current, total (total=-1 if unknown)
-    loading_finished = pyqtSignal()
-    error_occurred = pyqtSignal(str)
-    
+
+    # These are "signals" that the thread can send to the main program (the GUI)
+    new_options_available = pyqtSignal(list)  # Sends a list of new timetables
+    loading_progress = pyqtSignal(int, int)   # Tells how many have loaded so far (current, total)
+    loading_finished = pyqtSignal()           # Says "we're done loading!"
+    error_occurred = pyqtSignal(str)          # Sends an error message if something goes wrong
+
     def __init__(self, controller, file_path1, file_path2, batch_size=50):
         super().__init__()
-        self.controller = controller
-        self.file_path1 = file_path1
-        self.file_path2 = file_path2
-        self.batch_size = batch_size
-        self._stop_requested = False
-        self._paused = False
-        self.loaded_count = 0
-        
+        self.controller = controller          # The logic/controller part of your app
+        self.file_path1 = file_path1          # Path to the first input file
+        self.file_path2 = file_path2          # Path to the second input file
+        self.batch_size = batch_size          # How many results to send at a time
+        self._stop_requested = False          # If True, the thread should stop
+        self._paused = False                  # If True, the thread should pause
+        self.loaded_count = 0                 # How many timetables were loaded so far
+
     def run(self):
-        """Main worker thread execution"""
+        """This is what runs when you start the thread."""
         try:
-            # Get the batch generator from controller
+            # Get a generator that gives us batches of timetables
             batch_generator = self.controller.get_all_options(
                 self.file_path1, 
                 self.file_path2, 
                 batch_size=self.batch_size
             )
-            
+
             batch_count = 0
             for batch in batch_generator:
-                # Check if stop was requested
+                # Stop the thread if requested
                 if self._stop_requested:
                     break
-                
-                # Handle pause
+
+                # Wait here if paused
                 while self._paused and not self._stop_requested:
-                    self.msleep(100)  # Sleep for 100ms while paused
-                
+                    self.msleep(100)  # Wait 100ms before checking again
+
                 if self._stop_requested:
                     break
-                
-                # Process the batch
-                if batch:  # Make sure batch is not empty
+
+                if batch:  # If the batch is not empty
                     self.loaded_count += len(batch)
                     batch_count += 1
-                    
-                    # Emit the new batch
+
+                    # Let the GUI know we got new data
                     self.new_options_available.emit(batch)
-                    
-                    # Emit progress (we don't know total, so use -1)
-                    self.loading_progress.emit(self.loaded_count, -1)
-                    
-                    # Small delay to prevent UI freezing
+
+                    # Let the GUI know how much we've done
+                    self.loading_progress.emit(self.loaded_count, -1)  # -1 means we don't know total
+
+                    # Small sleep so the GUI doesn’t freeze
                     self.msleep(10)
-                
-            # Emit completion signal
+
+            # If we finished normally (no stop requested), tell the GUI we’re done
             if not self._stop_requested:
                 self.loading_finished.emit()
-                
+
         except Exception as e:
+            # If an error happened, let the GUI know
             self.error_occurred.emit(str(e))
-    
+
     def stop(self):
-        """Request the worker to stop"""
+        """Call this if you want to stop the thread."""
         self._stop_requested = True
-    
+
     def pause(self):
-        """Pause the worker"""
+        """Call this to pause the thread."""
         self._paused = True
-    
+
     def resume(self):
-        """Resume the worker"""
+        """Call this to continue after pause."""
         self._paused = False
