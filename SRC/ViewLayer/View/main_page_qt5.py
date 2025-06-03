@@ -70,13 +70,15 @@ class MainPageQt5(QMainWindow):
         
         # Middle panel - Course Details (40% width)
         self.details_panel = CourseDetailsPanelQt5()
-        self.details_panel.setMinimumWidth(350)
-        self.details_panel.setMaximumWidth(400)
+        self.details_panel.setMinimumWidth(400)
+        self.details_panel.setMaximumWidth(600)
+        self.details_panel.setMinimumHeight(500)
+        self.details_panel.setMaximumHeight(600)
         content_layout.addWidget(self.details_panel, 0)
         
         # Right panel - Selected Courses (30% width)
         self.selected_courses_panel = SelectedCoursesPanelQt5(self.max_courses)
-        self.selected_courses_panel.setMinimumWidth(400)
+        self.selected_courses_panel.setMinimumWidth(300)
         content_layout.addWidget(self.selected_courses_panel, 1)
         
         parent_layout.addWidget(content_widget)

@@ -69,7 +69,7 @@ QLabel#FileLabel {
 
 /* === Send Button === */
 QPushButton#SendButton {
-    background-color:#ecac57; /* === צבע חום של הפלטה === */
+    background-color:#ecac57; /* === צבע כתום של הפלטה === */
     color: #212529;
     border: none;
     min-height: 36px;
@@ -82,7 +82,7 @@ QPushButton#SendButton {
 }
 
 QPushButton#SendButton:hover {
-    background-color:#944e25 ; /* === צבע כתום של הפלטה === */
+    background-color:#944e25 ; /* === צבע חום  של הפלטה === */
 }
 
 /* === Footer === */

@@ -6,8 +6,8 @@ class ModernUIQt5:
 
     # Color palette
     COLORS = {
-        "primary": "#3499FF",
-        "secondary": "#36F6A9",
+        "primary": "#ecac57",
+        "secondary": "#944e25",
         "accent": "#FFDAB9",
         "light": "#ecf0f1",
         "dark": "#625D5D",
@@ -50,6 +50,7 @@ class ModernUIQt5:
                 padding: 6px 12px;
             }}
             QPushButton:hover {{
+                background-color: #944e25;
                 opacity: 0.85;
             }}
         """)
