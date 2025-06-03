@@ -7,7 +7,7 @@ class ModernUI:
     # Color palette
     COLORS = {
         "primary": "#3499FF",     # Blue
-        "secondary": "#36F6A9",   # Green
+        "secondary": "##D9B382",   # Green
         "accent": "#FF1313",      # Red
         "light": "#ecf0f1",       # Light Gray
         # "dark": "#2c3e50",        # Dark Blue/Gray
