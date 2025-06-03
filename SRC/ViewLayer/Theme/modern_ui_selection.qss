@@ -109,3 +109,17 @@ QWidget {
     color: #2c3e50;
     background-color: transparent;
 }
+
+
+\\\\\\\\\\\/////////////////////
+   QPushButton#DetailsButton {
+                background-color:rgb(242, 246, 168);
+                border: none;
+                color: white;
+                padding: 8px 16px;
+                border-radius: 4px;
+                font-weight: bold;
+            }
+            QPushButton#DetailsButton:hover {
+                background-color:rgb(242, 246, 168);
+            }

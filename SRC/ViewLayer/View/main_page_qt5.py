@@ -72,6 +72,7 @@ class MainPageQt5(QMainWindow):
         self.details_panel = CourseDetailsPanelQt5()
         self.details_panel.setMinimumWidth(400)
         self.details_panel.setMaximumWidth(600)
+        self.details_panel.setMinimumHeight(500)
         self.details_panel.setMaximumHeight(600)
         content_layout.addWidget(self.details_panel, 0)
         

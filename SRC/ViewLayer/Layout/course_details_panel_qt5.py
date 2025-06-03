@@ -21,15 +21,18 @@ class CourseDetailsPanelQt5(QWidget):
         # Title
         title_label = QLabel("Course Details")
         title_label.setObjectName("panelTitle")
+        title_label.setAlignment(Qt.AlignTop | Qt.AlignHCenter)
         layout.addWidget(title_label)
 
         # Content frame with orange border
         content_frame = QFrame()
         content_frame.setObjectName("detailsFrame")
+        
         content_layout = QVBoxLayout(content_frame)
         content_layout.setContentsMargins(15, 15, 15, 15)
-        content_layout.setSpacing(0)
-
+        content_layout.setSpacing(8)  # שינוי מ-0 ל-8
+        content_layout.setAlignment(Qt.AlignTop)  # יישור לחלק העליון
+        
         # General course info (compact)
         general_info_fields = [
             ('code_label', "Code: "),
@@ -42,19 +45,20 @@ class CourseDetailsPanelQt5(QWidget):
         for attr, text in general_info_fields:
             self.create_detail_row(content_layout, attr, text)
 
-        # Lesson types summary
-        # self.create_lesson_summary_section(content_layout)
+        # הוספת stretch כדי לדחוף הכל למעלה
+        content_layout.addStretch()
 
         layout.addWidget(content_frame)
 
-        # Buttons layout
+        # Buttons layout מיד אחרי הפרטים
+        # אם אתה רוצה שהכפתורים יהיו למטה, השאר את layout.addStretch()
+        
         buttons_layout = QHBoxLayout()
         
         # Details button
-        self.details_button = ModernUIQt5.create_button("📋 Additional Details")
+        self.details_button = ModernUIQt5.create_button("Additional Details")
         self.details_button.setObjectName("DetailsButton")
         self.details_button.clicked.connect(self.show_details_popup)
-        # Remove hover events that caused auto-closing
         buttons_layout.addWidget(self.details_button)
 
         # Add course button
@@ -65,19 +69,7 @@ class CourseDetailsPanelQt5(QWidget):
 
         layout.addLayout(buttons_layout)
 
-        self.setStyleSheet(ModernUIQt5.get_main_stylesheet() + """
-            QPushButton#DetailsButton {
-                background-color: #4CAF50;
-                border: none;
-                color: white;
-                padding: 8px 16px;
-                border-radius: 4px;
-                font-weight: bold;
-            }
-            QPushButton#DetailsButton:hover {
-                background-color: #45a049;
-            }
-        """)
+        self.setStyleSheet(ModernUIQt5.get_main_stylesheet())
 
     # def create_lesson_summary_section(self, parent_layout):
     #     """Create compact summary of lesson types"""
@@ -124,7 +116,7 @@ class CourseDetailsPanelQt5(QWidget):
         line = QFrame()
         line.setFrameShape(QFrame.HLine)
         line.setFrameShadow(QFrame.Sunken)
-        line.setStyleSheet("color: #FFA500; background-color: #FFA500; max-height: 1px;")
+        line.setStyleSheet("color: #FFA500; background-color: #944e25; max-height: 1px;")
         layout.addWidget(line)
 
     def update_details(self, course):
@@ -257,8 +249,8 @@ class CourseDetailsPanelQt5(QWidget):
         layout.setSpacing(10)
 
         # Title
-        title = QLabel("📋 Detailed Course Information")
-        title.setStyleSheet("font-size: 16px; font-weight: bold; color: #FFA500; padding: 10px 0px;")
+        title = QLabel("Detailed Course Information")
+        title.setStyleSheet("font-size: 18px; font-weight: bold; color: #944e25; padding: 10px 0px;")
         layout.addWidget(title)
 
         # Scroll area
@@ -289,7 +281,7 @@ class CourseDetailsPanelQt5(QWidget):
                 font-weight: bold;
             }
             QPushButton:hover {
-                background-color: #d32f2f;
+                background-color: #944e25;
             }
         """)
         close_btn.clicked.connect(popup.close)
@@ -318,7 +310,7 @@ class CourseDetailsPanelQt5(QWidget):
             notes_layout = QVBoxLayout(notes_frame)
             notes_layout.setContentsMargins(15, 15, 15, 15)
             
-            notes_title = QLabel("📝 Notes")
+            notes_title = QLabel("Notes")
             notes_title.setStyleSheet("font-weight: bold; font-size: 14px; color: #FFA500;")
             notes_layout.addWidget(notes_title)
             
@@ -415,14 +407,7 @@ class CourseDetailsPanelQt5(QWidget):
         
         # # Time
         if hasattr(lesson, 'time') and lesson.time:
-        #     time_label = QLabel("🕐 Time:")
-        #     time_display = f"{lesson.time.start_hour:02d}:00 - {lesson.time.end_hour:02d}:00"
-        #     time_value = QLabel(time_display)
-            
-        #     time_label.setStyleSheet("font-weight: bold; color: #555;")
-        #     details_layout.addWidget(time_label, row, 0)
-        #     details_layout.addWidget(time_value, row, 1)
-        #     row += 1
+      
             time_label = QLabel("Time:")
         
             # יצירת מחרוזת זמן מתאימה
