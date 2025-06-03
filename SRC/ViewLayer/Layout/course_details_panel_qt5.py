@@ -152,15 +152,15 @@ class CourseDetailsPanelQt5(QWidget):
     def update_lesson_summaries(self, course):
         """Update lesson type summaries"""
         lesson_types = [
-            ('lectures', 'Lectures', '🎓'),
-            ('exercises', 'Exercises', '📝'),
-            ('labs', 'Labs', '🔬'),
-            ('departmentHours', 'Department Hours', '🏢'),
-            ('reinforcement', 'Reinforcement', '💪'),
-            ('training', 'Training', '🏋️')
+            ('lectures', 'Lectures'),
+            ('exercises', 'Exercises'),
+            ('labs', 'Labs'),
+            ('departmentHours', 'Department Hours'),
+            ('reinforcement', 'Reinforcement'),
+            ('training', 'Training')
         ]
 
-        for attr_name, display_name, icon in lesson_types:
+        for attr_name, display_name in lesson_types:
             lessons = getattr(course, attr_name, [])
             count = len(lessons)
             
@@ -174,7 +174,7 @@ class CourseDetailsPanelQt5(QWidget):
                     if hasattr(lesson, 'instructors') and lesson.instructors:
                         instructors.update(lesson.instructors)
                 
-                summary = f"{icon} {display_name}: {count} sessions"
+                summary = f"{display_name}: {count} sessions"
                 if groups:
                     summary += f" | Groups: {', '.join(map(str, sorted(groups)))}"
                 if instructors:
@@ -183,7 +183,7 @@ class CourseDetailsPanelQt5(QWidget):
                         instructors_short += f" +{len(instructors)-2} more"
                     summary += f" | Prof: {instructors_short}"
             else:
-                summary = f"{icon} {display_name}: No sessions"
+                summary = f"{display_name}: No sessions"
             
             # summary_label = getattr(self, f"{attr_name}_summary_label")
             # summary_label.setText(summary)
@@ -331,21 +331,21 @@ class CourseDetailsPanelQt5(QWidget):
 
         # Detailed lesson sections
         lesson_types = [
-            ('lectures', 'Lectures', '🎓'),
-            ('exercises', 'Exercises', '📝'),
-            ('labs', 'Labs', '🔬'),
-            ('departmentHours', 'Department Hours', '🏢'),
-            ('reinforcement', 'Reinforcement', '💪'),
-            ('training', 'Training', '🏋️')
+            ('lectures', 'Lectures'),
+            ('exercises', 'Exercises'),
+            ('labs', 'Labs'),
+            ('departmentHours', 'Department Hours'),
+            ('reinforcement', 'Reinforcement'),
+            ('training', 'Training')
         ]
 
-        for attr_name, display_name, icon in lesson_types:
+        for attr_name, display_name in lesson_types:
             lessons = getattr(course, attr_name, [])
             if lessons:  # Only show sections that have lessons
-                section_widget = self.create_detailed_lesson_section(attr_name, display_name, icon, lessons)
+                section_widget = self.create_detailed_lesson_section(attr_name, display_name, lessons)
                 self.popup_main_layout.addWidget(section_widget)
 
-    def create_detailed_lesson_section(self, attr_name, display_name, icon, lessons):
+    def create_detailed_lesson_section(self, attr_name, display_name, lessons):
         """Create detailed section for lesson type"""
         frame = QFrame()
         frame.setObjectName("detailsFrame")
@@ -355,7 +355,7 @@ class CourseDetailsPanelQt5(QWidget):
 
         # Section header
         header_layout = QHBoxLayout()
-        title_label = QLabel(f"{icon} {display_name}")
+        title_label = QLabel(f" {display_name}")
         title_label.setStyleSheet("font-weight: bold; font-size: 14px; color: #FFA500;")
         
         count_label = QLabel(f"({len(lessons)} sessions)")
@@ -413,12 +413,35 @@ class CourseDetailsPanelQt5(QWidget):
 
         row = 0
         
-        # Time
+        # # Time
         if hasattr(lesson, 'time') and lesson.time:
-            time_label = QLabel("🕐 Time:")
+        #     time_label = QLabel("🕐 Time:")
+        #     time_display = f"{lesson.time.start_hour:02d}:00 - {lesson.time.end_hour:02d}:00"
+        #     time_value = QLabel(time_display)
             
-            # גרסה פשוטה יותר - רק שעות
-            time_display = f"{lesson.time.start_hour:02d}:00 - {lesson.time.end_hour:02d}:00"
+        #     time_label.setStyleSheet("font-weight: bold; color: #555;")
+        #     details_layout.addWidget(time_label, row, 0)
+        #     details_layout.addWidget(time_value, row, 1)
+        #     row += 1
+            time_label = QLabel("Time:")
+        
+            # יצירת מחרוזת זמן מתאימה
+            start_time = f"{lesson.time.start_hour:02d}:00"
+            end_time = f"{lesson.time.end_hour:02d}:00"
+            
+            # המרת מספר היום לשם היום (אופציונלי)
+            days = {
+                0: "ראשון",
+                1: "שני", 
+                2: "שלישי",
+                3: "רביעי",
+                4: "חמישי",
+                5: "שישי",
+                6: "שבת"
+            }
+            day_name = days.get(lesson.time.day, f"יום {lesson.time.day}")
+            
+            time_display = f"{day_name}: {start_time} - {end_time}"
             time_value = QLabel(time_display)
             
             time_label.setStyleSheet("font-weight: bold; color: #555;")
@@ -428,8 +451,8 @@ class CourseDetailsPanelQt5(QWidget):
 
         # Location
         if hasattr(lesson, 'building') and hasattr(lesson, 'room') and lesson.building and lesson.room:
-            location_label = QLabel("📍 Location:")
-            location_value = QLabel(f"Building {lesson.building}, Room {lesson.room}")
+            location_label = QLabel("Location:")
+            location_value = QLabel(f"בניין:  {lesson.building}, חדר: {lesson.room}")
             location_label.setStyleSheet("font-weight: bold; color: #555;")
             details_layout.addWidget(location_label, row, 0)
             details_layout.addWidget(location_value, row, 1)
@@ -437,7 +460,7 @@ class CourseDetailsPanelQt5(QWidget):
 
         # Instructors
         if hasattr(lesson, 'instructors') and lesson.instructors:
-            instructors_label = QLabel("👨‍🏫 Instructors:")
+            instructors_label = QLabel("Instructors:")
             instructors_value = QLabel(", ".join(lesson.instructors))
             instructors_label.setStyleSheet("font-weight: bold; color: #555;")
             instructors_value.setWordWrap(True)
@@ -447,7 +470,7 @@ class CourseDetailsPanelQt5(QWidget):
 
         # Credits
         if hasattr(lesson, 'creditPoints') and lesson.creditPoints:
-            credits_label = QLabel("🎯 Credits:")
+            credits_label = QLabel("Credits:")
             credits_value = QLabel(str(lesson.creditPoints))
             credits_label.setStyleSheet("font-weight: bold; color: #555;")
             details_layout.addWidget(credits_label, row, 0)
@@ -456,7 +479,7 @@ class CourseDetailsPanelQt5(QWidget):
 
         # Weekly Hours
         if hasattr(lesson, 'weeklyHours') and lesson.weeklyHours:
-            hours_label = QLabel("⏰ Weekly Hours:")
+            hours_label = QLabel("Weekly Hours:")
             hours_value = QLabel(str(lesson.weeklyHours))
             hours_label.setStyleSheet("font-weight: bold; color: #555;")
             details_layout.addWidget(hours_label, row, 0)
