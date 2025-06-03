@@ -1,6 +1,7 @@
 from PyQt5.QtWidgets import QWidget, QLabel, QPushButton, QVBoxLayout, QHBoxLayout, QFileDialog, QMessageBox, QFrame
 from PyQt5.QtCore import Qt, pyqtSignal
 from PyQt5.QtGui import QFont, QDragEnterEvent, QDropEvent
+from PyQt5.QtGui import QPixmap 
 import os
 from pathlib import Path
 class LandPageView(QWidget):
@@ -30,9 +31,33 @@ class LandPageView(QWidget):
     def setup_ui(self):
         layout = QVBoxLayout()
 
-        # === HEADER ===
-        header = QLabel("WELCOME TO SCHEDUAL SYSTEM CREATOR")
+        # === HEADER CONTAINER ===
+        header_layout = QVBoxLayout()
+        logo_label = QLabel()
+        logo_pixmap = QPixmap("Data/Logo.png")
+        if not logo_pixmap.isNull():
+            logo_pixmap = logo_pixmap.scaled(128, 128, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+            logo_label.setPixmap(logo_pixmap)
+        else:
+            logo_label.setText("LOGO")
+            logo_label.setStyleSheet("color: gray; font-size: 16px;")
+
+        logo_label.setAlignment(Qt.AlignHCenter | Qt.AlignTop)
+        logo_label.setObjectName("logoLabel")
+
+        
+        header =QLabel("Welcome to Scudual System Creator")
         header.setObjectName("HeaderLabel")
+        header.setAlignment(Qt.AlignHCenter)
+
+        # Add logo and header to a vertical layout
+        header_layout.addWidget(logo_label)
+        header_layout.addWidget(header)
+
+        # Wrap header_layout in a QWidget so it can be added to the main layout
+        header_widget = QWidget()
+        header_widget.setLayout(header_layout)
+        layout.addWidget(header_widget)
 
         # === DROP AREA ===
         self.drop_frame = QFrame()
@@ -44,27 +69,22 @@ class LandPageView(QWidget):
         self.drop_label.setObjectName("DropLabel")
         drop_layout.addWidget(self.drop_label)
 
-        # === UPLOAD BUTTON ===
         self.upload_button = QPushButton("UPLOAD")
         self.upload_button.setObjectName("UploadButton")
         drop_layout.addWidget(self.upload_button, alignment=Qt.AlignCenter)
 
-        # === FILE NAME LABEL ===
         self.file_label = QLabel("")
         self.file_label.setObjectName("FileLabel")
 
-        # === SEND BUTTON ===
         self.send_button = QPushButton("SEND.")
         self.send_button.setObjectName("SendButton")
         send_layout = QHBoxLayout()
         send_layout.addStretch()
         send_layout.addWidget(self.send_button)
 
-        # === FOOTER ===
         footer = QLabel("All rights reserved to the SchedSquad team.")
         footer.setObjectName("FooterLabel")
 
-        layout.addWidget(header)
         layout.addStretch()
         layout.addWidget(self.drop_frame, alignment=Qt.AlignCenter)
         layout.addWidget(self.file_label)
@@ -89,3 +109,5 @@ class LandPageView(QWidget):
                 self.uploaded_path = path
                 self.file_label.setText(f"Uploaded: {os.path.basename(path)}")
                 self.file_uploaded.emit(path)
+    
+    

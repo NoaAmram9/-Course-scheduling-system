@@ -35,3 +35,7 @@ QScrollBar::handle {
     background: #bdc3c7;
     border-radius: 4px;
 }
+#logoLabel {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
