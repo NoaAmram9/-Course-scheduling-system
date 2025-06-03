@@ -486,12 +486,16 @@ from itertools import product
 from SRC.Interfaces.IScheduleService import IScheduleService
 from SRC.Models.TimeTable import TimeTable
 from SRC.Models.Course import Course
+from SRC.Services.PreferencesService import PreferencesService
 
 class ScheduleService(IScheduleService):
     def generate_schedules(self, courses: list, limit: int = 1000) -> list:
         """Original method - kept for backward compatibility"""
         self.possible_timetables = []
         self.limit = limit
+        
+        self.preferencesService = PreferencesService()
+
 
         # צור את כל הקומבינציות האפשריות עבור כל קורס
         course_combinations = []
@@ -513,6 +517,7 @@ class ScheduleService(IScheduleService):
                     departmentHours, reinforcement, training
                 )
             ])
+
 
         self._build_valid_schedules(course_combinations, 0, [], [])
         return self.possible_timetables
@@ -522,6 +527,8 @@ class ScheduleService(IScheduleService):
         Generator version - yields TimeTable objects one by one
         Much more memory efficient for large numbers of combinations
         """
+        self.preferencesService = PreferencesService()
+
         # צור את כל הקומבינציות האפשריות עבור כל קורס
         course_combinations = []
         for course in courses:
@@ -542,6 +549,7 @@ class ScheduleService(IScheduleService):
                     departmentHours, reinforcement, training
                 )
             ])
+
 
         # Use generator version of the recursive function
         count = 0
@@ -559,7 +567,9 @@ class ScheduleService(IScheduleService):
         """
         if index == len(combinations):
             # Instead of appending to a list, yield the TimeTable
-            yield TimeTable(current_courses.copy())
+            timetable = TimeTable(current_courses.copy())
+            self.preferencesService.apply_preferences(timetable)  # קריאה להעדפות
+            yield timetable
             return
 
         for combo in combinations[index]:
@@ -595,7 +605,9 @@ class ScheduleService(IScheduleService):
             return
 
         if index == len(combinations):
-            self.possible_timetables.append(TimeTable(current_courses.copy()))
+            timetable = TimeTable(current_courses.copy())
+            self.possible_timetables.append(timetable)
+            self.preferencesService.apply_preferences(timetable)  # קריאה להעדפות
             #קריאה להעדפות#########################
             return
 

@@ -9,7 +9,7 @@ class PreferencesService:
         timetable = None
  
     # Method to apply user preferences details to the timetable.
-    def apply_prefernces(self, timetable):
+    def apply_preferences(self, timetable):
         """
         Apply user preferences details to the timetable.
         
@@ -37,6 +37,10 @@ class PreferencesService:
         )
         
         self.timetable.preferences_details = preferences
+        # print(f"applied preferences: {self.timetable.preferences_details.days} active days, "
+        #       f"{self.timetable.preferences_details.free_windows_number} free windows, "
+        #       f"avg start time: {self.timetable.preferences_details.avarage_start_time}, "
+        #       f"avg end time: {self.timetable.preferences_details.avarage_end_time}")
  
     # Method to get the lesson times from the timetable.
     def get_lesson_times(self):
@@ -136,14 +140,20 @@ class PreferencesService:
         return avg_start, avg_end
     
     # Method to extract the hour from a time string in HH:MM format.
-    def extract_hour(self, time_str: str) -> int:
+    def extract_hour(self, time_val: str) -> int:
         """
-        Extract the hour component from a time string in HH:MM format.
+        Extract the hour component from a time value that may be a string in HH:MM format or an integer.
 
         Args:
-            time_str (str): A time string, e.g., "09:30"
+            time_val (str | int): A time string (e.g., "09:30") or already an integer hour (e.g., 9)
 
         Returns:
             int: The hour part as an integer, e.g., 9
         """
-        return int(time_str.split(":")[0])
+       
+        if isinstance(time_val, int):
+            return time_val
+        elif isinstance(time_val, str):
+            return int(time_val.split(":")[0])
+        else:
+            raise ValueError(f"Unexpected time value format: {time_val}")
