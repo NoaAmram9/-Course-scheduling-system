@@ -596,6 +596,7 @@ class ScheduleService(IScheduleService):
 
         if index == len(combinations):
             self.possible_timetables.append(TimeTable(current_courses.copy()))
+            #קריאה להעדפות#########################
             return
 
         for combo in combinations[index]:

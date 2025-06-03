@@ -35,7 +35,7 @@ class TimetablesPageQt5(QMainWindow):
         super().__init__()
         self.controller = controller
         self.go_back_callback = go_back_callback
-        self._is_exiting_from_back = False
+        self._is_exiting_from_back = False #התמודדות עם כפתור חזרה אחורה
         
         # Timetable data management
         self.all_options = []  # All loaded timetables

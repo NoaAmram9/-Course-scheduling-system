@@ -27,7 +27,7 @@ def debug_excel_parsing(file_path):
 
 if __name__ == "__main__":
     # ⚠️ Replace this with your actual path to the Excel file
-    excel_file =r"C:\Users\noaam\Desktop\מסמכי תואר- שנה ב\לימודי\software_engineer1\shcedual\-Course-scheduling-system\SRC\Services\example.xlsx"
+    excel_file =r"C:\Users\noaam\Desktop\מסמכי תואר- שנה ב\לימודי\software_engineer1\shcedual\-Course-scheduling-system\SRC\Services\EngineeringV2.xlsx"
 
     
     if os.path.exists(excel_file):
