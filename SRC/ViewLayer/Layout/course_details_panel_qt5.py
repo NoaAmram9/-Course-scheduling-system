@@ -79,7 +79,7 @@ class CourseDetailsPanelQt5(QWidget):
             self.instructor_label.setText(f"Prof.: {instructors}")
 
             self.semester_label.setText(f"Semester: {course._semester}")
-            self.credits_label.setText(f"Credit Points: {getattr(course, 'creditPoints', 'N/A')}")
+            self.credits_label.setText(f"Credit Points: {getattr(course, '_creditPoints', 'N/A')}")
             self.groups_label.setText(f"Groups: {self._count_groups(course)}")
             
         else:
@@ -97,6 +97,7 @@ class CourseDetailsPanelQt5(QWidget):
             for lesson in lst:
                 instructors_set.update(lesson.instructors)
         return ', '.join(instructors_set) if instructors_set else "Unknown"
+       
 
     def _count_groups(self, course):
         groups = set()
