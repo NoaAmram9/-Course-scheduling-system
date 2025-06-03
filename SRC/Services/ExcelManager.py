@@ -85,6 +85,7 @@ class ExcelManager(FileManager):
             'מרצים': 'instructors',
             'הערה': 'notes',
             'חדר': 'location',
+            'תקופה': 'semester_hebrew'
         }
 
         for heb_col, eng_col in column_mapping.items():
@@ -104,6 +105,9 @@ class ExcelManager(FileManager):
             instructors_str = str(row.get("instructors", "")).strip()
             notes = str(row.get("notes", "")).strip()
             location_str = str(row.get("location", "")).strip()
+            semester_hebrew = str(row.get("semester_hebrew", "")).strip()
+            semester = 1 if "א" in semester_hebrew else 2 if "ב" in semester_hebrew else 0
+
 
             lesson_type = self.determine_lesson_type(type_str)
             start_hour, end_hour = self.parse_time_range(time_str)
@@ -129,7 +133,7 @@ class ExcelManager(FileManager):
             )
 
             if course_key not in courses_dict:
-                courses_dict[course_key] = Course(name=name, code=main_code, semester=0, notes=notes)
+                courses_dict[course_key] = Course(name=name, code=main_code, semester=semester, notes=notes)
 
             course = courses_dict[course_key]
             if lesson_type == "lecture":

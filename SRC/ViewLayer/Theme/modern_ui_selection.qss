@@ -18,8 +18,94 @@ QLabel#TitleLabel {
     font-weight: bold;
     color:rgb(68, 107, 146);
 }
+QFrame#detailsFrame {
+    border: 2px solid #FFA500; /* orange */
+    border-radius: 12px;
+    background-color: #fffef6;
+}
 
-QPushButton#AddCourseButton {
-    background-color:rgb(117, 168, 227);
-    color: white;
+QFrame#detailRowFrame {
+    padding-left: 6px;
+    padding-right: 6px;
+}
+
+QLabel#detailLabel {
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+}
+
+.................\\\\\\\\\\\\\\\\\\\\\\
+QFrame#courseTreeFrame {
+    border: 2px solid #FFA500;
+    border-radius: 12px;
+    background-color: #fffef6;
+}
+
+QTreeWidget#courseTree {
+    font-size: 14px;
+    alternate-background-color: #fdfdfd;
+    background-color: #ffffff;
+    border: none;
+}
+
+QLineEdit#searchInput {
+    padding: 6px 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 13px;
+}
+ ....................\\\\\\\\\\\\\\\\\\\\
+
+ /* Selected Courses Panel Title */
+#panelTitle {
+    font-size: 18px;
+    font-weight: bold;
+    color: #2c3e50;
+    padding: 6px;
+    border-bottom: 1px solid #dcdcdc;
+}
+
+/* Count Label */
+#countLabel {
+    font-size: 14px;
+    color: #7f8c8d;
+}
+
+/* Selected Courses Table */
+#selectedTable {
+    border: 1px solid #dcdcdc;
+    border-radius: 10px;
+    background-color: #fefefe;
+    alternate-background-color: #f8f9fa;
+    font-size: 14px;
+    outline: none;
+}
+
+#selectedTable::item {
+    padding: 6px;
+    border: none;
+}
+
+#selectedTable::item:selected {
+    background-color: #d5f5e3;
+    color: #2c3e50;
+    border-radius: 8px;
+}
+
+/* QHeaderView (column headers) */
+QHeaderView::section {
+    background-color: #ecf0f1;
+    padding: 6px;
+    font-weight: bold;
+    border: none;
+    border-bottom: 1px solid #dcdcdc;
+}
+
+/* General QWidget inside panel */
+QWidget {
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 13px;
+    color: #2c3e50;
+    background-color: transparent;
 }

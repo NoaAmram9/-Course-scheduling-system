@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
-from SRC.ViewLayer.Theme.modern_ui_qt5 import ModernUIQt5
+from SRC.ViewLayer.Theme.ModernUIQt5 import ModernUIQt5
 
 class SelectedCoursesPanelQt5(QWidget):
     # Signal
@@ -16,24 +16,31 @@ class SelectedCoursesPanelQt5(QWidget):
         
     def init_ui(self):
         """Initialize the user interface"""
-        layout = QVBoxLayout(self)
-        layout.setContentsMargins(5, 5, 5, 5)
-        layout.setSpacing(5)
-        
+        outer_layout = QVBoxLayout(self)
+        outer_layout.setContentsMargins(5, 5, 5, 5)
+        outer_layout.setSpacing(5)
+
+        # Create a frame for the inner content
+        frame = QFrame()
+        frame.setObjectName("detailsFrame")  # QSS selector
+        frame_layout = QVBoxLayout(frame)
+        frame_layout.setContentsMargins(10, 10, 10, 10)
+        frame_layout.setSpacing(5)
+
         # Header with count
         header_layout = QHBoxLayout()
-        
+
         title_label = QLabel("Selected Courses")
         title_label.setObjectName("panelTitle")
         header_layout.addWidget(title_label)
-        
+
         self.count_label = QLabel(f"(0/{self.max_courses})")
         self.count_label.setObjectName("countLabel")
         header_layout.addWidget(self.count_label)
         header_layout.addStretch()
-        
-        layout.addLayout(header_layout)
-        
+
+        frame_layout.addLayout(header_layout)
+
         # Selected courses table
         self.selected_table = QTreeWidget()
         self.selected_table.setHeaderLabels([
@@ -42,7 +49,7 @@ class SelectedCoursesPanelQt5(QWidget):
         self.selected_table.setRootIsDecorated(False)
         self.selected_table.setAlternatingRowColors(True)
         self.selected_table.setObjectName("selectedTable")
-        
+
         # Set column widths
         header = self.selected_table.header()
         header.resizeSection(0, 80)   # Code
@@ -51,15 +58,18 @@ class SelectedCoursesPanelQt5(QWidget):
         header.resizeSection(3, 70)   # Lectures
         header.resizeSection(4, 70)   # Exercises
         header.resizeSection(5, 70)   # Labs
-        
+
         # Connect double-click to remove
         self.selected_table.itemDoubleClicked.connect(self.on_course_double_click)
-        
-        layout.addWidget(self.selected_table)
-        
+
+        frame_layout.addWidget(self.selected_table)
+
+        # Add the frame to the outer layout
+        outer_layout.addWidget(frame)
+
         # Apply styling
-        self.setStyleSheet(ModernUIQt5.get_panel_stylesheet())
-        
+        self.setStyleSheet(ModernUIQt5.get_main_stylesheet())
+
     def set_course_map(self, course_map):
         """Set the course map reference"""
         self.course_map = course_map
