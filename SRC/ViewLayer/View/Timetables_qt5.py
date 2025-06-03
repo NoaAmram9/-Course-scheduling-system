@@ -19,6 +19,7 @@ from reportlab.lib.pagesizes import landscape, A4
 from SRC.ViewLayer.Logic.TimeTable import map_courses_to_slots, DAYS, HOURS
 from SRC.ViewLayer.Layout.Timetable_qt5 import TimetableGridWidget
 from SRC.ViewLayer.Logic.Pdf_Exporter import generate_pdf_from_data
+from SRC.ViewLayer.Logic.PreferencesSorter import sort_timetables
 from SRC.ViewLayer.Theme.ModernUIQt5 import ModernUIQt5
 from SRC.ViewLayer.View.TimeTableWorker import TimetableWorker
 from SRC.ViewLayer.Layout.TimetablesUIComponents import TimetableUIComponents
@@ -511,3 +512,8 @@ class TimetablesPageQt5(QMainWindow):
         else:
             self.start_background_loading()
             event.ignore()
+    
+    def apply_display_sort(self, key, ascending):
+        # print(f"Applying display sort on timetables by {key} in {'ascending' if ascending else 'descending'} order.")
+        sort_timetables(self.all_options, key, ascending)
+        self.update_view()

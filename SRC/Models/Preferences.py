@@ -12,8 +12,8 @@ class Preferences:
     def __init__(self, days: int = 0,
                  free_windows_number: int = 0,
                  free_windows_sum: int = 0,
-                 avarage_start_time: int = 0, 
-                 avarage_end_time: int = 0):
+                 avarage_start_time: float = 0, 
+                 avarage_end_time: float = 0):
         self._days = days # number of active days in the schedule (1-7)
         self._free_windows_number = free_windows_number # number of free windows in the schedule (0-98)
         self._free_windows_sum = free_windows_sum # sum of all free windows in the schedule (0-98)
