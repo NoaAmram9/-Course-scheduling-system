@@ -1,0 +1,4 @@
+##A Guide for the Integrator Programmer
+1. File names start with a capital letter.
+2. Property names start with a lowercase letter, if a property consists of two words - first word with a lowercase letter, second word will start with an uppercase letter (without _ or any other character) -
+forExample

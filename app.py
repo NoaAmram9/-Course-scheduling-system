@@ -1,19 +1,17 @@
-
 import sys
-import os
-from tkinterdnd2 import TkinterDnD
-from SRC.ViewLayer.LandPage import LandPage
+from PyQt5.QtWidgets import QApplication
+from SRC.ViewLayer.View.LandPageView import LandPageView
 from SRC.Controller.Controller import Controller
-
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), 'SRC')))
-
-
+from SRC.Controller.FileController import FileController
+from SRC.ViewLayer.Logic.LandPageController import LandPageController
 
 def main():
-    controller = Controller()
-    root = TkinterDnD.Tk()
-    app = LandPage(root, controller)
-    app.run()
+    app = QApplication(sys.argv)
+    controller = FileController("excel")  # Initialize the file controller with the desired file type
+    view = LandPageView()
+    logic = LandPageController(view, controller)
+    view.show()
+    sys.exit(app.exec_())
 
 if __name__ == "__main__":
     main()

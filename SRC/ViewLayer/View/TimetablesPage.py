@@ -1,4 +1,5 @@
 # timetables page
+import sys
 import tkinter as tk
 from tkinter import ttk, messagebox, filedialog
 import tempfile
@@ -35,6 +36,7 @@ class TimetablesPage:
         
         # Initial view update
         self.update_view()
+        # self.window.protocol("WM_DELETE_WINDOW", self.on_close)
     
     def create_nav_bar(self):
         """Create the navigation bar with prev/next buttons and title"""
@@ -312,9 +314,21 @@ class TimetablesPage:
         except Exception as e:
             messagebox.showerror("Error", f"Failed to export PDF: {e}")
 
+
     def apply_display_sort(self, display_option, sort_order):
         print("display by: ", display_option, "in: ", sort_order)
         # כאן אפשר למיין או לשנות תצוגה בהתאם לשתי הבחירות
         boolean_order = sort_order == "Ascending"
         sort_timetables(self.options, display_option, boolean_order)
         self.update_view()
+
+    def on_close(self):
+     """Handle window close event"""
+        # Make sure to ask for confirmation before closing
+     if messagebox.askokcancel("Exit", "Are you sure you want to exit?"):
+            self.controller.handle_exit()  # Call the controller's exit method
+            self.window.quit()     # exit the loop
+            self.window.destroy()  # destroy the window
+            sys.exit()             # exit the program
+
+

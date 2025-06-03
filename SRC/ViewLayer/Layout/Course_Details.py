@@ -73,7 +73,7 @@ class CourseDetailsPanel(tk.Frame):
         if course:
             self.code_label.config(text=f"Code: {course._code}")
             self.name_label.config(text=f"Name: {course._name}")
-            self.instructor_label.config(text=f"Prof.: {course._instructor}")
+           # self.instructor_label.config(text=f"Prof.: {course._instructor}")
             
             # self.lectures_label.config(text=f"• Lectures: {len(course._lectures)}")
             # self.exercises_label.config(text=f"• Exercises: {len(course._exercises)}")

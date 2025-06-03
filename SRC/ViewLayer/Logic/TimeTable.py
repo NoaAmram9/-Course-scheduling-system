@@ -15,8 +15,8 @@ def map_courses_to_slots(timetable):
                                          ("Lab", course.labs)]:
             for lesson in lesson_list:
                 day = DAYS[lesson.time.day - 1]  # Convert day index to string. lesson["day"] should be an index (numerical).
-                start = int(lesson.time.start_hour.split(":")[0])
-                end = int(lesson.time.end_hour.split(":")[0])
+                start = int(lesson.time.start_hour)
+                end = int(lesson.time.end_hour)
                 
                 # Fill in the slots for this lesson
                 for hour in range(start, end):
@@ -24,7 +24,7 @@ def map_courses_to_slots(timetable):
                         "name": course.name,
                         "code": course.code,
                         "type": lesson_type,
-                        "instructor": course.instructor,
+                        #"instructor": course.instructor,
                         "location": f"{lesson.building}-{lesson.room}" 
                     }
 

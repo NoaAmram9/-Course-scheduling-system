@@ -1,0 +1,3 @@
+## Future improvements ##
+1. Separating the Course model into lessons and all other properties.
+   (Separating the 6 lists into a separate object)

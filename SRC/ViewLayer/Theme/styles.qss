@@ -1,0 +1,350 @@
+/* === Base Widget === */
+QWidget {
+    background-color: #F9FAFB;
+    font-family: "Segoe UI", Calibri, sans-serif;
+    font-size: 14px;
+    color: #333;
+}
+
+/* === Header === */
+QLabel#HeaderLabel {
+    background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+                                      stop:0 rgb(188, 197, 245), stop:1 rgb(241, 160, 176));
+    font-size: 24px;
+    font-weight: bold;
+    color: white;
+    border-radius: 16px;
+    padding: 18px;
+    margin: 20px;
+    qproperty-alignment: AlignCenter;
+    
+}
+
+/* === Drop Area === */
+QFrame#DropFrame {
+    background-color: #FFFFFF;
+    border: 2px dashed #D0D0D0;
+    border-radius: 16px;
+    padding: 24px;
+    margin: 10px;
+    
+}
+
+QLabel#DropLabel {
+    color: #666;
+    font-size: 15px;
+    font-style: italic;
+    qproperty-alignment: AlignCenter;
+}
+
+/* === Upload Button === */
+QPushButton#UploadButton {
+    background-color:rgb(255, 245, 197);
+    color: #222;
+    min-height: 40px;         
+    min-width: 120px;        
+    border: none;
+    border-radius: 22px;
+    padding: 10px 24px;
+    font-size: 15px;
+    font-weight: 600;
+    
+}
+QPushButton#UploadButton:hover {
+    background-color:rgb(220, 204, 121);
+}
+
+/* === File Label === */
+QLabel#FileLabel {
+    color: #555;
+    font-size: 13px;
+    margin-top: 10px;
+    qproperty-alignment: AlignCenter;
+}
+
+/* === Send Button === */
+QPushButton#SendButton {
+    background-color:rgb(248, 236, 194);
+    color: #000;
+    border: none;
+    min-height: 40px;         
+    min-width: 120px;         
+    border-radius: 30px; 
+    padding: 10px 24px;
+    font-size: 15px;
+    font-weight: 600;
+    margin: 15px 0;
+}
+QPushButton#SendButton:hover {
+    background-color:rgb(226, 219, 176);
+}
+
+/* === Footer === */
+QLabel#FooterLabel {
+    color: #999;
+    font-size: 11px;
+    margin-top: 20px;
+    qproperty-alignment: AlignCenter;
+    font-style: italic;
+}
+/* ModernUI.qss - Modern UI Stylesheet for PyQt5 */
+
+/* Main Window and Background */
+QWidget {
+    background-color: #f8f9fa;
+    color: #2c3e50;
+    font-family: "Helvetica", "Arial", sans-serif;
+}
+
+/* Navigation Frame */
+QFrame#navFrame {
+    background-color: #f8f9fa;
+    border: none;
+    padding: 10px;
+}
+
+/* Navigation Buttons */
+QPushButton#navButton {
+    background-color: #2c3e50;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 8px 16px;
+}
+
+QPushButton#navButton:hover {
+    background-color: #34495e;
+}
+
+QPushButton#navButton:pressed {
+    background-color: #1a252f;
+}
+
+QPushButton#navButton[disabled="true"] {
+    background-color: #95a5a6;
+    color: #bdc3c7;
+}
+
+QPushButton#navButton:disabled {
+    background-color: #95a5a6;
+    color: #bdc3c7;
+}
+
+/* Back Button */
+QPushButton#backButton {
+    background-color: #2c3e50;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+QPushButton#backButton:hover {
+    background-color: #34495e;
+}
+
+QPushButton#backButton:pressed {
+    background-color: #1a252f;
+}
+
+/* Export Button */
+QPushButton#exportButton {
+    background-color: #2c3e50;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 8px 16px;
+}
+
+QPushButton#exportButton:hover {
+    background-color: #34495e;
+}
+
+QPushButton#exportButton:pressed {
+    background-color: #1a252f;
+}
+
+/* Title Label */
+QLabel#titleLabel {
+    color: #2c3e50;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 0 20px;
+}
+
+/* No Data Label */
+QLabel#noDataLabel {
+    color: #2c3e50;
+    font-size: 14px;
+    padding: 50px;
+}
+
+/* Scroll Area */
+QScrollArea#scrollArea {
+    border: none;
+    background-color: #f8f9fa;
+}
+
+QScrollArea#scrollArea QScrollBar:vertical {
+    background-color: #ecf0f1;
+    width: 12px;
+    border-radius: 6px;
+}
+
+QScrollArea#scrollArea QScrollBar::handle:vertical {
+    background-color: #bdc3c7;
+    border-radius: 6px;
+    min-height: 20px;
+}
+
+QScrollArea#scrollArea QScrollBar::handle:vertical:hover {
+    background-color: #95a5a6;
+}
+
+QScrollArea#scrollArea QScrollBar::add-line:vertical,
+QScrollArea#scrollArea QScrollBar::sub-line:vertical {
+    border: none;
+    background: none;
+}
+
+/* Timetable Widget */
+QWidget#timetableWidget {
+    background-color: white;
+    border-radius: 12px;
+    padding: 10px;
+}
+
+/* Timetable Grid */
+QFrame#timetableGrid {
+    background-color: white;
+    border: none;
+}
+
+/* Timetable Cells */
+QFrame#timeCell {
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 12px;
+    padding: 8px;
+}
+
+QLabel#timeCellLabel {
+    color: #2c3e50;
+    font-weight: bold;
+    font-size: 11px;
+}
+
+QFrame#dayHeader {
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 12px;
+    padding: 8px;
+}
+
+QLabel#dayHeaderLabel {
+    color: #2c3e50;
+    font-weight: bold;
+    font-size: 12px;
+}
+
+QFrame#emptyCell {
+    background-color: white;
+    border: 1px solid #e9ecef;
+    border-radius: 12px;
+}
+
+/* Course Cells - Different colors for different types */
+QFrame#lectureCell {
+    background-color: #e3f2fd;
+    border: 2px solid #1976d2;
+    border-radius: 12px;
+    padding: 8px;
+}
+
+QFrame#labCell {
+    background-color: #e8f5e8;
+    border: 2px solid #388e3c;
+    border-radius: 12px;
+    padding: 8px;
+}
+
+QFrame#exerciseCell {
+    background-color: #fff3e0;
+    border: 2px solid #f57c00;
+    border-radius: 12px;
+    padding: 8px;
+}
+
+QFrame#departmentHoursCell {
+    background-color: #fce4ec;
+    border: 2px solid #c2185b;
+    border-radius: 12px;
+    padding: 8px;
+}
+
+QFrame#reinforcementCell {
+    background-color: #f3e5f5;
+    border: 2px solid #7b1fa2;
+    border-radius: 12px;
+    padding: 8px;
+}
+
+QFrame#trainingCell {
+    background-color: #e0f2f1;
+    border: 2px solid #00695c;
+    border-radius: 12px;
+    padding: 8px;
+}
+
+/* Course Cell Labels */
+QLabel#courseCellLabel {
+    color: #2c3e50;
+    font-size: 9px;
+    font-weight: normal;
+}
+
+QLabel#courseNameLabel {
+    color: #2c3e50;
+    font-size: 10px;
+    font-weight: bold;
+}
+
+/* Hover Effects */
+QFrame#lectureCell:hover {
+    background-color: #bbdefb;
+}
+
+QFrame#labCell:hover {
+    background-color: #c8e6c9;
+}
+
+QFrame#exerciseCell:hover {
+    background-color: #ffe0b2;
+}
+
+QFrame#departmentHoursCell:hover {
+    background-color: #f8bbd9;
+}
+
+QFrame#reinforcementCell:hover {
+    background-color: #e1bee7;
+}
+
+QFrame#trainingCell:hover {
+    background-color: #b2dfdb;
+}
+
+/* Tooltips */
+QToolTip {
+    background-color: #2c3e50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 8px;
+    font-size: 11px;
+}

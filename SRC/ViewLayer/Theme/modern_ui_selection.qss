@@ -1,0 +1,25 @@
+/* Selection Page Specific Styles */
+QGroupBox#CourseDetails {
+    border: 1px solid #bbb;
+    border-radius: 8px;
+    padding: 6px;
+    background-color:rgb(208, 35, 35);
+}
+
+QListWidget#CourseList {
+    border: none;
+    background-color: white;
+    padding: 6px;
+    border-radius: 6px;
+}
+
+QLabel#TitleLabel {
+    font-size: 18px;
+    font-weight: bold;
+    color:rgb(68, 107, 146);
+}
+
+QPushButton#AddCourseButton {
+    background-color:rgb(117, 168, 227);
+    color: white;
+}
