@@ -1,11 +1,17 @@
 # SRC/ViewLayer/Layout/TimetablesUIComponents.py
 
-from PyQt5.QtWidgets import QFrame, QVBoxLayout, QHBoxLayout, QPushButton, QLabel, QProgressBar
-from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QFrame, QVBoxLayout, QHBoxLayout, QPushButton, QLabel, QProgressBar, QLineEdit
+from PyQt5.QtCore import Qt, pyqtSignal
 from PyQt5.QtGui import QPixmap 
 from SRC.ViewLayer.Theme.ModernUIQt5 import ModernUIQt5
+from SRC.ViewLayer.Layout.PreferencesDropDown import PreferencesDropdown
 
 class TimetableUIComponents:
+    # # Signal: emits index (str) when user presses Enter
+    # indexEntered = pyqtSignal(str)
+
+    # def __init__(self):
+    #     super().__init__()
 
     @staticmethod
     def create_enhanced_loading_indicator(parent, instance):
@@ -90,33 +96,54 @@ class TimetableUIComponents:
         instance.export_button.setFixedSize(120, 40)
         instance.export_button.clicked.connect(instance.export_pdf_dialog)
         export_jump_group.addWidget(instance.export_button)
-
+        
+        # Preferences row - second line
+        preferences_jump_row = QHBoxLayout()
+        
+        # Preferences Dropdown
+        instance.preferences_dropdown = PreferencesDropdown(instance.apply_display_sort)
+        preferences_jump_row.addWidget(instance.preferences_dropdown)
+        
+        preferences_jump_row.addStretch()
+        
         # Jump Label
         jump_label = QLabel("Jump to:")
         jump_label.setObjectName("jumpLabel")
         jump_label.setFixedHeight(40)
-        export_jump_group.addWidget(jump_label)
+        preferences_jump_row.addWidget(jump_label)
 
         # Jump First
-        instance.jump_first_button = QPushButton("⏮ First")
+        instance.jump_first_button = QPushButton("First")
         instance.jump_first_button.setObjectName("jumpButton")
         instance.jump_first_button.setFixedSize(70, 30)
         instance.jump_first_button.clicked.connect(instance.jump_to_first)
-        export_jump_group.addWidget(instance.jump_first_button)
+        preferences_jump_row.addWidget(instance.jump_first_button)
+
+        # # Jump to Index (QLineEdit)
+        # instance.jump_index_input = QLineEdit()
+        # instance.jump_index_input.setPlaceholderText("Index")
+        # instance.jump_index_input.setFixedSize(50, 30)
+        # instance.jump_index_input.setObjectName("jumpInput")
+        # preferences_jump_row.addWidget(instance.jump_index_input)
+        
+        # # Connect Enter key press in input to emit signal
+        # instance.jump_index_input.returnPressed.connect(self.emit_index_entered)
 
         # Jump Last
-        instance.jump_last_button = QPushButton("⏭ Last")
+        instance.jump_last_button = QPushButton("Last")
         instance.jump_last_button.setObjectName("jumpButton")
         instance.jump_last_button.setFixedSize(70, 30)
         instance.jump_last_button.clicked.connect(instance.jump_to_last)
-        export_jump_group.addWidget(instance.jump_last_button)
-
+        preferences_jump_row.addWidget(instance.jump_last_button)
+        
         top_nav.addLayout(export_jump_group)
 
         # Final assembly
         nav_layout.addLayout(top_nav)
         nav_frame.setLayout(nav_layout)
+        nav_layout.addLayout(preferences_jump_row)
         parent_layout.addWidget(nav_frame)
+        
   
     @staticmethod
     def create_status_bar(parent_layout, instance):
@@ -153,3 +180,6 @@ class TimetableUIComponents:
         status_frame.setLayout(status_layout)
         parent_layout.addWidget(status_frame)
 
+    # def emit_index_entered(self):
+    #     value = self.jump_index_input.text()
+    #     self.indexEntered.emit(value)

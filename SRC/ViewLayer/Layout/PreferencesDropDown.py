@@ -1,5 +1,6 @@
 from PyQt5.QtWidgets import QWidget, QToolButton, QMenu, QAction, QActionGroup, QHBoxLayout
 from PyQt5.QtCore import Qt
+from SRC.ViewLayer.Theme.ModernUIQt5 import ModernUIQt5
 
 class PreferencesDropdown(QWidget):
     
@@ -32,11 +33,12 @@ class PreferencesDropdown(QWidget):
         # Create the dropdown button
         self.button = QToolButton()
         self.button.setText("Display by ▾")
+        self.button.setObjectName("dropdownButton")
         self.button.setPopupMode(QToolButton.InstantPopup)  # Opens immediately on click
         
         # Create the dropdown menu
         self.menu = QMenu()
-        self.menu.setStyleSheet("QMenu { background-color: white; } QMenu::item:selected { background-color: darkgrey; }")
+        # self.menu.setStyleSheet("QMenu { background-color: white; } QMenu::item:selected { background-color: darkgrey; }")
         self.menu.setAttribute(Qt.WA_StyledBackground, True)
         
         # ------------ Section 1: Preferences --------------
@@ -80,6 +82,9 @@ class PreferencesDropdown(QWidget):
         # Add button to the layout
         layout.addWidget(self.button)
         self.setLayout(layout)
+        # Load and apply external stylesheet
+        self.menu.setStyleSheet(ModernUIQt5.get_dropdown_stylesheet())
+
 
     def on_selection_changed(self, action):
         """

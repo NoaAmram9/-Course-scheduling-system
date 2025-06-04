@@ -568,7 +568,7 @@ class ScheduleService(IScheduleService):
         if index == len(combinations):
             # Instead of appending to a list, yield the TimeTable
             timetable = TimeTable(current_courses.copy())
-            self.preferencesService.apply_preferences(timetable)  # קריאה להעדפות
+            self.preferencesService.apply_preferences(timetable)  # call to apply preferences
             yield timetable
             return
 
