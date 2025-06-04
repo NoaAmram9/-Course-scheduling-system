@@ -73,9 +73,18 @@ class TimetablesPageQt5(QMainWindow):
         main_layout = QVBoxLayout(central_widget)
         main_layout.setContentsMargins(15, 15, 15, 15)
         main_layout.setSpacing(20)
+
+        
+        # nav_bars = TimetableUIComponents()
+        
+        # # Create loading indicator with progress
+        # nav_bars.create_enhanced_nav_bar(main_layout, self)
+        
+        # nav_bars.indexEntered.connect(self.jump_to_index)
+        
+        
         # Create loading indicator with progress
-        TimetableUIComponents.create_enhanced_nav_bar(main_layout, self)
-         
+        TimetableUIComponents.create_enhanced_nav_bar(main_layout, self) 
         # Create navigation bar with auto-display controls
         TimetableUIComponents.create_enhanced_loading_indicator(main_layout, self)
         
@@ -269,6 +278,14 @@ class TimetablesPageQt5(QMainWindow):
         if self.all_options:
             self.current_index = 0
             self.update_view()
+    
+    # def jump_to_index(self, text):
+    #     """Jump to specific timetable index"""
+    #     if text.isdigit():
+    #         index = int(text)
+    #     if 0 <= index < len(self.all_options):
+    #         self.current_index = index
+    #         self.update_view()
     
     def jump_to_last(self):
         """Jump to last loaded timetable"""
