@@ -5,9 +5,9 @@ from SRC.Services.ScheduleService import ScheduleService
 
 class FileController:
     def __init__(self, file_type: str):
-        if file_type == "excel":
+        if file_type == ".xlsx" or file_type == ".xls":
             self.file_manager = ExcelManager()
-        elif file_type == "txt":
+        elif file_type == ".txt":
             self.file_manager = TxtManager()
         else:
             raise ValueError("Unsupported file type. Use 'excel' or 'txt'.")
