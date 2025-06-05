@@ -38,40 +38,80 @@ class FileController:
         
     # Function to create the schedules based on the selected courses
     def create_schedules(self, selected_courses):
+        
         scheduleService = ScheduleService()
         return scheduleService.generate_schedules(selected_courses, limit=1000)
+    #DEBUGGGGGGG 
     
-    # def get_all_options(self, file_path1, file_path2):         
-    #     courses_info = self.read_courses_from_file(file_path1)
-    #     selected_courses = self.get_selected_courses(file_path2)
-    #     selected_courses_info = self.selected_courses_info(courses_info, selected_courses)
-        
+    # def get_all_options(self, file_path1, file_path2, batch_size=100):
+    #     """
+    #     Returns batches of timetables instead of individual timetables
+    #     This replaces the old method that returned individual timetables
+    #     """
     #     try:
+    #         print("Starting get_all_options...")
+    #         courses_info = self.read_courses_from_file(file_path1)
+    #         print(f"Read {len(courses_info)} courses from file")
+            
+    #         selected_courses = self.get_selected_courses(file_path2)
+    #         print(f"Selected {len(selected_courses)} courses")
+            
+    #         selected_courses_info = self.selected_courses_info(courses_info, selected_courses)
+    #         print(f"Found {len(selected_courses_info)} matching courses")
+            
     #         schedule_service = ScheduleService()
+    #         print("Created ScheduleService")
             
-    #         # צור generator שיכול לטעון הכל
+    #         # Get the progressive generator (no limit)
     #         schedule_generator = schedule_service.generate_schedules_progressive(
-    #             selected_courses_info, 
-    #             limit=None  # ללא הגבלה
+    #             selected_courses_info,  
+    #             limit=None # No limit, to get all possible schedules
     #         )
+    #         print("Created schedule generator")
             
-    #         # טען במנות של 1000
+    #         # Collect into batches
     #         batch = []
-    #         for timetable in schedule_generator:
-    #             batch.append(timetable)
-                
-    #             # כשמגיעים ל-1000, החזר את המנה
-    #             if len(batch) >= 1000:
-    #                 yield batch
-    #                 batch = []  # איפוס למנה הבאה
+    #         count = 0
             
-    #         # החזר את המנה האחרונה (אם יש פחות מ-1000)
-    #         if batch:
-    #             yield batch
+    #         for timetable in schedule_generator:
+    #             try:
+    #                 batch.append(timetable)
+    #                 count += 1
+                    
+    #                 if count % 100 == 0:  # Progress tracking
+    #                     print(f"Processed {count} timetables")
+                    
+    #                 # When batch is full, yield it
+    #                 if len(batch) >= batch_size:
+    #                     print(f"Yielding batch of {len(batch)} timetables")
+    #                     yield batch
+    #                     batch = []  # Reset for next batch
                         
+    #             except ZeroDivisionError as zde:
+    #                 print(f"ZeroDivisionError at timetable {count}: {str(zde)}")
+    #                 print(f"Timetable details: {timetable}")
+    #                 raise zde
+    #             except Exception as e:
+    #                 print(f"Error processing timetable {count}: {str(e)}")
+    #                 continue  # Skip this timetable and continue
+                    
+    #         # Yield final batch if it has any items
+    #         if batch:
+    #             print(f"Yielding final batch of {len(batch)} timetables")
+    #             yield batch
+                
+    #         print(f"Completed processing {count} total timetables")
+                            
+    #     except ZeroDivisionError as zde:
+    #         print(f"ZeroDivisionError in get_all_options: {str(zde)}")
+    #         import traceback
+    #         traceback.print_exc()
+    #         return []
     #     except Exception as e:
-    #         print(f"Error in generator: {str(e)}")
-    #         return
+    #         print(f"General error in get_all_options: {str(e)}")
+    #         import traceback
+    #         traceback.print_exc()
+    #         return []
 
     def get_all_options(self, file_path1, file_path2, batch_size=100):
         """

@@ -46,13 +46,14 @@ class ExcelManager(FileManager):
             return "exercise"
         elif 'מעבדה' in type_str:
             return "lab"
-        elif 'פיתוח' in type_str:
-            return "development"
-        elif 'שיעות' in type_str:
-            return "lesson"
+        elif 'ש.מחלקה' in type_str:
+            return "departmentHours"
+        elif 'תגבור' in type_str:
+            return "reinforcement"
+        elif 'הדרכה' in type_str:
+            return "training"
         else:
-            return "other"
-
+            return "other" 
     @staticmethod
     def parse_location(location_str: str) -> tuple:
         if not location_str or pd.isna(location_str):
@@ -146,8 +147,12 @@ class ExcelManager(FileManager):
                 course.exercises.append(lesson)
             elif lesson_type == "lab":
                 course.labs.append(lesson)
-            elif lesson_type == "development":
+            elif lesson_type == "departmentHours":
                 course.departmentHours.append(lesson)
+            elif lesson_type == "reinforcement":
+                course.reinforcement.append(lesson)
+            elif lesson_type == "training":
+                course.training.append(lesson)
             else:
                 course.training.append(lesson)
                 

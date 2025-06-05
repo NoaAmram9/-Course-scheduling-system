@@ -1,5 +1,5 @@
 from SRC.Services.FileManager import FileManager
-from SRC.Services.ScheduleService import ScheduleService
+# from SRC.Services.ScheduleService import ScheduleService
 import SRC.ViewLayer.View.TimetablesPage as TimetablesPage
 from tkinterdnd2 import TkinterDnD
 
@@ -32,17 +32,17 @@ class Controller:
                 selected_courses_info.append(course)
         return selected_courses_info
     
-    # Function to create the schedules based on the selected courses
-    def create_schedules(self, selected_courses, selected_courses_path, courses_info_path):
-        dataManager = FileManager()
+    # # Function to create the schedules based on the selected courses
+    # def create_schedules(self, selected_courses, selected_courses_path, courses_info_path):
+    #     dataManager = FileManager()
 
-        # Validate that all selected course numbers exist in the courses info
-        if not dataManager.validate_course_numbers_exist(selected_courses_path, courses_info_path):
-            print("Error: Some selected courses are invalid.")
-            return []
+    #     # Validate that all selected course numbers exist in the courses info
+    #     if not dataManager.validate_course_numbers_exist(selected_courses_path, courses_info_path):
+    #         print("Error: Some selected courses are invalid.")
+    #         return []
         
-        scheduleService = ScheduleService()
-        return scheduleService.generate_schedules(selected_courses)
+    #     scheduleService = ScheduleService()
+    #     return scheduleService.generate_schedules(selected_courses)
     
     
     # Function to write the schedule to an output file

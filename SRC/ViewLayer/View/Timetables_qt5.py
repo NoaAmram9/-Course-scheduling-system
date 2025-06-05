@@ -216,9 +216,11 @@ class TimetablesPageQt5(QMainWindow):
         if hasattr(self, 'loading_start_time'):
             import time
             elapsed = time.time() - self.loading_start_time
-            if elapsed > 0:
+            if elapsed > 0.001:  # Avoid division by zero
                 rate = current / elapsed
                 self.loading_rate_label.setText(f"Rate: {rate:.1f} options/sec")
+            else:
+                self.loading_rate_label.setText("Rate: calculating...")
         else:
             import time
             self.loading_start_time = time.time()

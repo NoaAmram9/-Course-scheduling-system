@@ -16,7 +16,12 @@ def get_lesson_type_color_class(lesson_type):
     type_classes = {
         "Lecture": "lectureCell",  # Class for lecture cells
         "Lab": "labCell",          # Class for lab cells
-        "Exercise": "exerciseCell" # Class for exercise cells
+        "Exercise": "exerciseCell", # Class for exercise cells
+        "Reinforcement": "reinforcementCell",  # Class for reinforcement cells
+        "Training": "trainingCell",  # Class for training cells
+        "DepartmentHour": "departmentHourCell",  # Class for department hour cells
+        "default": "defaultCell"   # Default class for any other type or if not specified
+        
     }
     # Return the class for the given lesson_type, or "defaultCell" if not found
     return type_classes.get(lesson_type, "defaultCell")

@@ -106,6 +106,8 @@ QPushButton[disabled="true"] {
     font-size: 12px;
     color: #888;
 }
+
+
 QFrame#lectureCell {
     background-color: #EFD8C5; /* בז' חם, טבעי */
     border-radius: 10px;
@@ -113,16 +115,41 @@ QFrame#lectureCell {
 }
 
 QFrame#labCell {
-    background-color: #E6C1A5; /* אפרסק בהיר / כתום מדברי */
+    background-color: #D6EFD8; /* ירקרק רך */
     border-radius: 10px;
-    border: 1px solid #B1774F; /* חום־כתום רך */
+    border: 1px solid #91C7A9; /* ירוק עלים בינוני */
 }
 
 QFrame#exerciseCell {
-    background-color: #D9B382; /* חמרה מדברית */
+    background-color: #D8E4EF; /* תכלת בהיר */
     border-radius: 10px;
-    border: 1px solid #996633; /* חום כהה קלאסי */
+    border: 1px solid #8CAFD1; /* כחול בינוני רך */
 }
+
+QFrame#reinforcementCell {
+    background-color: #F0E5D8; /* גוון חול בהיר */
+    border-radius: 10px;
+    border: 1px solid #C2B29B; /* חום־אפור */
+}
+
+QFrame#trainingCell {
+    background-color: #F7EFD8; /* צהבהב רך */
+    border-radius: 10px;
+    border: 1px solid #D1C187; /* זהוב־צהוב טבעי */
+}
+
+QFrame#departmentHourCell {
+    background-color: #EFD8E6; /* ורדרד בהיר */
+    border-radius: 10px;
+    border: 1px solid #C9A6BA; /* ורוד־סגלגל בינוני */
+}
+
+QFrame#defaultCell {
+    background-color: #E0E0E0; /* אפור בהיר נייטרלי */
+    border-radius: 10px;
+    border: 1px solid #B0B0B0; /* אפור בינוני */
+}
+
 
 QFrame#defaultCell {
     background-color: #F5F0E6; /* בז' בהיר מאוד */
