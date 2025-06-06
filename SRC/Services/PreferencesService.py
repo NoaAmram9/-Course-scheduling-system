@@ -57,7 +57,8 @@ class PreferencesService:
         # Collect all lesson times from the timetable's courses
         lesson_times = []
         for course in self.timetable.courses:
-            for lesson_list in [course.lectures, course.exercises, course.labs]:
+            for lesson_list in [course.lectures, course.exercises, course.labs, course.departmentHours,
+                                course.reinforcement, course.training]:
                 if not lesson_list:
                     continue
                 for lesson in lesson_list:
@@ -83,7 +84,11 @@ class PreferencesService:
         Returns:
             int: The number of active days.
         """
-        return len(lesson_times) if lesson_times else 0
+     
+    
+        return  len(lesson_times) if lesson_times else 0
+       
+        
     
     # Method to calculate the number and total duration of free windows in the timetable.       
     def calculate_free_windows(self, lesson_times=None):
@@ -113,6 +118,72 @@ class PreferencesService:
               
         
         return free_windows, total_free_hours
+    
+    ####DEBUGGING METHODS - Uncomment to use for debugging purposes#####
+    # def calculate_avg_times(self, lesson_times=None):
+    #     """
+    #     Calculate the average start and end times of lessons in the timetable.
+    #     Args:
+    #         lesson_times (dict): Dictionary of lesson lists grouped by day.
+
+    #     Returns:
+    #         tuple: (avg_start, avg_end) where:
+    #     """   
+    #     print(f"DEBUG: Starting calculate_avg_times")
+    #     print(f"DEBUG: lesson_times = {lesson_times}")
+        
+    #     total_start = 0
+    #     total_end = 0
+    #     total_days = self.calculate_active_days(lesson_times=lesson_times)
+        
+    #     print(f"DEBUG: total_days = {total_days}")
+        
+    #     # Check if we have any active days
+    #     if total_days == 0:
+    #         print("DEBUG: No active days found - returning default values")
+    #         return 0, 0  # או ערכים default אחרים שמתאימים לך
+        
+    #     # Check if lesson_times is empty or None
+    #     if not lesson_times:
+    #         print("DEBUG: lesson_times is empty or None")
+    #         return 0, 0
+        
+    #     # for each day, add the start and end times of lessons to the totals
+    #     for day, daily_lessons in lesson_times.items():
+    #         print(f"DEBUG: Processing day {day} with {len(daily_lessons)} lessons")
+            
+    #         if not daily_lessons:  # אם אין שיעורים ביום הזה
+    #             print(f"DEBUG: No lessons for day {day}")
+    #             continue
+                
+    #         last_lesson_index = len(daily_lessons) - 1
+            
+    #         # בדיקה נוספת שהשיעור הראשון והאחרון קיימים
+    #         if daily_lessons[0] is None or daily_lessons[last_lesson_index] is None:
+    #             print(f"DEBUG: Invalid lesson found on day {day}")
+    #             continue
+                
+    #         start_hour = self.extract_hour(daily_lessons[0].start_hour)
+    #         end_hour = self.extract_hour(daily_lessons[last_lesson_index].end_hour)
+            
+    #         print(f"DEBUG: Day {day} - start: {start_hour}, end: {end_hour}")
+            
+    #         total_start += start_hour
+    #         total_end += end_hour
+        
+    #     print(f"DEBUG: total_start = {total_start}, total_end = {total_end}, total_days = {total_days}")
+        
+    #     # Calculate the average start and end times - with zero division protection
+    #     if total_days > 0:
+    #         avg_start = total_start / total_days
+    #         avg_end = total_end / total_days
+    #         print(f"DEBUG: avg_start = {avg_start}, avg_end = {avg_end}")
+    #     else:
+    #         print("DEBUG: total_days is 0 - cannot calculate average")
+    #         avg_start = 0
+    #         avg_end = 0
+        
+    #     return avg_start, avg_end
     
     # Method to calculate the average start and end times in the timetable.       
     def calculate_avg_times(self, lesson_times=None):

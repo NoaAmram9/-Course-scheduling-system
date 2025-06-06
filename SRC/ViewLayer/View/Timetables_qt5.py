@@ -6,7 +6,7 @@ from pathlib import Path
 
 # Import necessary PyQt5 modules for creating the GUI
 from PyQt5.QtWidgets import (QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QPushButton,
-                             QLabel, QScrollArea, QFrame, QMessageBox, QFileDialog,
+                             QLabel, QScrollArea, QFrame, QMessageBox, QFileDialog,QApplication,
                              QGridLayout, QSizePolicy, QProgressBar)
 from PyQt5.QtCore import Qt, QSize, QTimer, pyqtSignal
 from PyQt5.QtGui import QFont, QPalette
@@ -216,9 +216,11 @@ class TimetablesPageQt5(QMainWindow):
         if hasattr(self, 'loading_start_time'):
             import time
             elapsed = time.time() - self.loading_start_time
-            if elapsed > 0:
+            if elapsed > 0.001:  # Avoid division by zero
                 rate = current / elapsed
                 self.loading_rate_label.setText(f"Rate: {rate:.1f} options/sec")
+            else:
+                self.loading_rate_label.setText("Rate: calculating...")
         else:
             import time
             self.loading_start_time = time.time()
@@ -228,7 +230,8 @@ class TimetablesPageQt5(QMainWindow):
         self.loading_complete = True
         self.loading_frame.hide()
         self.is_loading = False
-        
+       
+        self.update_title()
         if not self.all_options:
             self.no_data_label.setText("No timetable options found.\nPlease go back and select different courses.")
             self.no_data_label.show()

@@ -34,6 +34,7 @@ def debug_excel_parsing(file_path):
             print_lessons("Lab", course.labs)
             print_lessons("DepartmentHour", course.departmentHours)
             print_lessons("Training", course.training)
+            print(f"📑 Reinforcement: {course.reinforcement}")
 
     except Exception as e:
         print("❌ An error occurred while parsing the Excel file:")

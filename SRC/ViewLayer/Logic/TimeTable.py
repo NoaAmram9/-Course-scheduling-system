@@ -12,7 +12,10 @@ def map_courses_to_slots(timetable):
     for course in courses:
         for lesson_type, lesson_list in [("Lecture", course.lectures),
                                          ("Exercise", course.exercises),
-                                         ("Lab", course.labs)]:
+                                         ("Lab", course.labs),
+                                         ("Reinforcement", course.reinforcement),
+                                         ("DepartmentHour", course.departmentHours),
+                                         ("Training", course.training)]:
             for lesson in lesson_list:
                 day = DAYS[lesson.time.day - 1]  # Convert day index to string. lesson["day"] should be an index (numerical).
                 start = int(lesson.time.start_hour)

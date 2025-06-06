@@ -151,7 +151,7 @@ class CourseListPanelQt5(QWidget):
         for i in range(self.course_tree.topLevelItemCount()):
             item = self.course_tree.topLevelItem(i)
             if item.data(0, Qt.UserRole) == course_code:
-                item.setBackground(0, QColor("#d5f5e3"))
+                item.setBackground(0, QColor("#EFD8C5"))
                 break
 
     def unmark_course_as_selected(self, course_code):

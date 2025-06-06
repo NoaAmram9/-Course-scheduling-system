@@ -3,12 +3,14 @@ from SRC.ViewLayer.View.main_page_qt5 import MainPageQt5
 from SRC.Models.ValidationError import ValidationError
 import os
 import shutil
-
+from SRC.Controller.FileController import FileController
 class LandPageController:
-    def __init__(self, view, controller):
+    def __init__(self, view):
         self.view = view
-        self.controller = controller
+        self.file_controller = None  # יאותחל לפי סוג הקובץ
+        
         self.file_uploaded = False
+        self.uploaded_path = None
 
         # Connect buttons and signals
         self.view.upload_button.clicked.connect(self.upload_file)
@@ -16,6 +18,7 @@ class LandPageController:
         self.view.file_uploaded.connect(self.handle_uploaded_file)
 
     def handle_uploaded_file(self, path):
+        # בדיקת סיומת קובץ
         if not path.endswith((".txt", ".xlsx")):
             QMessageBox.critical(self.view, "Invalid file", "Only .txt or .xlsx files are allowed.")
             return
@@ -24,13 +27,24 @@ class LandPageController:
             save_dir = os.path.join(os.path.dirname(__file__), '..', '..', '..', 'Data')
             os.makedirs(save_dir, exist_ok=True)
 
+            # קבלת הסיומת
             extension = os.path.splitext(path)[1]
+            
+            # יצירת קונטרולר לפי סוג הקובץ
+            
+            self.file_controller = FileController(extension)
+            
+            # יצירת נתיב יעד
             dest_path = os.path.join(save_dir, f"courses{extension}")
+            
+            # העתקת הקובץ
             shutil.copy(path, dest_path)
 
+            # עדכון UI
             self.view.file_label.setText(f"Uploaded: {os.path.basename(path)}")
             self.uploaded_path = dest_path
             self.file_uploaded = True
+            
         except Exception as e:
             QMessageBox.critical(self.view, "Error", f"Failed to save file:\n{str(e)}")
 
@@ -50,17 +64,27 @@ class LandPageController:
             QMessageBox.warning(self.view, "Missing File", "Please upload a .txt or .xlsx file before proceeding.")
             return
 
-        file_to_process = self.uploaded_path
-
-        data = self.controller.read_courses_from_file(file_to_process)
-        if all(isinstance(x, ValidationError) for x in data):
-            error_messages = "\n".join(str(error) for error in data)
-            QMessageBox.warning(self.view, "Invalid Course File", f"The following errors were found:\n\n{error_messages}")
+        if not self.file_controller:
+            QMessageBox.critical(self.view, "Error", "File controller not initialized.")
             return
 
-        self.view.close()
+        # קריאת הקורסים מהקובץ
+        try:
+            data = self.file_controller.read_courses_from_file(self.uploaded_path)
+            
+            # בדיקת שגיאות validation
+            if all(isinstance(x, ValidationError) for x in data):
+                error_messages = "\n".join(str(error) for error in data)
+                QMessageBox.warning(self.view, "Invalid Course File", f"The following errors were found:\n\n{error_messages}")
+                return
+            
+            # סגירת החלון הנוכחי ופתיחת הדף הראשי
+            self.view.close()
 
-        self.main_page = MainPageQt5(self.controller)
-        self.main_page.show()
-        self.main_page.setWindowTitle("Main Page")
-        self.main_page.resize(800, 600)
+            self.main_page = MainPageQt5(self.file_controller)
+            self.main_page.show()
+            self.main_page.setWindowTitle("Main Page")
+            self.main_page.resize(800, 600)
+            
+        except Exception as e:
+            QMessageBox.critical(self.view, "Error", f"Failed to process file:\n{str(e)}")

@@ -7,9 +7,9 @@ from SRC.ViewLayer.Logic.LandPageController import LandPageController
 
 def main():
     app = QApplication(sys.argv)
-    controller = FileController("excel")  # Initialize the file controller with the desired file type
+    # controller = FileController("excel")  # Initialize the file controller with the desired file type
     view = LandPageView()
-    logic = LandPageController(view, controller)
+    logic = LandPageController(view)
     view.show()
     sys.exit(app.exec_())
 
