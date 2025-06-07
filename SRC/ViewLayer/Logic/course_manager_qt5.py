@@ -3,12 +3,12 @@ from PyQt5.QtWidgets import QMessageBox
 class CourseManagerQt5:
     """Logic class that handles interaction between the controller and UI components."""
     
-    def __init__(self, controller, course_list_panel, course_details_panel, selected_courses_panel):
+    def __init__(self, controller,Data, course_list_panel, course_details_panel, selected_courses_panel):
         self.controller = controller
         self.course_list_panel = course_list_panel
         self.course_details_panel = course_details_panel  
         self.selected_courses_panel = selected_courses_panel
-        
+        self.Data = Data
         # Connect signals -
         self.course_list_panel.course_selected.connect(self.show_course_details)
         self.course_list_panel.course_double_clicked.connect(self.add_course)
@@ -20,7 +20,7 @@ class CourseManagerQt5:
     
     def load_courses(self):
         """Load courses from the repository file using the controller"""
-        courses = self.controller.read_courses_from_file("Data/courses.xlsx")
+        courses = self.Data
         course_map = {course.code: course for course in courses}
         
         self.course_list_panel.load_courses(courses)
@@ -51,10 +51,6 @@ class CourseManagerQt5:
         if not selected_courses:
             QMessageBox.information(None, "No Courses", "You haven't selected any courses yet.")
             return False
-        
-        course_names = [course._name for course in selected_courses]
-        message = f"You have selected {len(course_names)} courses:\n\n"
-        message += "\n".join([f"- {name}" for name in course_names])
         
         course_codes = [course._code for course in selected_courses]
         self.controller.create_selected_courses_file(course_codes, "Data/selected_courses.txt")

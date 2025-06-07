@@ -9,15 +9,17 @@ from SRC.ViewLayer.Layout.selected_courses_panel_qt5 import SelectedCoursesPanel
 from SRC.ViewLayer.Theme.ModernUIQt5 import ModernUIQt5
 
 class MainPageQt5(QMainWindow):
-    def __init__(self, controller):
+    def __init__(self, Data ,controller, filePath):
         super().__init__()
         self.controller = controller
         self.max_courses = 7
         self.selected_course_ids = set()
         self.course_map = {}
-        
+        self.Data= Data
         self.init_ui()
         self.setup_course_manager()
+        self.filePath = filePath
+     
         
     def init_ui(self):
         """Initialize the user interface"""
@@ -102,6 +104,7 @@ class MainPageQt5(QMainWindow):
         """Set up the course manager to handle logic"""
         self.course_manager = CourseManagerQt5(
             self.controller,
+            self.Data,
             self.course_list_panel,
             self.details_panel,
             self.selected_courses_panel
@@ -142,11 +145,14 @@ class MainPageQt5(QMainWindow):
         # Create the timetables window
         self.timetables_window = TimetablesPageQt5(
             controller=self.controller,
-            go_back_callback=go_back_to_selection
+            go_back_callback=go_back_to_selection,
+            filePath= self.filePath
         )
         
         # Show the timetables window
-        self.timetables_window.show()       
+        self.timetables_window.show()  
+        
+             
     def get_selected_courses(self):
         """Get the list of selected courses"""
         return self.course_manager.get_selected_courses()

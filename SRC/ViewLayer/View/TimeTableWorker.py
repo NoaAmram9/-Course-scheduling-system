@@ -22,7 +22,7 @@ class TimetableWorker(QThread):
         self._stop_requested = False          # If True, the thread should stop
         self._paused = False                  # If True, the thread should pause
         self.loaded_count = 0                 # How many timetables were loaded so far
-
+        print(f"TimetableWorker initialized with files: {file_path1}, {file_path2} and batch size: {batch_size}")
     def run(self):
         """This is what runs when you start the thread."""
         try:

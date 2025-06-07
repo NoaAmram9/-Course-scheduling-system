@@ -11,7 +11,7 @@ class LandPageController:
         
         self.file_uploaded = False
         self.uploaded_path = None
-
+        self.Data = None
         # Connect buttons and signals
         self.view.upload_button.clicked.connect(self.upload_file)
         self.view.send_button.clicked.connect(self.send_action)
@@ -39,10 +39,13 @@ class LandPageController:
             
             # העתקת הקובץ
             shutil.copy(path, dest_path)
-
+            
+           
+            
             # עדכון UI
             self.view.file_label.setText(f"Uploaded: {os.path.basename(path)}")
             self.uploaded_path = dest_path
+            
             self.file_uploaded = True
             
         except Exception as e:
@@ -58,7 +61,6 @@ class LandPageController:
         )
         if file_path:
             self.handle_uploaded_file(file_path)
-
     def send_action(self):
         if not self.file_uploaded:
             QMessageBox.warning(self.view, "Missing File", "Please upload a .txt or .xlsx file before proceeding.")
@@ -68,23 +70,55 @@ class LandPageController:
             QMessageBox.critical(self.view, "Error", "File controller not initialized.")
             return
 
-        # קריאת הקורסים מהקובץ
         try:
-            data = self.file_controller.read_courses_from_file(self.uploaded_path)
-            
-            # בדיקת שגיאות validation
-            if all(isinstance(x, ValidationError) for x in data):
-                error_messages = "\n".join(str(error) for error in data)
+            courses, errors = self.file_controller.read_courses_from_file(self.uploaded_path)
+             # הוספת קוד לחילוץ שני החלקים האחרונים של הנתיב
+            from pathlib import Path
+            last_two_parts = Path(self.uploaded_path).parts[-2:]
+            filePath = os.path.join(*last_two_parts)
+            unix_style_path = filePath.replace("\\", "/")
+            if errors:
+                error_messages = "\n".join(str(error) for error in errors)
                 QMessageBox.warning(self.view, "Invalid Course File", f"The following errors were found:\n\n{error_messages}")
                 return
-            
-            # סגירת החלון הנוכחי ופתיחת הדף הראשי
-            self.view.close()
 
-            self.main_page = MainPageQt5(self.file_controller)
+            self.view.close()
+            self.Data = courses
+           
+            self.main_page = MainPageQt5(self.Data, self.file_controller,unix_style_path)
             self.main_page.show()
             self.main_page.setWindowTitle("Main Page")
             self.main_page.resize(800, 600)
-            
+
         except Exception as e:
             QMessageBox.critical(self.view, "Error", f"Failed to process file:\n{str(e)}")
+
+    # def send_action(self):
+    #     if not self.file_uploaded:
+    #         QMessageBox.warning(self.view, "Missing File", "Please upload a .txt or .xlsx file before proceeding.")
+    #         return
+
+    #     if not self.file_controller:
+    #         QMessageBox.critical(self.view, "Error", "File controller not initialized.")
+    #         return
+
+    #     # קריאת הקורסים מהקובץ
+    #     try:
+    #         data = self.file_controller.read_courses_from_file(self.uploaded_path)
+    #         print(f"Data read from file:11111111111111111")
+    #         # בדיקת שגיאות validation
+    #         if all(isinstance(x, ValidationError) for x in data):
+    #             error_messages = "\n".join(str(error) for error in data)
+    #             QMessageBox.warning(self.view, "Invalid Course File", f"The following errors were found:\n\n{error_messages}")
+    #             return
+    #         print(f"Data read from file: 2222222222222222")
+    #         # סגירת החלון הנוכחי ופתיחת הדף הראשי
+    #         self.view.close()
+
+    #         self.main_page = MainPageQt5(self.file_controller)
+    #         self.main_page.show()
+    #         self.main_page.setWindowTitle("Main Page")
+    #         self.main_page.resize(800, 600)
+            
+    #     except Exception as e:
+    #         QMessageBox.critical(self.view, "Error", f"Failed to process file:\n{str(e)}")

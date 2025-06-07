@@ -11,7 +11,9 @@ class FileController:
             self.file_manager = TxtManager()
         else:
             raise ValueError("Unsupported file type. Use 'excel' or 'txt'.")
-
+    def get_file_type(self) -> str:
+        return self.file_type
+    
     def read_courses_from_file(self, file_path: str):
         return self.file_manager.read_courses_from_file(file_path)
 

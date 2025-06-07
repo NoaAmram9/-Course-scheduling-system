@@ -409,20 +409,19 @@ class CourseDetailsPanelQt5(QWidget):
         if hasattr(lesson, 'time') and lesson.time:
       
             time_label = QLabel("Time:")
-        
-            # יצירת מחרוזת זמן מתאימה
+           
+            # Format time as HH:MM
             start_time = f"{lesson.time.start_hour:02d}:00"
             end_time = f"{lesson.time.end_hour:02d}:00"
-            
-            # המרת מספר היום לשם היום (אופציונלי)
+         
             days = {
-                0: "ראשון",
-                1: "שני", 
-                2: "שלישי",
-                3: "רביעי",
-                4: "חמישי",
-                5: "שישי",
-                6: "שבת"
+                1: "ראשון",
+                2: "שני", 
+                3: "שלישי",
+                4: "רביעי",
+                5: "חמישי",
+                6: "שישי",
+                7: "שבת"
             }
             day_name = days.get(lesson.time.day, f"יום {lesson.time.day}")
             
