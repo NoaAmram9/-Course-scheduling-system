@@ -122,7 +122,6 @@ class FileController:
         Returns batches of timetables instead of individual timetables
         This replaces the old method that returned individual timetables
         """
-        print(">>> get_all_options called")
         
         courses_info = self.read_courses_from_file(file_path1)
         selected_courses = self.get_selected_courses(file_path2)

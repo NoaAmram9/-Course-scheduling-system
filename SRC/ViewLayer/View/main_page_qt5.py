@@ -175,28 +175,7 @@ class MainPageQt5(QMainWindow):
     def get_selected_courses(self):
         """Get the list of selected courses"""
         return self.course_manager.get_selected_courses()
-    
-    # def toggle_time_constraints(self):
-    #     """Toggle time constraints (add/remove dummy course)"""
-    #     if not hasattr(self, "_constraints_added"):
-    #         self._constraints_added = False
 
-    #     if not self._constraints_added:
-    #         self.course_manager.add_time_constraints()
-    #         self.toggle_constraints_button.setText("Remove Time Constraints")
-    #         self._constraints_added = True
-    #     else:
-    #         self.course_manager.remove_time_constraints()
-    #         self.toggle_constraints_button.setText("Add Time Constraints")
-    #         self._constraints_added = False
-
-    # def open_time_constraints_dialog(self):
-    #     dialog = TimeConstraintsDialog(self)
-    #     if dialog.exec_():
-    #         selected_constraints = dialog.get_selected_slots()
-    #         dummy_courses = self.controller.time_constraints_service.generate_busy_slots(selected_constraints)
-    #         self.selected_courses_panel.add_dummy_courses(dummy_courses)
-    #         self.course_manager.selected_courses.extend(dummy_courses)
 
     def show_time_constraints_selector(self):
         self.dialog = QDialog(self)
