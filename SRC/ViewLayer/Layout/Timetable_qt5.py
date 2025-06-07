@@ -43,7 +43,7 @@ def format_course_info(course_data):
         lines.append(name)
 
     # Add lesson type if available (third line)
-    if course_data.get("type") and not course_data.get("code", "").startswith("BLOCKED_"):
+    if course_data.get("type") and not course_data.get("code", "").startswith("BLOCKED"):
         lines.append(course_data["type"])
 
     # Add location if available (fourth line)
@@ -245,7 +245,7 @@ class TimetableGridWidget(QWidget):
             # cell.setObjectName(cell_class)  # Apply the class name for styling
 
             lesson_type = course_data.get("type", "")
-            is_blocked = course_data.get("code", "").startswith("BLOCKED_")
+            is_blocked = course_data.get("code", "").startswith("BLOCKED")
 
             if is_blocked:
                 cell.setObjectName("blockedCell")

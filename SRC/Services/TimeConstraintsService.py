@@ -24,7 +24,7 @@ class TimeConstraintsService:
             time = LessonTimes(start_hour=start, end_hour=end, day=day)
             dummy_lesson = Lesson(
                 time=time,
-                lesson_type="Blocked",      # Use valid type expected by generator
+                lesson_type="Blocked",   
                 building="",
                 room="",
                 instructors=[],
@@ -35,7 +35,7 @@ class TimeConstraintsService:
 
             dummy_course = Course(
                 name = "Unavailable Time",
-                code=f"BLOCKED_{self.block_counter}",
+                code=f"BLOCKED",
                 semester=0,
                 lectures=[dummy_lesson],
                 exercises=[dummy_lesson],
