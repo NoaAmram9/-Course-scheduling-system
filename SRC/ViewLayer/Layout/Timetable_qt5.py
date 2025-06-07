@@ -43,7 +43,7 @@ def format_course_info(course_data):
         lines.append(name)
 
     # Add lesson type if available (third line)
-    if course_data.get("type"):
+    if course_data.get("type") and not course_data.get("code", "").startswith("BLOCKED_"):
         lines.append(course_data["type"])
 
     # Add location if available (fourth line)
@@ -240,9 +240,19 @@ class TimetableGridWidget(QWidget):
 
         if course_data:  # If there is course data for this slot
             # Determine the CSS class for styling based on lesson type
-            lesson_type = course_data.get("type", "")  # Get lesson type, default to empty string
-            cell_class = get_lesson_type_color_class(lesson_type)
-            cell.setObjectName(cell_class)  # Apply the class name for styling
+            #lesson_type = course_data.get("type", "")  # Get lesson type, default to empty string
+            #cell_class = get_lesson_type_color_class(lesson_type)
+            # cell.setObjectName(cell_class)  # Apply the class name for styling
+
+            lesson_type = course_data.get("type", "")
+            is_blocked = course_data.get("code", "").startswith("BLOCKED_")
+
+            if is_blocked:
+                cell.setObjectName("blockedCell")
+            else:
+                cell_class = get_lesson_type_color_class(lesson_type)
+                cell.setObjectName(cell_class)
+
 
             layout.setSpacing(2)  # Set spacing between widgets in the layout
 
@@ -253,7 +263,11 @@ class TimetableGridWidget(QWidget):
             # Display course code/name (first line, potentially styled differently)
             if lines:  # If there's at least one line of text
                 name_label = QLabel(lines[0])  # Create label for the first line (code or name)
-                name_label.setObjectName("courseNameLabel")  # Style for primary info
+                if is_blocked:
+                    name_label.setObjectName("blockedLabel")
+                else:
+                    name_label.setObjectName("courseNameLabel")# Style for primary info
+                                                                
                 name_label.setAlignment(Qt.AlignCenter)       # Center text
                 name_label.setWordWrap(True)                 # Allow text to wrap if it's too long
                 layout.addWidget(name_label)                 # Add to cell layout

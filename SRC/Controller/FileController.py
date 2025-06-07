@@ -2,6 +2,7 @@ from SRC.Services.ExcelManager import ExcelManager
 from SRC.Services.TxtManager import TxtManager
 from SRC.Interfaces.FileManager import FileManager
 from SRC.Services.ScheduleService import ScheduleService
+from SRC.Services.TimeConstraintsService import TimeConstraintsService
 
 class FileController:
     def __init__(self, file_type: str):
@@ -11,6 +12,7 @@ class FileController:
             self.file_manager = TxtManager()
         else:
             raise ValueError("Unsupported file type. Use 'excel' or 'txt'.")
+        self.time_constraints_service = TimeConstraintsService()
 
     def read_courses_from_file(self, file_path: str):
         return self.file_manager.read_courses_from_file(file_path)
@@ -118,10 +120,24 @@ class FileController:
         Returns batches of timetables instead of individual timetables
         This replaces the old method that returned individual timetables
         """
+        print(">>> get_all_options called")
+        
         courses_info = self.read_courses_from_file(file_path1)
         selected_courses = self.get_selected_courses(file_path2)
         selected_courses_info = self.selected_courses_info(courses_info, selected_courses)
         
+        
+        # STEP 1: Define time constraints (can be hardcoded or passed later)
+        constraints = [
+            {"day": 5, "start": 17, "end": 18},
+        ]
+
+        # STEP 2: Generate dummy courses for busy time blocks
+        busy_slots = self.time_constraints_service.generate_busy_slots(constraints)
+
+        # STEP 3: Inject them into selected_courses_info
+        selected_courses_info.extend(busy_slots)
+
         try:
             schedule_service = ScheduleService()
             

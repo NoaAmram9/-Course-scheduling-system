@@ -336,12 +336,14 @@ class TimetablesPageQt5(QMainWindow):
     
     def update_title(self):
         """Update the title label"""
-        if self.loading_complete:
+        if len(self.all_options) == 0:
+            self.title_label.setText("No timetable options available")
+        elif self.loading_complete:
             self.title_label.setText(f"Timetable Option {self.current_index + 1} of {len(self.all_options)}")
         else:
             remaining_text = f"+ (Loading...)" if self.is_loading else ""
             self.title_label.setText(f"Timetable Option {self.current_index + 1} of {len(self.all_options)}{remaining_text}")
-    
+
     def update_button_states(self):
         """Update navigation button states"""
         if self.auto_display_enabled:
