@@ -1,6 +1,6 @@
 class Course:
       
-    def __init__(self, name: str = "", code: str = "", semester: int = 0, lectures: list = None, exercises: list = None, labs: list = None, departmentHours: list = None, reinforcement: list = None, training: list = None, notes:str = ""):
+    def __init__(self, name: str = "", code: str = "", semester: int = 1, lectures: list = None, exercises: list = None, labs: list = None, departmentHours: list = None, reinforcement: list = None, training: list = None, notes:str = ""):
         self._name = name  # course name
         self._code = code  # course number
         self._semester = semester  # course semester

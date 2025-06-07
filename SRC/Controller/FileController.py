@@ -4,14 +4,17 @@ from SRC.Interfaces.FileManager import FileManager
 from SRC.Services.ScheduleService import ScheduleService
 
 class FileController:
-    def __init__(self, file_type: str):
+    def __init__(self, file_type: str, filePath: str = None):
+        self.filePath = filePath
         if file_type == ".xlsx" or file_type == ".xls":
             self.file_manager = ExcelManager()
         elif file_type == ".txt":
             self.file_manager = TxtManager()
         else:
             raise ValueError("Unsupported file type. Use 'excel' or 'txt'.")
-
+    def get_file_type(self) -> str:
+        return self.file_type
+    
     def read_courses_from_file(self, file_path: str):
         return self.file_manager.read_courses_from_file(file_path)
 
@@ -118,7 +121,7 @@ class FileController:
         Returns batches of timetables instead of individual timetables
         This replaces the old method that returned individual timetables
         """
-        courses_info = self.read_courses_from_file(file_path1)
+        courses_info = self.read_courses_from_file(file_path1)[0]  # Get the first element which is the courses info
         selected_courses = self.get_selected_courses(file_path2)
         selected_courses_info = self.selected_courses_info(courses_info, selected_courses)
         
@@ -157,7 +160,7 @@ class FileController:
         delete the temporary files
         
         """
-        file_path1 = "Data/selected_courses.txt"
+        file_path1 = self.filePath
         file_path2 = "Data/courses.xlsx"
         dataManager = FileManager()
         dataManager.delete_temp_files(file_path1, file_path2)
