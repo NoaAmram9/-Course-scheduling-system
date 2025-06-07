@@ -63,3 +63,13 @@ class CourseManagerQt5:
     def get_selected_courses(self):
         """Return the full list of selected Course objects"""
         return self.selected_courses_panel.get_selected_courses()
+    
+    def add_time_constraints(self):
+        constraints = [
+            {"day": 5, "start": 17, "end": 18},
+        ]   
+        self.controller.apply_time_constraints(constraints)  # 👈 Update the controller
+
+    def remove_time_constraints(self):
+        self.controller.clear_time_constraints()  # 👈 Remove from controller
+    

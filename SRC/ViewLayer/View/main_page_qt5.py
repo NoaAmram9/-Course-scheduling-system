@@ -67,6 +67,15 @@ class MainPageQt5(QMainWindow):
         self.course_list_panel = CourseListPanelQt5()
         self.course_list_panel.setMinimumWidth(300)
         content_layout.addWidget(self.course_list_panel, 1)
+
+        # Add Time Constraints Button (styled like Save Selection)
+        self.toggle_constraints_button = ModernUIQt5.create_button("Add Time Constraints", "primary")
+        self.toggle_constraints_button.setFixedHeight(36)
+        self.toggle_constraints_button.clicked.connect(self.toggle_time_constraints)
+
+        # Add it to content_layout with alignment below the course list
+        content_layout.addWidget(self.toggle_constraints_button, 1, Qt.AlignTop)
+
         
         # Middle panel - Course Details (40% width)
         self.details_panel = CourseDetailsPanelQt5()
@@ -150,6 +159,21 @@ class MainPageQt5(QMainWindow):
     def get_selected_courses(self):
         """Get the list of selected courses"""
         return self.course_manager.get_selected_courses()
+    
+    def toggle_time_constraints(self):
+        """Toggle time constraints (add/remove dummy course)"""
+        if not hasattr(self, "_constraints_added"):
+            self._constraints_added = False
+    
+        if not self._constraints_added:
+            self.course_manager.add_time_constraints()
+            self.toggle_constraints_button.setText("Remove Time Constraints")
+            self._constraints_added = True
+        else:
+            self.course_manager.remove_time_constraints()
+            self.toggle_constraints_button.setText("Add Time Constraints")
+            self._constraints_added = False
+
         
     def closeEvent(self, event):
         """Handle window close event"""

@@ -13,6 +13,8 @@ class FileController:
         else:
             raise ValueError("Unsupported file type. Use 'excel' or 'txt'.")
         self.time_constraints_service = TimeConstraintsService()
+        self._injected_constraints = []
+
 
     def read_courses_from_file(self, file_path: str):
         return self.file_manager.read_courses_from_file(file_path)
@@ -126,17 +128,10 @@ class FileController:
         selected_courses = self.get_selected_courses(file_path2)
         selected_courses_info = self.selected_courses_info(courses_info, selected_courses)
         
-        
-        # STEP 1: Define time constraints (can be hardcoded or passed later)
-        constraints = [
-            {"day": 5, "start": 17, "end": 18},
-        ]
+        # Optional: Include dummy blocked courses if added earlier
+        if hasattr(self, "_injected_constraints"):
+            selected_courses_info.extend(self._injected_constraints)
 
-        # STEP 2: Generate dummy courses for busy time blocks
-        busy_slots = self.time_constraints_service.generate_busy_slots(constraints)
-
-        # STEP 3: Inject them into selected_courses_info
-        selected_courses_info.extend(busy_slots)
 
         try:
             schedule_service = ScheduleService()
@@ -178,4 +173,10 @@ class FileController:
         dataManager = FileManager()
         dataManager.delete_temp_files(file_path1, file_path2)
 
-    
+    def apply_time_constraints(self, constraints: list[dict]):
+        """Set the dummy courses to be injected as blocked time slots."""
+        self._injected_constraints = self.time_constraints_service.generate_busy_slots(constraints)
+
+    def clear_time_constraints(self):
+        """Clear any previously set time constraints (remove dummy courses)."""
+        self._injected_constraints = []
