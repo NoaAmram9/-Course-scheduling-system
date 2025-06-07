@@ -13,6 +13,9 @@ class CourseListPanelQt5(QWidget):
         self.filtered_courses = []
         self.course_map = {}
         self.current_semester = '1'  # Default to Semester A
+        self.semester_locked = False  # Boolean to track if semester is locked
+        self.locked_semester = None   # Which semester is locked
+        self.selected_courses = set()  # Track selected courses
         self.init_ui()
 
     def init_ui(self):
@@ -133,6 +136,15 @@ class CourseListPanelQt5(QWidget):
 
     def on_semester_change(self):
         """Triggered when semester radio selection changes"""
+        # Check if semester is locked and prevent change
+        if self.semester_locked:
+            # Revert to locked semester
+            if self.locked_semester == '1':
+                self.semester_a_radio.setChecked(True)
+            else:
+                self.semester_b_radio.setChecked(True)
+            return
+        
         self.current_semester = '1' if self.semester_a_radio.isChecked() else '2'
         self.apply_semester_filter()
 
@@ -148,11 +160,23 @@ class CourseListPanelQt5(QWidget):
             self.course_double_clicked.emit(course_code)
 
     def mark_course_as_selected(self, course_code):
+        """Mark course as selected and lock semester if first course"""
         for i in range(self.course_tree.topLevelItemCount()):
             item = self.course_tree.topLevelItem(i)
             if item.data(0, Qt.UserRole) == course_code:
                 item.setBackground(0, QColor("#EFD8C5"))
                 break
+        
+        # Add to selected courses
+        self.selected_courses.add(course_code)
+        
+        # Lock semester on first course selection
+        if not self.semester_locked and len(self.selected_courses) == 1:
+            course = self.course_map.get(course_code)
+            if course:
+                self.semester_locked = True
+                self.locked_semester = str(course._semester)
+                self.update_semester_radio_state()
 
     def unmark_course_as_selected(self, course_code):
         for i in range(self.course_tree.topLevelItemCount()):
@@ -160,3 +184,25 @@ class CourseListPanelQt5(QWidget):
             if item.data(0, Qt.UserRole) == course_code:
                 item.setBackground(0, QColor("transparent"))
                 break
+        
+        # Remove from selected courses
+        self.selected_courses.discard(course_code)
+        
+        # Unlock semester if no courses are selected
+        if len(self.selected_courses) == 0:
+            self.unlock_semester()
+            
+    def unlock_semester(self):
+        """Unlock semester selection (call when all courses are deselected)"""
+        self.semester_locked = False
+        self.locked_semester = None
+        self.update_semester_radio_state()
+
+    def update_semester_radio_state(self):
+        """Enable/disable semester radio buttons based on lock state"""
+        if self.semester_locked:
+            self.semester_a_radio.setEnabled(False)
+            self.semester_b_radio.setEnabled(False)
+        else:
+            self.semester_a_radio.setEnabled(True)
+            self.semester_b_radio.setEnabled(True)
