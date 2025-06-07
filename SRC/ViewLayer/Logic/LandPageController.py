@@ -4,6 +4,7 @@ from SRC.Models.ValidationError import ValidationError
 import os
 import shutil
 from SRC.Controller.FileController import FileController
+from pathlib import Path
 class LandPageController:
     def __init__(self, view):
         self.view = view
@@ -30,21 +31,21 @@ class LandPageController:
             # קבלת הסיומת
             extension = os.path.splitext(path)[1]
             
-            # יצירת קונטרולר לפי סוג הקובץ
-            
-            self.file_controller = FileController(extension)
-            
             # יצירת נתיב יעד
             dest_path = os.path.join(save_dir, f"courses{extension}")
             
             # העתקת הקובץ
             shutil.copy(path, dest_path)
-            
-           
+            self.uploaded_path = dest_path
+            last_two_parts = Path(self.uploaded_path).parts[-2:]
+            filePath = os.path.join(*last_two_parts)
+            unix_style_path = filePath.replace("\\", "/")
+            # יצירת קונטרולר לפי סוג הקובץ
+            self.file_controller = FileController(extension, unix_style_path)
             
             # עדכון UI
             self.view.file_label.setText(f"Uploaded: {os.path.basename(path)}")
-            self.uploaded_path = dest_path
+            
             
             self.file_uploaded = True
             
@@ -73,7 +74,7 @@ class LandPageController:
         try:
             courses, errors = self.file_controller.read_courses_from_file(self.uploaded_path)
              # הוספת קוד לחילוץ שני החלקים האחרונים של הנתיב
-            from pathlib import Path
+           
             last_two_parts = Path(self.uploaded_path).parts[-2:]
             filePath = os.path.join(*last_two_parts)
             unix_style_path = filePath.replace("\\", "/")

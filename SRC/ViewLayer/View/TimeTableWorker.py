@@ -22,11 +22,14 @@ class TimetableWorker(QThread):
         self._stop_requested = False          # If True, the thread should stop
         self._paused = False                  # If True, the thread should pause
         self.loaded_count = 0                 # How many timetables were loaded so far
-        print(f"TimetableWorker initialized with files: {file_path1}, {file_path2} and batch size: {batch_size}")
+        print(f"[DEBUG] TimetableWorker initialized with files: {file_path1}, {file_path2} and batch size: {batch_size}")
+
     def run(self):
         """This is what runs when you start the thread."""
+        print("[DEBUG] TimetableWorker thread started.")
         try:
             # Get a generator that gives us batches of timetables
+            print("[DEBUG] Calling controller.get_all_options()")
             batch_generator = self.controller.get_all_options(
                 self.file_path1, 
                 self.file_path2, 
@@ -35,15 +38,19 @@ class TimetableWorker(QThread):
 
             batch_count = 0
             for batch in batch_generator:
+                print(f"[DEBUG] Received batch {batch_count+1} with {len(batch)} items.")
                 # Stop the thread if requested
                 if self._stop_requested:
+                    print("[DEBUG] Stop requested. Exiting loop.")
                     break
 
                 # Wait here if paused
                 while self._paused and not self._stop_requested:
+                    print("[DEBUG] Paused. Sleeping for 100ms.")
                     self.msleep(100)  # Wait 100ms before checking again
 
                 if self._stop_requested:
+                    print("[DEBUG] Stop requested during pause. Exiting loop.")
                     break
 
                 if batch:  # If the batch is not empty
@@ -51,9 +58,11 @@ class TimetableWorker(QThread):
                     batch_count += 1
 
                     # Let the GUI know we got new data
+                    print(f"[DEBUG] Emitting new_options_available for batch {batch_count}.")
                     self.new_options_available.emit(batch)
 
                     # Let the GUI know how much we've done
+                    print(f"[DEBUG] Emitting loading_progress: loaded_count={self.loaded_count}")
                     self.loading_progress.emit(self.loaded_count, -1)  # -1 means we don't know total
 
                     # Small sleep so the GUI doesn’t freeze
@@ -61,20 +70,25 @@ class TimetableWorker(QThread):
 
             # If we finished normally (no stop requested), tell the GUI we’re done
             if not self._stop_requested:
+                print("[DEBUG] Loading finished. Emitting loading_finished.")
                 self.loading_finished.emit()
 
         except Exception as e:
             # If an error happened, let the GUI know
+            print(f"[DEBUG] Exception occurred: {e}")
             self.error_occurred.emit(str(e))
 
     def stop(self):
         """Call this if you want to stop the thread."""
+        print("[DEBUG] stop() called. Setting _stop_requested = True")
         self._stop_requested = True
 
     def pause(self):
         """Call this to pause the thread."""
+        print("[DEBUG] pause() called. Setting _paused = True")
         self._paused = True
 
     def resume(self):
         """Call this to continue after pause."""
+        print("[DEBUG] resume() called. Setting _paused = False")
         self._paused = False
