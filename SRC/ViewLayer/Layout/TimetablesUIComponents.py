@@ -90,13 +90,13 @@ class TimetableUIComponents:
         # Export + Jump Buttons Group (all in the same row)
         export_jump_group = QHBoxLayout()
 
-        # Export button
-        instance.export_button = QPushButton("📄 Export PDF")
-        instance.export_button.setObjectName("exportButton")
-        instance.export_button.setFixedSize(120, 40)
-        instance.export_button.clicked.connect(instance.export_pdf_dialog)
-        export_jump_group.addWidget(instance.export_button)
-        
+          # Export PDF Screenshots button - הכפתור היחיד שנשאר
+        instance.export_screenshots_button = QPushButton(" Export PDF ")
+        instance.export_screenshots_button.setObjectName("screenshotPdfButton")
+        instance.export_screenshots_button.setFixedSize(180, 40)
+        # חיבור לפונקציה שתקרא למחלקת ScreenshotPDFExporter
+        instance.export_screenshots_button.clicked.connect(instance.export_pdf_screenshots)
+        top_nav.addWidget(instance.export_screenshots_button)
         # Preferences row - second line
         preferences_jump_row = QHBoxLayout()
         
