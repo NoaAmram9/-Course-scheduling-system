@@ -161,7 +161,8 @@ class FileController:
         
         """
         file_path1 = self.filePath
-        file_path2 = "Data/courses.xlsx"
+        #file_path2 = "Data/courses.xlsx"
+        file_path2 = "Data/selected_courses.txt"
         dataManager = FileManager()
         dataManager.delete_temp_files(file_path1, file_path2)
 
