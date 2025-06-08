@@ -57,6 +57,9 @@ class PreferencesService:
         # Collect all lesson times from the timetable's courses
         lesson_times = []
         for course in self.timetable.courses:
+            if course.code.startswith("BLOCKED_"):
+                continue  # Skip dummy time constraints
+            
             for lesson_list in [course.lectures, course.exercises, course.labs, course.departmentHours,
                                 course.reinforcement, course.training]:
                 if not lesson_list:

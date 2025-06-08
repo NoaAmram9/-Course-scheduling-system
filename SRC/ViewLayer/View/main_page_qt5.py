@@ -2,11 +2,13 @@ import sys
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
+from SRC.ViewLayer.Layout.TimeConstraintsSelector import TimeConstraintsSelector
 from SRC.ViewLayer.Logic.course_manager_qt5 import CourseManagerQt5
 from SRC.ViewLayer.Layout.course_list_panel_qt5 import CourseListPanelQt5
 from SRC.ViewLayer.Layout.course_details_panel_qt5 import CourseDetailsPanelQt5
 from SRC.ViewLayer.Layout.selected_courses_panel_qt5 import SelectedCoursesPanelQt5
 from SRC.ViewLayer.Theme.ModernUIQt5 import ModernUIQt5
+
 
 class MainPageQt5(QMainWindow):
     def __init__(self, Data ,controller, filePath):
@@ -15,6 +17,7 @@ class MainPageQt5(QMainWindow):
         self.max_courses = 7
         self.selected_course_ids = set()
         self.course_map = {}
+        self.previous_constraints = []
         self.Data= Data
         self.init_ui()
         self.setup_course_manager()
@@ -38,7 +41,7 @@ class MainPageQt5(QMainWindow):
         
         # Header
         self.create_header(main_layout)
-        
+
         # Content area with 3 panels
         self.create_content_area(main_layout)
         
@@ -69,6 +72,17 @@ class MainPageQt5(QMainWindow):
         self.course_list_panel = CourseListPanelQt5()
         self.course_list_panel.setMinimumWidth(300)
         content_layout.addWidget(self.course_list_panel, 1)
+
+        # # Add Time Constraints Button (styled like Save Selection)
+        # self.toggle_constraints_button = ModernUIQt5.create_button("Add Time Constraints", "primary")
+        # self.toggle_constraints_button.setFixedHeight(36)
+        # #self.toggle_constraints_button.clicked.connect(self.open_time_constraints_dialog)
+        # self.toggle_constraints_button.clicked.connect(self.show_time_constraints_selector)
+
+
+        # # Add it to content_layout with alignment below the course list
+        # content_layout.addWidget(self.toggle_constraints_button, 1, Qt.AlignTop)
+
         
         # Middle panel - Course Details (40% width)
         self.details_panel = CourseDetailsPanelQt5()
@@ -84,21 +98,32 @@ class MainPageQt5(QMainWindow):
         content_layout.addWidget(self.selected_courses_panel, 1)
         
         parent_layout.addWidget(content_widget)
-        
+
     def create_footer(self, parent_layout):
-        """Create the footer with action buttons"""
+        """Unified footer with both buttons on the same row"""
         footer_widget = QWidget()
         footer_layout = QHBoxLayout(footer_widget)
         footer_layout.setContentsMargins(0, 0, 0, 0)
-        
+        footer_layout.setSpacing(10)
+    
+        # Add Time Constraints button (left-aligned)
+        self.toggle_constraints_button = ModernUIQt5.create_button("Add Time Constraints", "primary")
+        self.toggle_constraints_button.setFixedHeight(36)
+        self.toggle_constraints_button.clicked.connect(self.show_time_constraints_selector)
+        footer_layout.addWidget(self.toggle_constraints_button, alignment=Qt.AlignLeft)
+    
+        # Spacer in the middle
         footer_layout.addStretch()
-        
-        # Save Selection button
+    
+        # Save Selection button (right-aligned)
         save_button = ModernUIQt5.create_button("Save Selection", "primary")
         save_button.clicked.connect(self.save_selection)
-        footer_layout.addWidget(save_button)
-        
+        save_button.setFixedHeight(36)
+        footer_layout.addWidget(save_button, alignment=Qt.AlignRight)
+    
         parent_layout.addWidget(footer_widget)
+
+
         
     def setup_course_manager(self):
         """Set up the course manager to handle logic"""
@@ -156,6 +181,37 @@ class MainPageQt5(QMainWindow):
     def get_selected_courses(self):
         """Get the list of selected courses"""
         return self.course_manager.get_selected_courses()
+
+
+    def show_time_constraints_selector(self):
+        self.dialog = QDialog(self)
+        self.dialog.setWindowTitle("Select Time Constraints")
+        layout = QVBoxLayout(self.dialog)
+
+        # Convert stored constraints into (day, hour) tuples
+        preselected = set()
+        for c in self.previous_constraints:
+            for h in range(c["start"], c["end"]):
+                preselected.add((c["day"], h))
+
+        self.selector = TimeConstraintsSelector(preselected_slots=preselected)
+        layout.addWidget(self.selector)
+
+        confirm_btn = QPushButton("Apply")
+        confirm_btn.clicked.connect(self.apply_constraints_from_selector)
+        layout.addWidget(confirm_btn)
+
+        self.dialog.exec_()
+
+
+    def apply_constraints_from_selector(self):
+        self.previous_constraints = self.selector.get_constraints()  # Save them
+        self.controller.apply_time_constraints(self.previous_constraints)
+        self.dialog.close()
+
+
+    
+
         
     def closeEvent(self, event):
         """Handle window close event"""
