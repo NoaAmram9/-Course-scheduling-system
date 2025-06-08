@@ -12,7 +12,6 @@ from SRC.ViewLayer.Logic.TimeTable import map_courses_to_slots, DAYS, HOURS
 from SRC.ViewLayer.Layout.TimeTable import draw_timetable_grid
 from SRC.ViewLayer.Logic.Pdf_Exporter import generate_pdf_from_data
 from SRC.ViewLayer.Layout.PreferencesMenu import PreferencesMenu
-from SRC.ViewLayer.Logic.TimetableSorters import sort_timetables
 
 class TimetablesPage:
     def __init__(self, root, controller, go_back_callback=None):
