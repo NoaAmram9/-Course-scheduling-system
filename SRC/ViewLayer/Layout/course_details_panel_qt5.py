@@ -409,12 +409,11 @@ class CourseDetailsPanelQt5(QWidget):
         if hasattr(lesson, 'time') and lesson.time:
       
             time_label = QLabel("Time:")
-        
-            # יצירת מחרוזת זמן מתאימה
+           
+            # Format time as HH:MM
             start_time = f"{lesson.time.start_hour:02d}:00"
             end_time = f"{lesson.time.end_hour:02d}:00"
-            
-            # המרת מספר היום לשם היום (אופציונלי)
+         
             days = {
                 1: "ראשון",
                 2: "שני", 

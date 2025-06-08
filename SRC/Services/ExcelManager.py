@@ -78,7 +78,7 @@ class ExcelManager(FileManager):
         return ("", "")
     def read_courses_from_file(self, file_path: str) -> list[Course]:
         df = pd.read_excel(file_path)
-
+        
         column_mapping = {
             'שם': 'name',
             'קוד מלא': 'code',
@@ -97,7 +97,7 @@ class ExcelManager(FileManager):
                 df.rename(columns={heb_col: eng_col}, inplace=True)
 
         courses_dict = {}
-
+        errors = []
         for _, row in df.iterrows():
             name = str(row.get("name", "")).strip()
             if not name:
@@ -157,7 +157,7 @@ class ExcelManager(FileManager):
                 course.training.append(lesson)
                 
             
-        return list(courses_dict.values())
+        return list(courses_dict.values()), errors
     # def read_courses_from_file(self, file_path: str) -> tuple[list[Course], list[ValidationError]]:
     #     df = pd.read_excel(file_path)
 

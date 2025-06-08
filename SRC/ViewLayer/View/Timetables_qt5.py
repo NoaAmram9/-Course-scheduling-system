@@ -32,12 +32,13 @@ class TimetablesPageQt5(QMainWindow):
     # Custom signals
     new_timetable_ready = pyqtSignal()
     
-    def __init__(self, controller, go_back_callback):
+    def __init__(self, controller, go_back_callback, filePath):
         super().__init__()
         self.controller = controller
         self.go_back_callback = go_back_callback
         self._is_exiting_from_back = False #התמודדות עם כפתור חזרה אחורה
-        
+        self.filePath = filePath
+       
         # Timetable data management
         self.all_options = []  # All loaded timetables
         self.current_index = 0
@@ -130,7 +131,7 @@ class TimetablesPageQt5(QMainWindow):
         try:
             self.worker = TimetableWorker(
                 self.controller,
-                "Data/courses.xlsx", 
+                self.filePath,  # Pass the Data object to the worker
                 "Data/selected_courses.txt",
                 batch_size=50  # Process in batches of 50
             )
