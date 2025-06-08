@@ -26,5 +26,6 @@ __pycache__/
 *.pyc
 
 Data/chosen_courses.txt
+Data/selected_courses.txt
 Data/courses.txt
 schedule.txt
