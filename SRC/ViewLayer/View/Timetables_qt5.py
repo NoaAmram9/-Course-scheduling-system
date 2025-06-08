@@ -19,7 +19,8 @@ from reportlab.lib.pagesizes import landscape, A4
 from SRC.ViewLayer.Logic.TimeTable import map_courses_to_slots, DAYS, HOURS
 from SRC.ViewLayer.Layout.Timetable_qt5 import TimetableGridWidget
 from SRC.ViewLayer.Logic.Pdf_Exporter import generate_pdf_from_data
-from SRC.ViewLayer.Logic.PreferencesSorter import sort_timetables
+from SRC.ViewLayer.Logic.TimetableSorters import sort_timetables
+from SRC.ViewLayer.Logic.TimetableSorters import TimetablesSorter
 from SRC.ViewLayer.Theme.ModernUIQt5 import ModernUIQt5
 from SRC.ViewLayer.View.TimeTableWorker import TimetableWorker
 from SRC.ViewLayer.Layout.TimetablesUIComponents import TimetableUIComponents
@@ -44,6 +45,9 @@ class TimetablesPageQt5(QMainWindow):
         self.current_index = 0
         self.loading_complete = False
         self.total_expected = 0  # Total number of timetables expected
+        self.timetables_sorter = TimetablesSorter()  # Instance of the sorter for managing timetable sorting
+        self.sorted_timetables = []  # Cache for sorted timetables
+        self.display_sorted = False  # Flag to indicate if sorted timetables should be displayed
         
         # Worker thread for background loading
         self.worker = None
@@ -186,7 +190,7 @@ class TimetablesPageQt5(QMainWindow):
             return
         
         self.all_options.extend(new_batch)
-        
+        self.timetables_sorter.add_timetables(new_batch)  # Add new timetables to sorter
         # If this is the first batch, show the first timetable
         if len(self.all_options) == len(new_batch):
             self.current_index = 0
@@ -310,7 +314,11 @@ class TimetablesPageQt5(QMainWindow):
         self.update_title()
         
         # Get current timetable
-        current_timetable_courses = self.all_options[self.current_index]
+        if self.display_sorted:
+            # If sorted display is enabled, use the sorted list
+            current_timetable_courses = self.sorted_timetables[self.current_index]
+        else:
+            current_timetable_courses = self.all_options[self.current_index]
         slot_map = map_courses_to_slots(current_timetable_courses)
         
         # Clear previous content
@@ -531,10 +539,15 @@ class TimetablesPageQt5(QMainWindow):
                 self.controller.handle_exit()
             event.accept()
         else:
-            self.start_background_loading()
+           # self.start_background_loading()
             event.ignore()
     
     def apply_display_sort(self, key, ascending):
+        if key == "None":
+            self.display_sorted = False
+        else:
         # print(f"Applying display sort on timetables by {key} in {'ascending' if ascending else 'descending'} order.")
-        sort_timetables(self.all_options, key, ascending)
+            self.sorted_timetables = self.timetables_sorter.sort_timetables_by_key(self.all_options, key, ascending)
+            self.display_sorted = True
+        # sort_timetables(self.all_options, key, ascending)
         self.update_view()
