@@ -8,6 +8,6 @@ def sort_timetables(timetables, key, ascending):
     
     :return: None. Modifies the input list of timetables in-place, sorting them by the given preference key and order.
     """
-    timetables.sort(key=lambda timetable: getattr(timetable.preferences_details, key), reverse=not ascending)
+    timetables.sort(key=lambda timetable: getattr(timetable.metrics, key), reverse=not ascending)
     # print(f"Sorted timetables by {key} in {'ascending' if ascending else 'descending'} order.")
     

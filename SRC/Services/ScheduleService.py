@@ -754,12 +754,12 @@ from itertools import product
 from SRC.Interfaces.IScheduleService import IScheduleService
 from SRC.Models.TimeTable import TimeTable
 from SRC.Models.Course import Course
-from SRC.Services.PreferencesService import PreferencesService
+from SRC.Services.TimetableMetricsService import TimetableMetricsService
 
 class ScheduleService(IScheduleService):
     def __init__(self):
         """יצירה פעם אחת של שירות ההעדפות"""
-        self.preferencesService = PreferencesService()
+        self.timetable_metrics_service = TimetableMetricsService()
     
     def generate_schedules(self, courses: list, limit: int = 1000) -> list:
         """
@@ -961,7 +961,7 @@ class ScheduleService(IScheduleService):
             
             # *** המקום הנכון והיחיד לקריאה להעדפות! ***
             # רק כאן, אחרי שהמערכת מוכנה לחלוטין עם כל הקורסים
-            self.preferencesService.apply_preferences(timetable)
+            self.timetable_metrics_service.generate_metrics(timetable)
             
             yield timetable
             return

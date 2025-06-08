@@ -10,11 +10,11 @@ class PreferencesMenu(tk.Frame):
 
         # תיבות בחירה
         self.display_options = {
-            "Active Days": "days",
+            "Active Days": "active_days",
             "Free Windows": "free_windows_number",
             "Total Free Windows": "free_windows_sum",
-            "Avg Start": "avarage_start_time",
-            "Avg End": "avarage_end_time"
+            "Avg Start": "average_start_time",
+            "Avg End": "average_end_time"
         }
         self.sort_options = ["Ascending", "Descending"]
 

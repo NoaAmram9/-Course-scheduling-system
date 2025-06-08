@@ -1,10 +1,10 @@
-from SRC.Models.Preferences import Preferences
+from SRC.Models.TimetableMetrics import TimetableMetrics
 
 class TimeTable:
-    def __init__(self, courses: list = None, preferences_details: Preferences = None):
+    def __init__(self, courses: list = None, metrics: TimetableMetrics = None):
 
         self._courses = courses if courses else []  # list of courses in the timetable
-        self._preferences_details = None # Preferences object to hold details for user's displaying preferences
+        self._metrics = None # TimetableMetrics object to hold metrics
 
     @property
     def courses(self):
@@ -16,12 +16,12 @@ class TimeTable:
 
         
     @property
-    def preferences_details(self):
-        return self._preferences_details
+    def metrics(self):
+        return self._metrics
     
-    @preferences_details.setter
-    def preferences_details(self, value: Preferences):
-        self._preferences_details = value
+    @metrics.setter
+    def metrics(self, value: TimetableMetrics):
+        self._metrics = value
     
     @property
     def get_lesson_times(self):
@@ -63,4 +63,3 @@ class TimeTable:
                         times.append(lesson._time)
             
         return times
-
