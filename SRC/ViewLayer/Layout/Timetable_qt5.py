@@ -221,7 +221,7 @@ class TimetableGridWidget(QWidget):
         # Use a QVBoxLayout to center the label within the frame
         layout = QVBoxLayout()
         layout.setContentsMargins(8, 8, 8, 8)  # Margins inside the cell
-        layout.setAlignment(Qt.AlignCenter)    # Align content to the center
+        layout.setAlignment(Qt.AlignCenter)    # Alשign content to the center
 
         label = QLabel(time_text)  # Create a QLabel with the time text
         label.setObjectName("timeCellLabel")  # Set object name for QSS styling of the label
