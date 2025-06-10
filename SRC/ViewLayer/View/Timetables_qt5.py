@@ -4,6 +4,9 @@ import os
 import tempfile 
 from pathlib import Path 
 
+from threading import Timer
+import threading
+
 # Import necessary PyQt5 modules for creating the GUI
 from PyQt5.QtWidgets import (QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QPushButton,
                              QLabel, QScrollArea, QFrame, QMessageBox, QFileDialog,QApplication,
@@ -19,10 +22,12 @@ from reportlab.lib.pagesizes import landscape, A4
 from SRC.ViewLayer.Logic.TimeTable import map_courses_to_slots, DAYS, HOURS
 from SRC.ViewLayer.Layout.Timetable_qt5 import TimetableGridWidget
 from SRC.ViewLayer.Logic.Pdf_Exporter import generate_pdf_from_data
-from SRC.ViewLayer.Logic.TimetableSorters import TimetablesSorter
+from SRC.ViewLayer.Logic.TimetablesSorter import TimetablesSorter
 from SRC.ViewLayer.Theme.ModernUIQt5 import ModernUIQt5
 from SRC.ViewLayer.View.TimeTableWorker import TimetableWorker
 from SRC.ViewLayer.Layout.TimetablesUIComponents import TimetableUIComponents
+# from SRC.ViewLayer.Logic.TimetablesSorter import TimetablesDisplayManager  # ייבוא המחלקה החדשה
+
 
 class TimetablesPageQt5(QMainWindow):
     """
@@ -38,6 +43,16 @@ class TimetablesPageQt5(QMainWindow):
         self.go_back_callback = go_back_callback
         self._is_exiting_from_back = False #התמודדות עם כפתור חזרה אחורה
         self.filePath = filePath
+        
+        # # Thread-safe timetable management
+        # self.display_manager = TimetablesDisplayManager()
+        # self.display_manager.set_ui_update_callback(self._on_sorted_data_updated)
+        
+        # # Legacy support - keep references for existing code
+        # self.all_options = []
+        # self.current_index = 0
+        # self.loading_complete = False
+        # self.total_expected = 0
        
         # Timetable data management
         self.all_options = []  # All loaded timetables
@@ -57,6 +72,11 @@ class TimetablesPageQt5(QMainWindow):
         self.display_timer = QTimer()
         self.display_timer.timeout.connect(self.auto_next_timetable)
         self.display_interval = 3000  # 3 seconds between timetables
+        
+        # # UI update throttling to prevent excessive refreshes
+        # self._ui_update_timer = Timer(0.2, self._delayed_ui_update)
+        # self._ui_update_pending = False
+        # self._ui_update_lock = threading.Lock()
         
         # Batch loading management
         self.current_batch = []
@@ -189,7 +209,7 @@ class TimetablesPageQt5(QMainWindow):
             return
         
         self.all_options.extend(new_batch)
-        self.timetables_sorter.add_timetables(new_batch)  # Add new timetables to sorter
+        # self.timetables_sorter.add_timetables(new_batch)  # Add new timetables to sorter
         # If this is the first batch, show the first timetable
         if len(self.all_options) == len(new_batch):
             self.current_index = 0
@@ -286,19 +306,26 @@ class TimetablesPageQt5(QMainWindow):
             self.current_index = 0
             self.update_view()
     
-    # def jump_to_index(self, text):
-    #     """Jump to specific timetable index"""
-    #     if text.isdigit():
-    #         index = int(text)
-    #     if 0 <= index < len(self.all_options):
-    #         self.current_index = index
-    #         self.update_view()
+    def jump_to_index(self, index):
+        """
+        Jump to specific timetable index.
+        Handle both sorted and unsorted timetables. 
+        param index: 1-based index of the timetable to jump to.
+        """
+        if 0 < index <= len(self.all_options):
+            if self.display_sorted and index > len(self.sorted_timetables):
+                self.refresh_timetables()  # Refresh if index is out of bounds for sorted list
+            self.current_index = index - 1  # Convert to zero-based index
+            self.update_view()
+        else:
+            QMessageBox.warning(self, "Invalid Index", f"   Index {index} is out of range.   ")
     
     def jump_to_last(self):
         """Jump to last loaded timetable"""
         if self.all_options:
-            self.current_index = len(self.all_options) - 1
-            self.update_view()
+            # self.current_index = len(self.all_options) - 1
+            # self.update_view()
+            self.jump_to_index(len(self.all_options))  # Use the jump_to_index method with the last index
     
     def update_view(self):
         """Update the displayed timetable"""
@@ -311,6 +338,7 @@ class TimetablesPageQt5(QMainWindow):
         self.no_data_label.hide()
         
         self.update_title()
+        self.update_metrics()
         
         # Get current timetable
         if self.display_sorted:
@@ -350,6 +378,23 @@ class TimetablesPageQt5(QMainWindow):
             remaining_text = f"+ (Loading...)" if self.is_loading else ""
             self.title_label.setText(f"Timetable Option {self.current_index + 1} of {len(self.all_options)}{remaining_text}")
     
+    def update_metrics(self):
+        if self.display_sorted :
+            metrics = self.sorted_timetables[self.current_index].metrics
+        else: 
+            metrics = self.all_options[self.current_index].metrics
+        self.metrics_label.setText(f"metrics:  active days: {metrics.active_days}, free windows: {metrics.free_windows_number}," + 
+                                       f" total free windows: {metrics.free_windows_sum}, " +
+                                       f" average start time: {metrics.average_start_time}, average end time: {metrics.average_end_time}")
+        PREFERENCES_OPTIONS = {
+                "None": "None",
+                "Active Days": "active_days",
+                "Free windows": "free_windows_number",
+                "Total free windows": "free_windows_sum",
+                "Average Start Time": "average_start_time",
+                "Average End Time": "average_end_time",
+            }     
+        
     def update_button_states(self):
         """Update navigation button states"""
         if self.auto_display_enabled:
@@ -386,9 +431,19 @@ class TimetablesPageQt5(QMainWindow):
     
     def show_next(self):
         """Show next timetable"""
-        if self.current_index < len(self.all_options) - 1:
-            self.current_index += 1
-            self.update_view()
+        # if self.display_sorted:
+        #     if self.current_index >= len(self.sorted_timetables) - 1:
+        #         self.refresh_timetables()
+        #     if self.current_index < len(self.sorted_timetables) - 1:
+        #         self.current_index += 1
+        #         self.update_view()
+        
+        # elif self.current_index < len(self.all_options) - 1:
+        #     self.current_index += 1
+        #     self.update_view()
+        
+        # Use the jump_to_index method to handle bounds checking + sorting if needed
+        self.jump_to_index(self.current_index + 2)  
     
     def go_back(self):
         """Handle back button - stop auto display first"""
@@ -550,3 +605,33 @@ class TimetablesPageQt5(QMainWindow):
             self.display_sorted = True
         # sort_timetables(self.all_options, key, ascending)
         self.update_view()
+
+    def on_index_entered(self, index):
+        """Emit index entered signal"""
+        if index == "":
+            return
+        try:
+            int_index = int(index)
+            self.jump_to_index(int_index)
+
+        except ValueError:
+            QMessageBox.warning(self, "Invalid Input", f"   '{index}' is not a valid index.   ")
+
+    def refresh_timetables(self) :
+        if not self.display_sorted:
+            return
+        
+        # Start animation
+        self.refresh_movie.start()
+        
+        """Refresh the displayed timetables after sorting: re-sort by the current key"""
+        key, ascending = self.timetables_sorter.get_current_sort_key(self.sorted_timetables)
+        self.apply_display_sort(key, ascending)
+        print("refresh")
+        
+        # Stop animation after short delay (or after real async completion)
+        QTimer.singleShot(1000, self.stop_refresh_animation)
+    
+    def stop_refresh_animation(self):
+        self.refresh_movie.stop()
+        self.refresh_label.setText("🔄 Refresh")

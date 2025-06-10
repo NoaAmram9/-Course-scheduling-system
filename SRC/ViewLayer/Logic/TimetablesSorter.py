@@ -29,10 +29,22 @@ class TimetablesSorter:
             # Check if the cached sorted list contains all schedules
             if len(sorted_schedules) == len(all_schedules):
                 return sorted_schedules
-        # If the cache is empty or does not contain the key, sort the schedules
+        # If the cache does not contain the key or has only partial sorted list, sort the schedules
         sorted_list = sorted(all_schedules, key=lambda t: getattr(t.metrics, key), reverse=not ascending)
         self.sorted_schedules_cache[cache_key] = sorted_list
         return sorted_list
+    
+    def get_current_sort_key(self, list_of_timetables):
+        """
+        Returns a tuple (key, ascending) of the provided list of timetables.
+        Finds the list in the dictionary of sorted schedules cache that matches the provided list.
+        :param list_of_timetables: List of timetable objects to check.
+        :return: A tuple (key, ascending) if found, otherwise None.
+        """
+        for (key, ascending), sorted_list in self.sorted_schedules_cache.items():
+            if sorted_list == list_of_timetables:
+                return (key, ascending)
+        return None
     
     def add_timetables(self, timetable_batch):
         """
@@ -78,3 +90,4 @@ def insort_descending(sorted_list, new_item, key=lambda item: item):
 
     # Insert the new item into the correct position.
     sorted_list.insert(index, new_item)
+

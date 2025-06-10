@@ -36,6 +36,7 @@ class PreferencesDropdown(QWidget):
         self.button.setObjectName("dropdownButton")
         self.button.setPopupMode(QToolButton.InstantPopup)  # Opens immediately on click
         
+        
         # Create the dropdown menu
         self.menu = QMenu()
         # self.menu.setStyleSheet("QMenu { background-color: white; } QMenu::item:selected { background-color: darkgrey; }")
@@ -50,7 +51,7 @@ class PreferencesDropdown(QWidget):
         for label, value in self.PREFERENCES_OPTIONS.items():
             action = QAction(label, self.menu, checkable=True)
             action.setData(value) # Store internal value (not the visible label)
-            if value == "active_days":  # Default selection
+            if value == "None":  # Default selection
                 action.setChecked(True)  # Default selection
             self.pref_group.addAction(action)
             self.menu.addAction(action)

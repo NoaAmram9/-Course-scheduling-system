@@ -2,9 +2,11 @@
 
 from PyQt5.QtWidgets import QFrame, QVBoxLayout, QHBoxLayout, QPushButton, QLabel, QProgressBar, QLineEdit
 from PyQt5.QtCore import Qt, pyqtSignal
-from PyQt5.QtGui import QPixmap 
+from PyQt5.QtGui import QPixmap, QMovie
+from PyQt5.QtCore import QSize
 from SRC.ViewLayer.Theme.ModernUIQt5 import ModernUIQt5
 from SRC.ViewLayer.Layout.PreferencesDropDown import PreferencesDropdown
+import os
 
 class TimetableUIComponents:
     # # Signal: emits index (str) when user presses Enter
@@ -106,6 +108,120 @@ class TimetableUIComponents:
         
         preferences_jump_row.addStretch()
         
+        # # metrics label
+        # instance.metrics_label = QLabel("metrics")
+        # instance.metrics_label.setObjectName("metrics")
+        # instance.metrics_label.setAlignment(Qt.AlignCenter)
+        # instance.metrics_label.setMinimumWidth(300)
+        # preferences_jump_row.addWidget(instance.metrics_label)
+        
+        # preferences_jump_row.addStretch()
+
+        metrics_grid = QHBoxLayout()
+        # Metrics Grid - for displaying metrics
+        instance.metrics_grid = QFrame()
+        instance.metrics_grid.setObjectName("metricsGrid")
+        instance.metrics_grid.setLayout(metrics_grid)
+        instance.metrics_grid.setFixedHeight(40)
+        instance.metrics_grid.setContentsMargins(0, 0, 0, 0)
+        
+        preferences_jump_row.addWidget(instance.metrics_grid)
+        
+        # metrics label
+        instance.metrics_label = QLabel("metrics")
+        instance.metrics_label.setObjectName("metrics")
+        instance.metrics_label.setAlignment(Qt.AlignCenter)
+        instance.metrics_label.setMinimumWidth(300)
+        metrics_grid.addWidget(instance.metrics_label)
+        
+        preferences_jump_row.addStretch()
+        
+        # # Add a refresh button
+        # instance.refresh_button = QPushButton("🔄 Refresh")
+        # instance.refresh_button.setObjectName("refreshButton")
+        # instance.refresh_button.setFixedSize(120, 40)
+        # instance.refresh_button.clicked.connect(instance.refresh_timetables)
+        # preferences_jump_row.addWidget(instance.refresh_button)
+        # preferences_jump_row.addStretch()
+        
+        # instance.refresh_button = QPushButton()
+        # instance.refresh_button.setObjectName("refreshButton")
+        # instance.refresh_label = QLabel("🔄 Refresh")
+        # instance.refresh_label.setText("🔄 Refresh")
+        # instance.refresh_movie = QMovie("../../../Data/refresh_icon.gif")
+        # instance.refresh_label.setMovie(instance.refresh_movie)
+        # instance.refresh_button.setFixedSize(120, 40)
+        # # instance.refresh_button.setLayout(QVBoxLayout())
+        # # instance.refresh_button.layout().addWidget(instance.refresh_label)
+        
+        # preferences_jump_row.addWidget(instance.refresh_button)
+        # preferences_jump_row.addStretch()
+        
+        # # --- Refresh Button with GIF ---
+        
+        # # Create a layout inside the button
+        # refresh_button_layout = QVBoxLayout()
+        # refresh_button_layout.setContentsMargins(0, 0, 0, 0)
+        # refresh_button_layout.setAlignment(Qt.AlignCenter)
+
+        # # Create a QLabel with the animated gif
+        # instance.refresh_label = QLabel()
+        # instance.refresh_label.setAlignment(Qt.AlignCenter)
+
+        # # Load the GIF safely using relative path
+        # current_dir = os.path.dirname(__file__)
+        # gif_path = os.path.normpath(os.path.join(current_dir, "../../../Data/refresh_icon.gif"))
+        # print(f"[DEBUG] Loading GIF from: {gif_path}")  # Debugging line to check path
+        # instance.refresh_movie = QMovie(gif_path)
+        # instance.refresh_movie.setScaledSize(QSize(120, 40))
+        # instance.refresh_label.setMovie(instance.refresh_movie)
+
+        # # Create the button and set layout
+        # instance.refresh_button = QPushButton()
+        # instance.refresh_button.setObjectName("refreshButton")
+        # instance.refresh_button.setFixedSize(120, 40)
+        # instance.refresh_button.setLayout(refresh_button_layout)
+        # refresh_button_layout.addWidget(instance.refresh_label)
+
+        # # Connect the button to the refresh function
+        # instance.refresh_button.clicked.connect(instance.refresh_timetables)
+
+
+            # צור את הכפתור וה־QMovie
+        instance.refresh_button = QPushButton()
+        instance.refresh_button.setFixedSize(120, 40)
+        instance.refresh_button.setObjectName("refreshButton")
+
+        # צור QLabel שישמש כתמונה של הכפתור
+        instance.refresh_label = QLabel()
+        
+        # Load the GIF safely using relative path
+        current_dir = os.path.dirname(__file__)
+        gif_path = os.path.normpath(os.path.join(current_dir, "../../../Data/refresh_icon.gif"))
+        print(f"[DEBUG] Loading GIF from: {gif_path}")  # Debugging line to check path
+        instance.refresh_movie = QMovie(gif_path)
+        
+        # instance.refresh_movie = QMovie("נתיב_מדויק/refresh_icon.gif")
+        instance.refresh_movie.setScaledSize(QSize(24, 24))  # אפשר לשנות ל־40,40 אם את רוצה את כל הכפתור כתמונה
+        instance.refresh_label.setMovie(instance.refresh_movie)
+
+        # יצירת טקסט לצד ה־GIF
+        instance.refresh_text = QLabel("Refresh")
+
+        # סדר את הכל בלייאאוט פנימי
+        refresh_layout = QHBoxLayout()
+        refresh_layout.setContentsMargins(5, 0, 5, 0)
+        refresh_layout.addWidget(instance.refresh_label)
+        refresh_layout.addWidget(instance.refresh_text)
+
+        # שים את הלייאאוט בכפתור
+        instance.refresh_button.setLayout(refresh_layout)       
+        
+        # Add to layout
+        preferences_jump_row.addWidget(instance.refresh_button)
+        preferences_jump_row.addStretch()
+
+        
         # Jump Label
         jump_label = QLabel("Jump to:")
         jump_label.setObjectName("jumpLabel")
@@ -119,15 +235,18 @@ class TimetableUIComponents:
         instance.jump_first_button.clicked.connect(instance.jump_to_first)
         preferences_jump_row.addWidget(instance.jump_first_button)
 
-        # # Jump to Index (QLineEdit)
-        # instance.jump_index_input = QLineEdit()
-        # instance.jump_index_input.setPlaceholderText("Index")
-        # instance.jump_index_input.setFixedSize(50, 30)
-        # instance.jump_index_input.setObjectName("jumpInput")
-        # preferences_jump_row.addWidget(instance.jump_index_input)
+        # Jump to Index (QLineEdit)
+        instance.jump_index_input = QLineEdit()
+        instance.jump_index_input.setObjectName("jumpInput")
+        instance.jump_index_input.setPlaceholderText("Index")
+        instance.jump_index_input.setAlignment(Qt.AlignCenter)
+        instance.jump_index_input.setFixedSize(60, 35)
+        preferences_jump_row.addWidget(instance.jump_index_input)
         
-        # # Connect Enter key press in input to emit signal
-        # instance.jump_index_input.returnPressed.connect(self.emit_index_entered)
+        # Connect Enter key press in input to emit signal
+        instance.jump_index_input.returnPressed.connect(
+            lambda: instance.on_index_entered(instance.jump_index_input.text())
+        )
 
         # Jump Last
         instance.jump_last_button = QPushButton("Last")
@@ -180,6 +299,6 @@ class TimetableUIComponents:
         status_frame.setLayout(status_layout)
         parent_layout.addWidget(status_frame)
 
-    # def emit_index_entered(self):
-    #     value = self.jump_index_input.text()
-    #     self.indexEntered.emit(value)
+    def emit_index_entered(self):
+        value = self.jump_index_input.text()
+        self.indexEntered.emit(value)
