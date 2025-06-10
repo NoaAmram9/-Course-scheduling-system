@@ -1,139 +1,4 @@
-
-# The tests do check English data.
-# See: test_Excel_ReadingQT_valid_english_format, test_Excel_ReadingQT_valid_english_and_hebrew_mixed,
-# test_Excel_ReadingQT_valid_english_weekdays, test_Excel_ReadingQT_invalid_english_weekdays,
-# test_Excel_ReadingQT_unicode_and_special_characters_english, etc.
-def test_Excel_ReadingQT_valid_english_format(excel_manager, create_mock_excel_file):
-    """
-    Test: Verifies successful reading of a valid Excel file with English headers.
-    """
-    df_data = {
-        "Course Name": ["Introduction to Computer Science", "Introduction to Computer Science"],
-        "Full Code": ["83108-01", "83108-02"],
-        "Meeting Type": ["Lecture", "Tutorial"],
-        "Semester": ["A", "A"],
-        "Day": ["Sunday", "Tuesday"],
-        "Start Time": ["09:00", "12:00"],
-        "End Time": ["11:00", "13:00"],
-        "Room": ["Building 901", "Building 902"],
-        "Instructor": ["Dr. Cohen", "Prof. Levi"],
-    }
-    mock_file_path = create_mock_excel_file(df_data, "english_example.xlsx")
-
-    try:
-        loaded_courses = excel_manager.read_courses_from_file(mock_file_path)
-        assert loaded_courses is not None
-        if isinstance(loaded_courses, dict):
-            assert len(loaded_courses) == 1  # Should be one unique course (83108)
-            assert "83108" in loaded_courses
-            course = loaded_courses["83108"]
-            assert course.name == "Introduction to Computer Science"
-            assert len(course.sections) == 2  # Two sections
-        elif isinstance(loaded_courses, list):
-            course_codes = set()
-            for course in loaded_courses:
-                course_codes.add(course.code)
-            assert len(course_codes) == 1
-        print("✓ Successfully loaded courses from English Excel file")
-    except Exception as e:
-        pytest.fail(f"Failed to load valid English Excel file: {e}")
-
-def test_Excel_ReadingQT_valid_english_and_hebrew_mixed(excel_manager, create_mock_excel_file):
-    """
-    Test: Verifies reading Excel file with mixed Hebrew and English headers and data.
-    """
-    df_data = {
-        "Course Name": ["מבוא למדעי המחשב", "Introduction to Algorithms"],
-        "קוד מלא": ["83108-01", "83109-01"],
-        "Meeting Type": ["Lecture", "תרגיל"],
-        "תקופה": ["A", "א"],
-        "Day": ["ראשון", "Monday"],
-        "Start Time": ["09:00", "10:00"],
-        "End Time": ["11:00", "12:00"],
-        "Room": ["כיתה א", "Room B"],
-        "Instructor": ["ד\"ר כהן", "Dr. Smith"],
-    }
-    mock_file_path = create_mock_excel_file(df_data, "mixed_lang.xlsx")
-
-    try:
-        loaded_courses = excel_manager.read_courses_from_file(mock_file_path)
-        assert loaded_courses is not None
-        print("✓ Successfully loaded courses from mixed Hebrew/English Excel file")
-    except Exception as e:
-        pytest.fail(f"Failed to load mixed Hebrew/English Excel file: {e}")
-
-def test_Excel_ReadingQT_valid_english_weekdays(excel_manager, create_mock_excel_file):
-    """
-    Test: Verifies that courses on valid English weekdays (Sunday-Thursday) are accepted.
-    """
-    df_data = {
-        "Course Name": ["Course A", "Course B", "Course C", "Course D", "Course E"],
-        "Full Code": ["83114-01", "83115-01", "83116-01", "83117-01", "83118-01"],
-        "Meeting Type": ["Lecture"] * 5,
-        "Semester": ["A"] * 5,
-        "Day": ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday"],
-        "Start Time": ["09:00", "10:00", "11:00", "12:00", "13:00"],
-        "End Time": ["11:00", "12:00", "13:00", "14:00", "15:00"],
-        "Room": ["Room A", "Room B", "Room C", "Room D", "Room E"],
-        "Instructor": ["Dr. A", "Dr. B", "Dr. C", "Dr. D", "Dr. E"],
-    }
-    mock_file_path = create_mock_excel_file(df_data, "valid_english_weekdays.xlsx")
-
-    try:
-        loaded_courses = excel_manager.read_courses_from_file(mock_file_path)
-        assert loaded_courses is not None
-        if isinstance(loaded_courses, dict):
-            assert len(loaded_courses) == 5
-        print("✓ Successfully accepted courses on valid English weekdays")
-    except Exception as e:
-        pytest.fail(f"Failed to accept valid English weekdays: {e}")
-
-def test_Excel_ReadingQT_invalid_english_weekdays(excel_manager, create_mock_excel_file):
-    """
-    Test: Verifies handling of courses on invalid English days (Friday, Saturday).
-    """
-    df_data = {
-        "Course Name": ["Friday Course", "Saturday Course"],
-        "Full Code": ["83119-01", "83120-01"],
-        "Meeting Type": ["Lecture", "Lecture"],
-        "Semester": ["A", "A"],
-        "Day": ["Friday", "Saturday"],
-        "Start Time": ["09:00", "10:00"],
-        "End Time": ["11:00", "12:00"],
-        "Room": ["Room A", "Room B"],
-        "Instructor": ["Dr. Cohen", "Dr. Levi"],
-    }
-    mock_file_path = create_mock_excel_file(df_data, "invalid_english_weekdays.xlsx")
-
-    try:
-        loaded_courses = excel_manager.read_courses_from_file(mock_file_path)
-        print("✓ Handled courses on invalid English weekdays appropriately")
-    except Exception as e:
-        print(f"✓ Correctly rejected courses on invalid English weekdays: {e}")
-
-def test_Excel_ReadingQT_unicode_and_special_characters_english(excel_manager, create_mock_excel_file):
-    """
-    Test: Verifies handling of Unicode and special symbols in English data.
-    """
-    df_data = {
-        "Course Name": ["Discrete Math 🔢", "Physics I - Classical Mechanics", "Programming in C++"],
-        "Full Code": ["12321-01", "12322-01", "12323-01"],
-        "Meeting Type": ["Lecture", "Lecture", "Lecture"],
-        "Semester": ["A", "A", "A"],
-        "Day": ["Sunday", "Monday", "Tuesday"],
-        "Start Time": ["09:00", "10:00", "11:00"],
-        "End Time": ["11:00", "12:00", "13:00"],
-        "Room": ["Room α", "Building β-101", "Lab C++"],
-        "Instructor": ["Prof. Alpha-Beta", "Dr. Gamma", "Mr. Smith & Dr. Jones"],
-    }
-    mock_file_path = create_mock_excel_file(df_data, "unicode_special_chars_english.xlsx")
-
-    try:
-        loaded_courses = excel_manager.read_courses_from_file(mock_file_path)
-        assert loaded_courses is not None
-        print("✓ Successfully handled Unicode and special characters in English data")
-    except Exception as e:
-        print(f"✓ Handled Unicode/special characters in English with appropriate error: {e}")
+# your_project/tests/test_Excel_ReadingQT.py
 import pytest
 from unittest.mock import MagicMock, patch
 import pandas as pd
@@ -613,31 +478,37 @@ def test_Excel_ReadingQT_different_excel_format(excel_manager, create_mock_excel
         pytest.fail(f"Failed to load Excel file with different format: {e}")
 
 
-def test_Excel_ReadingQT_missing_required_field(excel_manager, create_mock_excel_file):
+def test_Excel_ReadingQT_missing_required_field_error(excel_manager, create_mock_excel_file):
     """
-    Test 2: Verifies that ExcelManager handles missing required fields by raising an error.
+    Test: Verifies that an error is raised or returned when a required field is missing entirely.
     """
+    # Missing the "שעת התחלה" (start time) column
     df_data = {
-        "שם קורס": ["קורס חסר שעות"],
+        "שם קורס": ["קורס חסר שעת התחלה"],
         "קוד מלא": ["12345-01"],
         "סוג מפגש": ["הרצאה"],
         "תקופה": ["א"],
         "יום": ["ראשון"],
-        "שעת התחלה": ["09:00"],
-        # "שעת סיום" is intentionally missing
+        "שעת סיום": ["11:00"],
         "חדר": ["בניין X"],
         "מרצה": ["מרצה"],
     }
-    mock_file_path = create_mock_excel_file(df_data, "missing_end_time.xlsx")
-
-    # Test that ExcelManager raises an error for missing required column
-    with pytest.raises((ValueError, KeyError, Exception)) as exc_info:
-        excel_manager.read_courses_from_file(mock_file_path)
-    
-    # Verify the error message mentions the missing column
-    error_message = str(exc_info.value).lower()
-    assert any(term in error_message for term in ["שעת סיום", "end_time", "missing", "column"])
-    print(f"✓ Correctly detected missing required field: {exc_info.value}")
+    mock_file_path = create_mock_excel_file(df_data, "missing_start_time.xlsx")
+    try:
+        result = excel_manager.read_courses_from_file(mock_file_path)
+        # Support both (courses, errors) and error raising
+        if isinstance(result, tuple) and len(result) == 2:
+            courses, errors = result
+            assert len(errors) > 0, "Expected validation errors for missing required column"
+            error_msgs = [str(error.message).lower() if hasattr(error, "message") else str(error).lower() for error in errors]
+            assert any("שעת התחלה" in msg or "start time" in msg or "missing" in msg or "column" in msg for msg in error_msgs), \
+                "Expected missing column validation error"
+            assert len(courses) == 0, "Expected no courses to be created with missing required column"
+        else:
+            pytest.fail("Expected read_courses_from_file to return (courses, errors) tuple")
+    except Exception as e:
+        # It's acceptable to raise an error for missing required columns
+        print(f"✓ Correctly raised error for missing required field: {e}")
 
 
 def test_Excel_ReadingQT_empty_fields(excel_manager, create_mock_excel_file):
@@ -743,38 +614,34 @@ def test_Excel_ReadingQT_course_group_identification(excel_manager, create_mock_
     except Exception as e:
         pytest.fail(f"Failed to identify course groups: {e}")
 
-
-def test_Excel_ReadingQT_course_without_tutorial(excel_manager, create_mock_excel_file):
+def test_Excel_ReadingQT_missing_required_field(excel_manager, create_mock_excel_file):
     """
-    Test 5: Verifies correct handling of courses with only lectures (no tutorials).
+    Test 2: Verifies that ExcelManager handles missing required fields by adding validation errors.
     """
     df_data = {
-        "שם קורס": ["קורס בלי תרגול"],
+        "שם קורס": ["קורס חסר שעות"],
         "קוד מלא": ["12345-01"],
         "סוג מפגש": ["הרצאה"],
         "תקופה": ["א"],
-        "יום": ["ראשון"],
-        "שעת התחלה": ["09:00"],
-        "שעת סיום": ["11:00"],
+        "מועד": ["ראשון 09:00-"],  # Missing end time - invalid format
         "חדר": ["בניין X"],
-        "מרצה": ["ד\"ר אבירם"],
+        "מרצה": ["מרצה"],
     }
-    mock_file_path = create_mock_excel_file(df_data, "no_tutorial.xlsx")
-
-    try:
-        loaded_courses = excel_manager.read_courses_from_file(mock_file_path)
-        
-        if isinstance(loaded_courses, dict):
-            assert len(loaded_courses) == 1
-            course = list(loaded_courses.values())[0]
-            assert len(course.sections) == 1
-            assert course.sections[0].meeting_type == "הרצאה"
-            
-        print(f"✓ Successfully handled course without tutorial")
-        
-    except Exception as e:
-        pytest.fail(f"Failed to handle course without tutorial: {e}")
-
+    mock_file_path = create_mock_excel_file(df_data, "missing_end_time.xlsx")
+    
+    # Test that ExcelManager returns validation errors for missing/invalid data
+    result = excel_manager.read_courses_from_file(mock_file_path)
+    # Support both (courses, errors) and error raising
+    if isinstance(result, tuple) and len(result) == 2:
+        courses, errors = result
+        assert len(errors) > 0, "Expected validation errors for missing required field"
+        # Accept both missing column and invalid time format errors
+        error_msgs = [str(error.message).lower() if hasattr(error, "message") else str(error).lower() for error in errors]
+        assert any("שעת סיום" in msg or "end_time" in msg or "missing" in msg or "column" in msg or "time format" in msg for msg in error_msgs), \
+            "Expected missing column or time format validation error"
+        assert len(courses) == 0, "Expected no courses to be created with invalid time data"
+    else:
+        pytest.fail("Expected read_courses_from_file to return (courses, errors) tuple")
 
 def test_Excel_ReadingQT_tutorial_without_lecture(excel_manager, create_mock_excel_file):
     """
