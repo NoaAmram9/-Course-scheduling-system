@@ -25,5 +25,7 @@ replay_pid*
 __pycache__/
 *.pyc
 
-Data
+Data/chosen_courses.txt
+Data/selected_courses.txt
+Data/courses.txt
 schedule.txt

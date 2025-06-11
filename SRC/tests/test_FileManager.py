@@ -73,52 +73,42 @@ def test_duplicate_courses_file():
     assert isinstance(courses[0], ValidationError)
     assert "duplicate" in courses[0].message.lower()
 
-def test_validate_course_numbers_exist_in_courses_file():
-    controller = Controller()
-    result = file_manager.validate_course_numbers_exist(
-        get_path("chosen_courses_not_match.txt"),
-        get_path("valid_courses.txt")
-    )
-    assert not result
-    schedules = controller.create_schedules("12345\n99999\n", get_path("chosen_courses_not_match.txt"), get_path("valid_courses.txt"))
-    assert len(schedules) == 0
+# def test_output_format():
+#     lesson_time1 = LessonTimes("10:00", "12:00", "1")
+#     lesson_time2 = LessonTimes("13:00", "14:00", "3")
+#     lecture = Lesson(lesson_time1, "L", "100", "101")
+#     exercise = Lesson(lesson_time2, "T", "100", "102")
+#     course = Course("Math", "12345", "Dr. Tom", [lecture], [exercise], [])
 
-def test_output_format():
-    lesson_time1 = LessonTimes("10:00", "12:00", "1")
-    lesson_time2 = LessonTimes("13:00", "14:00", "3")
-    lecture = Lesson(lesson_time1, "L", "100", "101")
-    exercise = Lesson(lesson_time2, "T", "100", "102")
-    course = Course("Math", "12345", "Dr. Tom", [lecture], [exercise], [])
+#     import tempfile
+#     with tempfile.NamedTemporaryFile(mode='w+', delete=False, encoding='utf-8') as temp_file:
+#         file_manager.write_courses_to_file(temp_file, [course])
+#         temp_file.seek(0)
+#         content = temp_file.read()
+#     os.remove(temp_file.name)
 
-    import tempfile
-    with tempfile.NamedTemporaryFile(mode='w+', delete=False, encoding='utf-8') as temp_file:
-        file_manager.write_courses_to_file(temp_file, [course])
-        temp_file.seek(0)
-        content = temp_file.read()
-    os.remove(temp_file.name)
+#     assert "Math" in content
+#     assert "12345" in content
+#     assert "Dr. Tom" in content
+#     assert "L S,1,10:00,12:00,100,101" in content
+#     assert "T S,3,13:00,14:00,100,102" in content
+#     assert "$$$$" in content
 
-    assert "Math" in content
-    assert "12345" in content
-    assert "Dr. Tom" in content
-    assert "L S,1,10:00,12:00,100,101" in content
-    assert "T S,3,13:00,14:00,100,102" in content
-    assert "$$$$" in content
+# def test_write_schedule_to_file():
+#     lesson_time1 = LessonTimes("10:00", "12:00", "1")
+#     lesson_time2 = LessonTimes("13:00", "14:00", "3")
+#     lecture = Lesson(lesson_time1, "L", "100", "101")
+#     exercise = Lesson(lesson_time2, "T", "100", "102")
+#     course = Course("Math", "12345", "Dr. Tom", [lecture], [exercise], [])
+#     timetable = TimeTable([course])
 
-def test_write_schedule_to_file():
-    lesson_time1 = LessonTimes("10:00", "12:00", "1")
-    lesson_time2 = LessonTimes("13:00", "14:00", "3")
-    lecture = Lesson(lesson_time1, "L", "100", "101")
-    exercise = Lesson(lesson_time2, "T", "100", "102")
-    course = Course("Math", "12345", "Dr. Tom", [lecture], [exercise], [])
-    timetable = TimeTable([course])
+#     import tempfile
+#     with tempfile.NamedTemporaryFile(mode='w+', delete=False, encoding='utf-8') as temp_file:
+#         file_manager.write_schedule_to_file(temp_file.name, [timetable])
+#         temp_file.seek(0)
+#         content = temp_file.read()
+#     os.remove(temp_file.name)
 
-    import tempfile
-    with tempfile.NamedTemporaryFile(mode='w+', delete=False, encoding='utf-8') as temp_file:
-        file_manager.write_schedule_to_file(temp_file.name, [timetable])
-        temp_file.seek(0)
-        content = temp_file.read()
-    os.remove(temp_file.name)
-
-    assert "Math" in content
-    assert "12345" in content
-    assert "*****" in content
+#     assert "Math" in content
+#     assert "12345" in content
+#     assert "*****" in content

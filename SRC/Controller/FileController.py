@@ -2,6 +2,7 @@ from SRC.Services.ExcelManager import ExcelManager
 from SRC.Services.TxtManager import TxtManager
 from SRC.Interfaces.FileManager import FileManager
 from SRC.Services.ScheduleService import ScheduleService
+from SRC.Services.TimeConstraintsService import TimeConstraintsService
 
 class FileController:
     def __init__(self, file_type: str, filePath: str = None):
@@ -12,9 +13,14 @@ class FileController:
             self.file_manager = TxtManager()
         else:
             raise ValueError("Unsupported file type. Use 'excel' or 'txt'.")
+        self.time_constraints_service = TimeConstraintsService()
+        self._injected_constraints = []
+
+
+
     def get_file_type(self) -> str:
         return self.file_type
-    
+
     def read_courses_from_file(self, file_path: str):
         return self.file_manager.read_courses_from_file(file_path)
 
@@ -121,10 +127,16 @@ class FileController:
         Returns batches of timetables instead of individual timetables
         This replaces the old method that returned individual timetables
         """
+
         courses_info = self.read_courses_from_file(file_path1)[0]  # Get the first element which is the courses info
         selected_courses = self.get_selected_courses(file_path2)
         selected_courses_info = self.selected_courses_info(courses_info, selected_courses)
         
+        # Optional: Include dummy blocked courses if added earlier
+        if hasattr(self, "_injected_constraints"):
+            selected_courses_info.extend(self._injected_constraints)
+
+
         try:
             schedule_service = ScheduleService()
             
@@ -167,4 +179,10 @@ class FileController:
         dataManager = FileManager()
         dataManager.delete_temp_files(files)
 
-    
+    def apply_time_constraints(self, constraints: list[dict]):
+        """Set the dummy courses to be injected as blocked time slots."""
+        self._injected_constraints = self.time_constraints_service.generate_busy_slots(constraints)
+
+    def clear_time_constraints(self):
+        """Clear any previously set time constraints (remove dummy courses)."""
+        self._injected_constraints = []

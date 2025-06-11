@@ -157,3 +157,14 @@ QFrame#defaultCell {
     border: 1px solid #BFAF9B; /* בז' מדברי רגוע */
 }
 
+QFrame#blockedCell {
+    background-color:rgb(212, 210, 210);  /* very light gray */
+    border: 1px dashed #999999;
+    border-radius: 10px;
+}
+
+QLabel#blockedLabel {
+    color: #666666;
+    font-style: italic;
+    font-size: 12px;
+}

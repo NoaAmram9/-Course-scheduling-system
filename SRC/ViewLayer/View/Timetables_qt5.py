@@ -26,8 +26,7 @@ from SRC.ViewLayer.Logic.TimetablesSorter import TimetablesSorter
 from SRC.ViewLayer.Theme.ModernUIQt5 import ModernUIQt5
 from SRC.ViewLayer.View.TimeTableWorker import TimetableWorker
 from SRC.ViewLayer.Layout.TimetablesUIComponents import TimetableUIComponents
-# from SRC.ViewLayer.Logic.TimetablesSorter import TimetablesDisplayManager  # ייבוא המחלקה החדשה
-
+from SRC.ViewLayer.Logic.Pdf_Exporter_System import ScreenshotPDFExporter
 
 class TimetablesPageQt5(QMainWindow):
     """
@@ -81,7 +80,8 @@ class TimetablesPageQt5(QMainWindow):
         # Batch loading management
         self.current_batch = []
         self.batch_index = 0
-        
+       # אתחול מערכת ייצוא Screenshots
+        self.init_screenshot_exporter()
         self.init_ui()
         self.start_background_loading()
     
@@ -143,7 +143,49 @@ class TimetablesPageQt5(QMainWindow):
         self.no_data_label.setAlignment(Qt.AlignCenter)
         parent_layout.addWidget(self.no_data_label)
         self.setStyleSheet(ModernUIQt5.get_timetable_stylesheet())
-    
+        
+    def init_screenshot_exporter(self):
+        """אתחול מערכת ייצוא PDF עם Screenshots"""
+        try:
+            # ייבוא המחלקה
+            from SRC.ViewLayer.Logic.Pdf_Exporter_System import ScreenshotPDFExporter
+            self.screenshot_exporter = ScreenshotPDFExporter(self)
+            print("Screenshot exporter initialized successfully")
+        except ImportError as e:
+            print(f"Failed to import ScreenshotPDFExporter: {e}")
+            self.screenshot_exporter = None
+        except Exception as e:
+            print(f"Failed to initialize screenshot exporter: {e}")
+            self.screenshot_exporter = None
+
+    def export_pdf_screenshots(self):
+        """ייצוא PDF עם Screenshots - הפונקציה שהכפתור קורא אליה"""
+        if self.screenshot_exporter is None:
+            QMessageBox.critical(
+                self, 
+                "Export Error", 
+                "Screenshot exporter is not available.\nPlease check if all required modules are installed."
+            )
+            return
+        
+        if not self.all_options:
+            QMessageBox.warning(
+                self, 
+                "No Data", 
+                "No timetables available for export.\nPlease wait for timetables to load."
+            )
+            return
+        
+        try:
+            # קריאה לפונקציית הייצוא
+            self.screenshot_exporter.export_pdf_screenshots()
+        except Exception as e:
+            QMessageBox.critical(
+                self, 
+                "Export Error", 
+                f"Failed to export PDF screenshots:\n{str(e)}"
+            )
+
     
     ############קריאה ל-Worker - מה שמציג את המערכות############
     def start_background_loading(self):
@@ -372,7 +414,9 @@ class TimetablesPageQt5(QMainWindow):
     
     def update_title(self):
         """Update the title label"""
-        if self.loading_complete:
+        if len(self.all_options) == 0:
+            self.title_label.setText("No timetable options available")
+        elif self.loading_complete:
             self.title_label.setText(f"Timetable Option {self.current_index + 1} of {len(self.all_options)}")
         else:
             remaining_text = f"+ (Loading...)" if self.is_loading else ""
@@ -451,113 +495,11 @@ class TimetablesPageQt5(QMainWindow):
         self.stop_background_loading()  # עצור טעינה אם יש
         if self.go_back_callback:
             self.go_back_callback()
-    
-   
-    def export_pdf_dialog(self):
-        """Handle PDF export with all current options"""
-        if not self.all_options:
-            QMessageBox.warning(self, "No Data", "No timetable options to export.")
-            return
-
-        # Ask the user if they want to export all options or only the current one
-        reply = QMessageBox.question(
-            self, 'Export PDF',
-            f'Do you want to export all {len(self.all_options)} loaded timetable options?\n\n'
-            'Yes: Export all loaded options\n'
-            'No: Export current option only',
-            QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel,
-            QMessageBox.Cancel
-        )
-
-        if reply == QMessageBox.Cancel:
-            return
-
-        # Open file dialog
-        file_path, _ = QFileDialog.getSaveFileName(
-            self, 'Save PDF', 'timetables.pdf', 'PDF files (*.pdf)'
-        )
-
-        if not file_path:
-            return
-
-        try:
-            if reply == QMessageBox.Yes:
-                # Export all loaded options
-                doc = SimpleDocTemplate(file_path, pagesize=landscape(A4))
-                all_elements = []
-                for idx, timetable_courses in enumerate(self.all_options):
-                    slot_map = map_courses_to_slots(timetable_courses)
-                    title = f"Timetable Option {idx + 1}"
-                    elements = generate_pdf_from_data(None, slot_map, title, return_elements=True)
-                    all_elements.extend(elements)
-
-                    if idx < len(self.all_options) - 1:
-                        all_elements.append(PageBreak())
-
-                doc.build(all_elements)
-
-                QMessageBox.information(
-                    self, "Export Complete",
-                    f"Successfully exported {len(self.all_options)} timetable options to:\n{file_path}"
-                )
-            else:
-                # Export current option only
-                current_timetable_courses = self.all_options[self.current_index]
-                slot_map = map_courses_to_slots(current_timetable_courses)
-                title = f"Timetable Option {self.current_index + 1}"
-                generate_pdf_from_data(file_path, slot_map, title)
-
-                QMessageBox.information(
-                    self, "Export Complete",
-                    f"Successfully exported current timetable to:\n{file_path}"
-                )
-
-            # Open the generated PDF
-            if sys.platform.startswith('win'):
-                os.startfile(file_path)
-            elif sys.platform.startswith('darwin'):
-                os.system(f'open "{file_path}"')
-            else:
-                os.system(f'xdg-open "{file_path}"')
-
-        except Exception as e:
-            QMessageBox.critical(self, "Export Error", f"Failed to export PDF:\n{str(e)}")
 
     def handle_back(self):
         self._is_exiting_from_back = True
         self.close()  # זה יפעיל את closeEvent
 
-          
-                
-    # def closeEvent(self, event):
-    #     """Handle window close event - stop all background processes"""
-        
-    #     self.stop_background_loading()
-
-    #     # המתן שה-worker יסתיים לפני סגירה
-    #     if self.worker is not None:
-    #         if self.worker.isRunning(): # בדוק אם ה-worker עדיין רץ
-    #             self.worker.stop()      # בקש ממנו לעצור
-    #             if not self.worker.wait(2000): # המתן עד 2 שניות
-    #                 # אם הוא לא סיים תוך 2 שניות, נסה לסיים בכוח
-    #                 print("Worker did not stop gracefully, attempting to terminate.")
-    #                 self.worker.terminate()
-    #                 self.worker.wait(500) # המתנה קצרה לאחר terminate
-
-    #     # הצג תמיד שאלת אישור כאשר לוחצים על "X"
-    #     reply = QMessageBox.question(
-    #             self, 'Exit', 'Are you sure you want to exit?',
-    #             QMessageBox.Yes | QMessageBox.No, QMessageBox.No
-    #         )
-
-    #     if reply == QMessageBox.Yes:
-    #             if hasattr(self.controller, 'handle_exit') and callable(self.controller.handle_exit):
-    #                 self.controller.handle_exit()
-    #             event.accept()
-    #     else:
-    #             self.start_background_loading()  # Restart loading if user cancels
-    #             event.ignore()
-                
     def closeEvent(self, event):
         """Handle window close event - distinguish between Back and X buttons"""
 

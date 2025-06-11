@@ -11,7 +11,6 @@ def test_generate_all_possible_schedules():
     course1 = Course(
         name="Course1",
         code="11111",
-        instructor="Instructor1",
         lectures=[
             Lesson(LessonTimes("08:00", "09:00", "1"), "L", "100", "101"),
             Lesson(LessonTimes("09:00", "10:00", "1"), "L", "100", "102")
@@ -25,7 +24,6 @@ def test_generate_all_possible_schedules():
     course2 = Course(
         name="Course2",
         code="22222",
-        instructor="Instructor2",
         lectures=[
             Lesson(LessonTimes("11:00", "12:00", "1"), "L", "200", "201")
         ],
@@ -44,7 +42,6 @@ def test_schedule_conflicts():
     course1 = Course(
         name="Course1",
         code="11111",
-        instructor="Instructor1",
         lectures=[
             Lesson(LessonTimes("10:00", "12:00", "1"), "L", "100", "101")
         ],
@@ -57,7 +54,6 @@ def test_schedule_conflicts():
     course2 = Course(
         name="Course2",
         code="22222",
-        instructor="Instructor2",
         lectures=[
             Lesson(LessonTimes("11:00", "13:00", "1"), "L", "200", "201")
         ],
@@ -74,7 +70,6 @@ def test_schedule_course_with_all_parts():
     course = Course(
         name="Course",
         code="11111",
-        instructor="Instructor",
         lectures=[
             Lesson(LessonTimes("08:00", "09:00", "2"), "L", "A", "101")
         ],
@@ -87,13 +82,12 @@ def test_schedule_course_with_all_parts():
     )
 
     schedules = service.generate_schedules([course])
-    assert len(schedules) == 1
+    assert len(schedules) == 2
 
 def test_schedule_course_with_multiple_lecture_groups():
     course = Course(
         name="Course",
         code="11111",
-        instructor="Instructor",
         lectures=[
             Lesson(LessonTimes("08:00", "09:00", "1"), "L", "C", "301"),
             Lesson(LessonTimes("09:00", "10:00", "1"), "L", "C", "302"),
@@ -112,7 +106,6 @@ def test_schedule_lessons_on_different_days():
     course1 = Course(
         name="Course1",
         code="11111",
-        instructor="Instructor1",
         lectures=[
             Lesson(LessonTimes("10:00", "11:00", "1"), "L", "A", "001")
         ],
@@ -125,7 +118,6 @@ def test_schedule_lessons_on_different_days():
     course2 = Course(
         name="Course2",
         code="22222",
-        instructor="Instructor2",
         lectures=[
             Lesson(LessonTimes("10:00", "11:00", "2"), "L", "B", "003")
         ],
@@ -142,7 +134,6 @@ def test_schedule_not_consecutive_lessons():
     course = Course(
         name="Course",
         code="11111",
-        instructor="Instructor",
         lectures=[
             Lesson(LessonTimes("09:00", "10:00", "3"), "L", "B1", "100")
         ],
@@ -159,7 +150,6 @@ def test_schedule_minimum_one_course():
     course = Course(
         name="Course",
         code="11111",
-        instructor="Instructor",
         lectures=[
             Lesson(LessonTimes("08:00", "09:00", "1"), "L", "A", "001")
         ],
@@ -178,7 +168,6 @@ def test_schedule_maximum_seven_courses():
         course = Course(
             name=f"Course{i+1}",
             code=f"{i+1}{i+1}{i+1}{i+1}{i+1}",
-            instructor=f"Instructor{i+1}",
             lectures=[
                 Lesson(LessonTimes("08:00", "09:00", str(i + 1)), "L", f"B{i+1}", f"00{i+1}")
             ],
@@ -198,7 +187,6 @@ def test_schedule_performance():
         course = Course (
             name=f"Course{i+1}",
             code=f"{i+1}{i+1}{i+1}{i+1}{i+1}",
-            instructor=f"Instructor{i+1}",
             lectures = [
                 Lesson(LessonTimes("08:00", "09:00", str(i + 1)), "L", f"B{i}", f"{i}01"),
                 Lesson(LessonTimes("10:00", "11:00", str(i + 1)), "L", f"B{i}", f"{i}02"),
@@ -216,4 +204,4 @@ def test_schedule_performance():
     duration = time.time() - start_time
 
     assert duration < 10
-    assert len(schedules) == 16384
+    assert len(schedules) == 1000

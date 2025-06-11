@@ -839,9 +839,9 @@ class ScheduleService(IScheduleService):
             
             # בדיקת חוקים:
             # אם יש הרצאות, חייב להיות גם תרגולים
-            if has_lectures and not has_exercises:
-                print(f"קורס {course._name} נדחה: יש הרצאה אבל אין תרגול")
-                continue
+            # if has_lectures and not has_exercises:
+            #     print(f"קורס {course._name} נדחה: יש הרצאה אבל אין תרגול")
+            #     continue
             
             # # אם יש reinforcement, חייב הרצאה + תרגול
             # if has_reinforcement and (not has_lectures or not has_exercises):
