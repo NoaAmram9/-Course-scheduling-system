@@ -72,6 +72,17 @@ QPushButton#jumpButton:hover {
     background-color: #dfa448;
 }
 
+QLineEdit#jumpInput {
+    background-color: transparent;
+    color: #944e25;
+    font-weight: 600;
+    border: 1px solid #ecac57;
+    border-radius: 6px;
+    padding: 4px 6px;
+}
+
+
+
 /* כפתור ייצוא PDF */
 QPushButton#exportButton {
     background-color: #944e25;

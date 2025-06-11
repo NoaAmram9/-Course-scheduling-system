@@ -1,15 +1,15 @@
-from SRC.Models.Preferences import Preferences
+from SRC.Models.TimetableMetrics import TimetableMetrics
 from SRC.Models.TimeTable import TimeTable
 from SRC.Models.LessonTimes import LessonTimes
 
 from collections import defaultdict
 
-class PreferencesService:
+class TimetableMetricsService:
     def __init__(self):
         timetable = None
  
     # Method to apply user preferences details to the timetable.
-    def apply_preferences(self, timetable):
+    def generate_metrics(self, timetable):
         """
         Apply user preferences details to the timetable.
         
@@ -23,24 +23,24 @@ class PreferencesService:
         lesson_times = self.get_lesson_times()  # Get the lesson times from the timetable
         
         # Calculate various preferences based on the timetable
-        days = self.calculate_active_days(lesson_times=lesson_times)
+        active_days = self.calculate_active_days(lesson_times=lesson_times)
         free_windows_num, free_windows_sum = self.calculate_free_windows(lesson_times=lesson_times)
         avg_start_time, avg_end_time = self.calculate_avg_times(lesson_times=lesson_times)
         
         # Create the preferences details & update in the timetable
-        preferences = Preferences(
-            days=days,
+        metrics = TimetableMetrics(
+            active_days=active_days,
             free_windows_number=free_windows_num,
             free_windows_sum=free_windows_sum,
-            avarage_start_time=avg_start_time,
-            avarage_end_time=avg_end_time
+            average_start_time=avg_start_time,
+            average_end_time=avg_end_time
         )
         
-        self.timetable.preferences_details = preferences
-        # print(f"applied preferences: {self.timetable.preferences_details.days} active days, "
+        self.timetable.metrics = metrics
+        # print(f"applied preferences: {self.timetable.preferences_details.active_days} active days, "
         #       f"{self.timetable.preferences_details.free_windows_number} free windows, "
-        #       f"avg start time: {self.timetable.preferences_details.avarage_start_time}, "
-        #       f"avg end time: {self.timetable.preferences_details.avarage_end_time}")
+        #       f"avg start time: {self.timetable.preferences_details.average_start_time}, "
+        #       f"avg end time: {self.timetable.preferences_details.average_end_time}")
  
     # Method to get the lesson times from the timetable.
     def get_lesson_times(self):

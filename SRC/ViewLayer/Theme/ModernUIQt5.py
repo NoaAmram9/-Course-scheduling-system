@@ -70,18 +70,18 @@ class ModernUIQt5:
         base = ModernUIQt5._load_stylesheet("modern_ui_base.qss")
         timetable = ModernUIQt5._load_stylesheet("modern_ui_timetable.qss")
         navbar = ModernUIQt5._load_stylesheet("NavBars_ui.qss")
-        # dropdown = ModernUIQt5._load_stylesheet("dropdown_menu.qss")
-        # return base + "\n" + timetable + "\n" + navbar + '\n' + dropdown
-        return base + "\n" + timetable + "\n" + navbar
+        dropdown = ModernUIQt5._load_stylesheet("dropdown.qss")
+        return base + "\n" + timetable + "\n" + navbar + '\n' + dropdown
+        # return base + "\n" + timetable + "\n" + navbar
 
     @staticmethod
     def get_navbars_stylesheet():
         """Load and combine base + selection styles"""
         base = ModernUIQt5._load_stylesheet("modern_ui_base.qss")
         navbar = ModernUIQt5._load_stylesheet("NavBars_ui.qss")
-        # dropdown = ModernUIQt5._load_stylesheet("dropdown_menu.qss")
-        # return base + "\n" + navbar + "\n" + dropdown
-        return base + "\n" + navbar
+        dropdown = ModernUIQt5._load_stylesheet("dropdown_menu.qss")
+        return base + "\n" + navbar + "\n" + dropdown
+        # return base + "\n" + navbar
     
     @staticmethod
     def get_dropdown_stylesheet():
