@@ -57,7 +57,7 @@ class TimetableMetricsService:
         # Collect all lesson times from the timetable's courses
         lesson_times = []
         for course in self.timetable.courses:
-            if course.code.startswith("BLOCKED_"):
+            if course.code.startswith("BLOCKED"):
                 continue  # Skip dummy time constraints
             
             for lesson_list in [course.lectures, course.exercises, course.labs, course.departmentHours,

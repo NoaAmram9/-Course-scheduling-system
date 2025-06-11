@@ -26,8 +26,8 @@ class TimetableUIComponents:
         instance.progress_label = QLabel("0 options loaded")
         instance.pause_button = QPushButton("⏸ Pause Loading")
         instance.pause_button.clicked.connect(instance.toggle_loading)
-        instance.stop_button = QPushButton("⏹ Stop Loading")
-        instance.stop_button.clicked.connect(instance.stop_background_loading)
+        # instance.stop_button = QPushButton("⏹ Stop Loading")
+        # instance.stop_button.clicked.connect(instance.stop_background_loading)
 
         # Create the refresh button with icons
         current_dir = os.path.dirname(__file__)
@@ -66,7 +66,7 @@ class TimetableUIComponents:
         top_row.addStretch()
         top_row.addWidget(instance.progress_label)
         top_row.addWidget(instance.pause_button)
-        top_row.addWidget(instance.stop_button)
+        # top_row.addWidget(instance.stop_button)
         top_row.addWidget(instance.refresh_button)
 
 
