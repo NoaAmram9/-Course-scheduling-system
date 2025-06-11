@@ -29,11 +29,46 @@ class TimetableUIComponents:
         instance.stop_button = QPushButton("⏹ Stop Loading")
         instance.stop_button.clicked.connect(instance.stop_background_loading)
 
+                # Create the refresh button with icons
+        current_dir = os.path.dirname(__file__)
+        instance.refresh_icons = [
+            QPixmap(os.path.normpath(os.path.join(current_dir, "../../../Data/refresh_down.gif"))),
+            QPixmap(os.path.normpath(os.path.join(current_dir, "../../../Data/refresh_left.gif"))),
+            QPixmap(os.path.normpath(os.path.join(current_dir, "../../../Data/refresh_up.gif"))),
+            QPixmap(os.path.normpath(os.path.join(current_dir, "../../../Data/refresh_right.gif"))),
+        ]
+
+        # define the default icon as the last one (refresh_right)
+        instance.default_refresh_icon = instance.refresh_icons[-1]  # refresh_right
+
+        # Label for the refresh button inside the button
+        instance.refresh_label = QLabel()
+        instance.refresh_label.setPixmap(instance.default_refresh_icon.scaled(24, 24, Qt.KeepAspectRatio, Qt.SmoothTransformation))
+        instance.refresh_label.setAlignment(Qt.AlignCenter)
+
+        # Create the refresh button
+        instance.refresh_button = QPushButton()
+        instance.refresh_button.setObjectName("refreshButton")
+        instance.refresh_button.setFixedSize(40, 40)
+
+        # Set the layout for the refresh button to center the label
+        refresh_button_layout = QVBoxLayout()
+        refresh_button_layout.setContentsMargins(0, 0, 0, 0)
+        refresh_button_layout.setAlignment(Qt.AlignCenter)
+        refresh_button_layout.addWidget(instance.refresh_label)
+        instance.refresh_button.setLayout(refresh_button_layout)
+
+        # Connect the refresh button to the refresh_timetables method
+        instance.refresh_button.clicked.connect(instance.refresh_timetables)
+        
+        # top_row.addWidget(instance.refresh_button)
         top_row.addWidget(instance.loading_label)
         top_row.addStretch()
         top_row.addWidget(instance.progress_label)
         top_row.addWidget(instance.pause_button)
         top_row.addWidget(instance.stop_button)
+        top_row.addWidget(instance.refresh_button)
+
 
         instance.progress_bar = QProgressBar()
         instance.progress_bar.setVisible(False)
@@ -117,61 +152,25 @@ class TimetableUIComponents:
         
         # preferences_jump_row.addStretch()
 
-        metrics_grid = QHBoxLayout()
-        # Metrics Grid - for displaying metrics
-        instance.metrics_grid = QFrame()
-        instance.metrics_grid.setObjectName("metricsGrid")
-        instance.metrics_grid.setLayout(metrics_grid)
-        instance.metrics_grid.setFixedHeight(40)
-        instance.metrics_grid.setContentsMargins(0, 0, 0, 0)
+        # metrics_grid = QHBoxLayout()
+        # # Metrics Grid - for displaying metrics
+        # instance.metrics_grid = QFrame()
+        # instance.metrics_grid.setObjectName("metricsGrid")
+        # instance.metrics_grid.setLayout(metrics_grid)
+        # instance.metrics_grid.setFixedHeight(40)
+        # instance.metrics_grid.setContentsMargins(0, 0, 0, 0)
         
-        preferences_jump_row.addWidget(instance.metrics_grid)
+        # preferences_jump_row.addWidget(instance.metrics_grid)
         
-        # metrics label
-        instance.metrics_label = QLabel("metrics")
-        instance.metrics_label.setObjectName("metrics")
-        instance.metrics_label.setAlignment(Qt.AlignCenter)
-        instance.metrics_label.setMinimumWidth(300)
-        metrics_grid.addWidget(instance.metrics_label)
+        # # metrics label
+        # instance.metrics_label = QLabel("metrics")
+        # instance.metrics_label.setObjectName("metrics")
+        # instance.metrics_label.setAlignment(Qt.AlignCenter)
+        # instance.metrics_label.setMinimumWidth(300)
+        # metrics_grid.addWidget(instance.metrics_label)
         
-        preferences_jump_row.addStretch()
+        # preferences_jump_row.addStretch()
         
-
-        # Create the refresh button with icons
-        current_dir = os.path.dirname(__file__)
-        instance.refresh_icons = [
-            QPixmap(os.path.normpath(os.path.join(current_dir, "../../../Data/refresh_down.gif"))),
-            QPixmap(os.path.normpath(os.path.join(current_dir, "../../../Data/refresh_left.gif"))),
-            QPixmap(os.path.normpath(os.path.join(current_dir, "../../../Data/refresh_up.gif"))),
-            QPixmap(os.path.normpath(os.path.join(current_dir, "../../../Data/refresh_right.gif"))),
-        ]
-
-        # define the default icon as the last one (refresh_right)
-        instance.default_refresh_icon = instance.refresh_icons[-1]  # refresh_right
-
-        # Label for the refresh button inside the button
-        instance.refresh_label = QLabel()
-        instance.refresh_label.setPixmap(instance.default_refresh_icon.scaled(24, 24, Qt.KeepAspectRatio, Qt.SmoothTransformation))
-        instance.refresh_label.setAlignment(Qt.AlignCenter)
-
-        # Create the refresh button
-        instance.refresh_button = QPushButton()
-        instance.refresh_button.setObjectName("refreshButton")
-        instance.refresh_button.setFixedSize(40, 40)
-
-        # Set the layout for the refresh button to center the label
-        refresh_button_layout = QVBoxLayout()
-        refresh_button_layout.setContentsMargins(0, 0, 0, 0)
-        refresh_button_layout.setAlignment(Qt.AlignCenter)
-        refresh_button_layout.addWidget(instance.refresh_label)
-        instance.refresh_button.setLayout(refresh_button_layout)
-
-        # Connect the refresh button to the refresh_timetables method
-        instance.refresh_button.clicked.connect(instance.refresh_timetables)
-
-        preferences_jump_row.addWidget(instance.refresh_button)
-
-
         
         # Jump Label
         jump_label = QLabel("Jump to:")
@@ -234,7 +233,8 @@ class TimetableUIComponents:
         # Logo in the center
         logo_label = QLabel()
         logo_label.setObjectName("logoLabel")
-        logo_pixmap = QPixmap("Data/logo.png")  
+        current_dir = os.path.dirname(__file__)
+        logo_pixmap = QPixmap(os.path.normpath(os.path.join(current_dir, "../../../Data/Logo.jpg")))
         logo_pixmap = logo_pixmap.scaled(80, 80, Qt.KeepAspectRatio, Qt.SmoothTransformation)
         logo_label.setPixmap(logo_pixmap)
         logo_label.setAlignment(Qt.AlignCenter)
