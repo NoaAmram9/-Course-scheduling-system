@@ -21,8 +21,6 @@ To run the system, open the `App.py` file and run it (e.g., press `F5` in your I
 
 ## 🔀 Branches
 
-- `main` – Base setup and version 1.0.
-- `Part 2` – Advanced logic, GUI updates, and initial constraints.
 - `Part 3` – Including performance optimization, user experience improvements, and dynamic scheduling features.
 
 ## 📥 Installation
