@@ -29,7 +29,7 @@ class TimetableUIComponents:
         instance.stop_button = QPushButton("⏹ Stop Loading")
         instance.stop_button.clicked.connect(instance.stop_background_loading)
 
-                # Create the refresh button with icons
+        # Create the refresh button with icons
         current_dir = os.path.dirname(__file__)
         instance.refresh_icons = [
             QPixmap(os.path.normpath(os.path.join(current_dir, "../Icons/refresh_down.gif"))),
@@ -143,14 +143,15 @@ class TimetableUIComponents:
         
         preferences_jump_row.addStretch()
         
-        # # metrics label
-        # instance.metrics_label = QLabel("metrics")
-        # instance.metrics_label.setObjectName("metrics")
-        # instance.metrics_label.setAlignment(Qt.AlignCenter)
-        # instance.metrics_label.setMinimumWidth(300)
-        # preferences_jump_row.addWidget(instance.metrics_label)
+        # metrics label
+        instance.metrics_label = QLabel("metrics")
+        instance.metrics_label.setObjectName("metrics")
+        instance.metrics_label.setAlignment(Qt.AlignCenter)
+        instance.metrics_label.setMinimumWidth(300)
+        instance.metrics_label.setContentsMargins(170, 0, 10, 0)
+        preferences_jump_row.addWidget(instance.metrics_label)
         
-        # preferences_jump_row.addStretch()
+        preferences_jump_row.addStretch()
 
         # metrics_grid = QHBoxLayout()
         # # Metrics Grid - for displaying metrics
@@ -175,7 +176,7 @@ class TimetableUIComponents:
         # Jump Label
         jump_label = QLabel("Jump to:")
         jump_label.setObjectName("jumpLabel")
-        jump_label.setFixedHeight(40)
+        jump_label.setFixedHeight(30)
         preferences_jump_row.addWidget(jump_label)
 
         # Jump First
@@ -189,8 +190,8 @@ class TimetableUIComponents:
         instance.jump_index_input = QLineEdit()
         instance.jump_index_input.setObjectName("jumpInput")
         instance.jump_index_input.setPlaceholderText("Index")
-        instance.jump_index_input.setAlignment(Qt.AlignCenter)
-        instance.jump_index_input.setFixedSize(60, 35)
+        instance.jump_index_input.setAlignment(Qt.AlignCenter)        
+        instance.jump_index_input.setFixedSize(60, 30)
         preferences_jump_row.addWidget(instance.jump_index_input)
         
         # Connect Enter key press in input to emit signal

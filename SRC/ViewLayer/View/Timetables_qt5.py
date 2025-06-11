@@ -380,7 +380,7 @@ class TimetablesPageQt5(QMainWindow):
         self.no_data_label.hide()
         
         self.update_title()
-        # self.update_metrics()
+        self.update_metrics()
         
         # Get current timetable
         if self.display_sorted:
@@ -422,22 +422,22 @@ class TimetablesPageQt5(QMainWindow):
             remaining_text = f"+ (Loading...)" if self.is_loading else ""
             self.title_label.setText(f"Timetable Option {self.current_index + 1} of {len(self.all_options)}{remaining_text}")
     
-    # def update_metrics(self):
-    #     if self.display_sorted :
-    #         metrics = self.sorted_timetables[self.current_index].metrics
-    #     else: 
-    #         metrics = self.all_options[self.current_index].metrics
-    #     self.metrics_label.setText(f"metrics:  active days: {metrics.active_days}, free windows: {metrics.free_windows_number}," + 
-    #                                    f" total free windows: {metrics.free_windows_sum}, " +
-    #                                    f" average start time: {metrics.average_start_time}, average end time: {metrics.average_end_time}")
-    #     PREFERENCES_OPTIONS = {
-    #             "None": "None",
-    #             "Active Days": "active_days",
-    #             "Free windows": "free_windows_number",
-    #             "Total free windows": "free_windows_sum",
-    #             "Average Start Time": "average_start_time",
-    #             "Average End Time": "average_end_time",
-    #         }     
+    def update_metrics(self):
+        if self.display_sorted :
+            metrics = self.sorted_timetables[self.current_index].metrics
+        else: 
+            metrics = self.all_options[self.current_index].metrics
+        self.metrics_label.setText(f"active days: {metrics.active_days}, free windows: {metrics.free_windows_number}," + 
+                                       f" total free windows: {metrics.free_windows_sum}, " +
+                                       f" average start time: {metrics.average_start_time}, average end time: {metrics.average_end_time}")
+        PREFERENCES_OPTIONS = {
+                "None": "None",
+                "Active Days": "active_days",
+                "Free windows": "free_windows_number",
+                "Total free windows": "free_windows_sum",
+                "Average Start Time": "average_start_time",
+                "Average End Time": "average_end_time",
+            }     
         
     def update_button_states(self):
         """Update navigation button states"""
