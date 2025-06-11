@@ -621,17 +621,29 @@ class TimetablesPageQt5(QMainWindow):
         if not self.display_sorted:
             return
         
-        # Start animation
-        self.refresh_movie.start()
-        
+        self.start_refresh_animation()
+
         """Refresh the displayed timetables after sorting: re-sort by the current key"""
         key, ascending = self.timetables_sorter.get_current_sort_key(self.sorted_timetables)
         self.apply_display_sort(key, ascending)
-        print("refresh")
         
-        # Stop animation after short delay (or after real async completion)
+        # Stop animation after short delay
         QTimer.singleShot(1000, self.stop_refresh_animation)
     
+    def start_refresh_animation(self):
+        self.refresh_animation_index = 0
+        self.refresh_animation_timer = QTimer()
+        self.refresh_animation_timer.timeout.connect(self.update_refresh_icon)
+        self.refresh_animation_timer.start(100)  # Update every 100 ms
+
+    def update_refresh_icon(self):
+        icon = self.refresh_icons[self.refresh_animation_index]
+        self.refresh_label.setPixmap(icon.scaled(24, 24, Qt.KeepAspectRatio, Qt.SmoothTransformation))
+        self.refresh_animation_index = (self.refresh_animation_index + 1) % len(self.refresh_icons)
+
     def stop_refresh_animation(self):
-        self.refresh_movie.stop()
-        self.refresh_label.setText("🔄 Refresh")
+        if hasattr(self, "refresh_animation_timer"):
+            self.refresh_animation_timer.stop()
+            del self.refresh_animation_timer
+        self.refresh_label.setPixmap(self.default_refresh_icon.scaled(24, 24, Qt.KeepAspectRatio, Qt.SmoothTransformation))
+        

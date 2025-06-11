@@ -136,65 +136,6 @@ class TimetableUIComponents:
         
         preferences_jump_row.addStretch()
         
-        # # Add a refresh button
-        # instance.refresh_button = QPushButton("🔄 Refresh")
-        # instance.refresh_button.setObjectName("refreshButton")
-        # instance.refresh_button.setFixedSize(120, 40)
-        # instance.refresh_button.clicked.connect(instance.refresh_timetables)
-        # preferences_jump_row.addWidget(instance.refresh_button)
-        # preferences_jump_row.addStretch()
-        
-        # instance.refresh_button = QPushButton()
-        # instance.refresh_button.setObjectName("refreshButton")
-        # instance.refresh_label = QLabel("🔄 Refresh")
-        # instance.refresh_label.setText("🔄 Refresh")
-        # instance.refresh_movie = QMovie("../../../Data/refresh_icon.gif")
-        # instance.refresh_label.setMovie(instance.refresh_movie)
-        # instance.refresh_button.setFixedSize(120, 40)
-        # # instance.refresh_button.setLayout(QVBoxLayout())
-        # # instance.refresh_button.layout().addWidget(instance.refresh_label)
-        
-        # preferences_jump_row.addWidget(instance.refresh_button)
-        # preferences_jump_row.addStretch()
-        
-        # # --- Refresh Button with GIF ---
-        
-        # # Create a layout inside the button
-        # refresh_button_layout = QVBoxLayout()
-        # refresh_button_layout.setContentsMargins(0, 0, 0, 0)
-        # refresh_button_layout.setAlignment(Qt.AlignCenter)
-
-        # # Create a QLabel with the animated gif
-        # instance.refresh_label = QLabel()
-        # instance.refresh_label.setAlignment(Qt.AlignRight | Qt.AlignVCenter)  # Align to the right and center vertically
-        # instance.refresh_label.setLayout(refresh_button_layout)  # Set the layout for the label
-        
-        # # Load the GIF safely using relative path
-        # current_dir = os.path.dirname(__file__)
-        # gif_path = os.path.normpath(os.path.join(current_dir, "../../../Data/refresh_right.gif"))
-        # print(f"[DEBUG] Loading GIF from: {gif_path}")  # Debugging line to check path
-        # instance.refresh_movie = QMovie(gif_path)
-        # instance.refresh_movie.setScaledSize(QSize(20, 20))
-        # instance.refresh_label.setMovie(instance.refresh_movie)
-        # instance.refresh_movie.start()  # Hide the movie animation
-        # # instance.refresh_label.setText("🔄 Refresh")  
-
-        # # instance.refresh_movie.setLayout(refresh_button_layout)  # Set the layout for the label
-
-
-        # # Create the button and set layout
-        # instance.refresh_button = QPushButton()
-        # instance.refresh_button.setObjectName("refreshButton")
-        # instance.refresh_button.setFixedSize(120, 40)
-        # instance.refresh_button.setLayout(refresh_button_layout)
-        # refresh_button_layout.addWidget(instance.refresh_label)
-
-        # # Connect the button to the refresh function
-        # instance.refresh_button.clicked.connect(instance.refresh_timetables)
-        
-        # # # Add to layout
-        # preferences_jump_row.addWidget(instance.refresh_button)
-        # preferences_jump_row.addStretch()
 
         # Create the refresh button with icons
         current_dir = os.path.dirname(__file__)
@@ -205,111 +146,31 @@ class TimetableUIComponents:
             QPixmap(os.path.normpath(os.path.join(current_dir, "../../../Data/refresh_right.gif"))),
         ]
 
-        # ברירת מחדל: האייקון הימני
+        # define the default icon as the last one (refresh_right)
         instance.default_refresh_icon = instance.refresh_icons[-1]  # refresh_right
 
-        # לייבל בתוך הכפתור
+        # Label for the refresh button inside the button
         instance.refresh_label = QLabel()
         instance.refresh_label.setPixmap(instance.default_refresh_icon.scaled(24, 24, Qt.KeepAspectRatio, Qt.SmoothTransformation))
         instance.refresh_label.setAlignment(Qt.AlignCenter)
 
-        # הכפתור עצמו
+        # Create the refresh button
         instance.refresh_button = QPushButton()
         instance.refresh_button.setObjectName("refreshButton")
         instance.refresh_button.setFixedSize(40, 40)
 
-        # עיצוב הכפתור
+        # Set the layout for the refresh button to center the label
         refresh_button_layout = QVBoxLayout()
         refresh_button_layout.setContentsMargins(0, 0, 0, 0)
         refresh_button_layout.setAlignment(Qt.AlignCenter)
         refresh_button_layout.addWidget(instance.refresh_label)
         instance.refresh_button.setLayout(refresh_button_layout)
 
-        # התחברות לפונקציית ריענון
+        # Connect the refresh button to the refresh_timetables method
         instance.refresh_button.clicked.connect(instance.refresh_timetables)
 
         preferences_jump_row.addWidget(instance.refresh_button)
 
-        
-        
-        # # --- Refresh Button with Text+GIF switching ---
-
-        # # Create the button
-        # instance.refresh_button = QPushButton()
-        # instance.refresh_button.setObjectName("refreshButton")
-        # instance.refresh_button.setFixedSize(120, 40)
-
-        # # Create two QLabel widgets: one for text and one for GIF
-        # instance.refresh_text_label = QLabel("🔄 Refresh")
-        # instance.refresh_text_label.setAlignment(Qt.AlignCenter)
-
-        # instance.refresh_gif_label = QLabel()
-        # instance.refresh_gif_label.setAlignment(Qt.AlignCenter)
-
-        # # Load the movie (GIF)
-        # current_dir = os.path.dirname(__file__)
-        # gif_path = os.path.normpath(os.path.join(current_dir, "../../../Data/refresh_icon.gif"))
-        # instance.refresh_movie = QMovie(gif_path)
-        # instance.refresh_movie.setScaledSize(QSize(20, 20))  # Adjust size as needed
-        
-        # instance.refresh_movie.setCacheMode(QMovie.CacheAll)
-        # instance.refresh_movie.setSpeed(100)  # 100% מהירות
-        # instance.refresh_movie.setScaledSize(QSize(20, 20))
-        
-        # instance.refresh_gif_label.setMovie(instance.refresh_movie)
-
-
-        # # Create a stacked layout to switch between text and gif
-        # refresh_button_layout = QStackedLayout()
-        # refresh_button_layout.setContentsMargins(0, 0, 0, 0)
-        # refresh_button_layout.addWidget(instance.refresh_text_label)  # index 0
-        # refresh_button_layout.addWidget(instance.refresh_gif_label)   # index 1
-
-        # # Set the layout to the button
-        # instance.refresh_button.setLayout(refresh_button_layout)
-        # instance.refresh_button_layout = refresh_button_layout  # Save reference for switching
-
-        # # Connect to refresh function
-        # instance.refresh_button.clicked.connect(instance.refresh_timetables)
-
-        # # Add to layout
-        # preferences_jump_row.addWidget(instance.refresh_button)
-        # preferences_jump_row.addStretch()
-
-
-        #     # צור את הכפתור וה־QMovie
-        # instance.refresh_button = QPushButton()
-        # instance.refresh_button.setFixedSize(120, 40)
-        # instance.refresh_button.setObjectName("refreshButton")
-
-        # # צור QLabel שישמש כתמונה של הכפתור
-        # instance.refresh_label = QLabel()
-        
-        # # Load the GIF safely using relative path
-        # current_dir = os.path.dirname(__file__)
-        # gif_path = os.path.normpath(os.path.join(current_dir, "../../../Data/refresh_icon.gif"))
-        # print(f"[DEBUG] Loading GIF from: {gif_path}")  # Debugging line to check path
-        # instance.refresh_movie = QMovie(gif_path)
-        
-        # # instance.refresh_movie = QMovie("נתיב_מדויק/refresh_icon.gif")
-        # instance.refresh_movie.setScaledSize(QSize(24, 24))  # אפשר לשנות ל־40,40 אם את רוצה את כל הכפתור כתמונה
-        # instance.refresh_label.setMovie(instance.refresh_movie)
-
-        # # יצירת טקסט לצד ה־GIF
-        # instance.refresh_text = QLabel("Refresh")
-
-        # # סדר את הכל בלייאאוט פנימי
-        # refresh_layout = QHBoxLayout()
-        # refresh_layout.setContentsMargins(0, 0, 0, 0)
-        # refresh_layout.addWidget(instance.refresh_label)
-        # refresh_layout.addWidget(instance.refresh_text)
-
-        # # שים את הלייאאוט בכפתור
-        # instance.refresh_button.setLayout(refresh_layout)       
-        
-        # # # Add to layout
-        # preferences_jump_row.addWidget(instance.refresh_button)
-        # # preferences_jump_row.addStretch()
 
         
         # Jump Label
