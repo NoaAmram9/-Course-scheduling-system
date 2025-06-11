@@ -32,10 +32,10 @@ class TimetableUIComponents:
                 # Create the refresh button with icons
         current_dir = os.path.dirname(__file__)
         instance.refresh_icons = [
-            QPixmap(os.path.normpath(os.path.join(current_dir, "../../../Data/refresh_down.gif"))),
-            QPixmap(os.path.normpath(os.path.join(current_dir, "../../../Data/refresh_left.gif"))),
-            QPixmap(os.path.normpath(os.path.join(current_dir, "../../../Data/refresh_up.gif"))),
-            QPixmap(os.path.normpath(os.path.join(current_dir, "../../../Data/refresh_right.gif"))),
+            QPixmap(os.path.normpath(os.path.join(current_dir, "../Icons/refresh_down.gif"))),
+            QPixmap(os.path.normpath(os.path.join(current_dir, "../Icons/refresh_left.gif"))),
+            QPixmap(os.path.normpath(os.path.join(current_dir, "../Icons/refresh_up.gif"))),
+            QPixmap(os.path.normpath(os.path.join(current_dir, "../Icons/refresh_right.gif"))),
         ]
 
         # define the default icon as the last one (refresh_right)
@@ -234,7 +234,7 @@ class TimetableUIComponents:
         logo_label = QLabel()
         logo_label.setObjectName("logoLabel")
         current_dir = os.path.dirname(__file__)
-        logo_pixmap = QPixmap(os.path.normpath(os.path.join(current_dir, "../../../Data/Logo.jpg")))
+        logo_pixmap = QPixmap(os.path.normpath(os.path.join(current_dir, "../Icons/Logo.jpg")))
         logo_pixmap = logo_pixmap.scaled(80, 80, Qt.KeepAspectRatio, Qt.SmoothTransformation)
         logo_label.setPixmap(logo_pixmap)
         logo_label.setAlignment(Qt.AlignCenter)
