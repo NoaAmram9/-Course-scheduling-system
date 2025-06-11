@@ -3,7 +3,7 @@ from typing import Callable
 
 class TimetablesSorterService:
     def __init__(self):
-        self.all_schedules = []  # list of all timetables so far
+        self.all_schedules = [] 
         self.sorted_cache = {}   # cache for sorted lists by different keys
         self.sort_key_funcs = {  # keys for sorting and their corresponding functions
             "active_days": lambda t: t.active_days,
@@ -13,21 +13,44 @@ class TimetablesSorterService:
             "free_windows_number": lambda t: t.free_windows_number,
         }
 
+import bisect
+from collections import defaultdict
+
+class TimetablesSorterService:
+    def __init__(self):
+        # רשימת כל מערכות השעות שנוצרו, לפי סדר הוספה
+        self.all_schedules = []  # list of all timetables so far
+
+        # cache של מיונים:
+        # key: (metric_key, reverse)
+        # value: list of (metric_value, timetable)
+        self.sorted_cache = defaultdict(list) # cache for sorted lists by different keys
+
     def add_timetable(self, timetable):
-        """מוסיפה מערכת שעות לכל הרשימות הרלוונטיות"""
+        """נקראת כאשר נוצרת מערכת שעות חדשה"""
         self.all_schedules.append(timetable)
 
-        for key, sorted_list in self.sorted_cache.items():
-            key_func = self.sort_key_funcs[key]
-            insort(sorted_list, timetable, key=key_func)
+        # עדכון כל המיונים שכבר קיימים בקאש
+        for (metric_key, reverse), sorted_list in self.sorted_cache.items():
+            metric_value = getattr(timetable, metric_key)
+            # שימוש ב-bisect כדי להכניס את המערכת למיקום הנכון
+            bisect.insort(sorted_list, (metric_value, timetable))
 
-    def get_sorted(self, sort_key: str, reverse: bool = False):
-        """מחזירה רשימה ממויינת לפי המפתח - ואם לא קיימת בקאש, יוצרת אותה"""
-        if sort_key in self.sorted_cache:
-            result = self.sorted_cache[sort_key]
-        else:
-            key_func = self.sort_key_funcs[sort_key]
-            result = sorted(self.all_schedules, key=key_func)
-            self.sorted_cache[sort_key] = result
+    def get_sorted(self, metric_key, reverse=False):
+        """החזרת מערכות ממויינות לפי מפתח מיון מסוים"""
+        cache_key = (metric_key, reverse)
 
-        return list(reversed(result)) if reverse else result
+        if cache_key not in self.sorted_cache:
+            # יצירת רשימה ממויינת בפעם הראשונה
+            sorted_list = sorted(
+                ((getattr(t, metric_key), t) for t in self.all_schedules),
+                reverse=reverse
+            )
+            self.sorted_cache[cache_key] = sorted_list
+
+        # החזרת רק הרשימה של האובייקטים עצמם (בלי הערך)
+        return [t for _, t in self.sorted_cache[cache_key]]
+
+    def get_unsorted(self):
+        """מחזיר את הרשימה הלא ממויינת (לפי סדר יצירה)"""
+        return self.all_schedules
