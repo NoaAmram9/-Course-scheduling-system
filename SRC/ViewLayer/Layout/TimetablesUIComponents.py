@@ -131,7 +131,7 @@ class TimetableUIComponents:
         instance.export_screenshots_button = QPushButton(" Export PDF ")
         instance.export_screenshots_button.setObjectName("screenshotPdfButton")
         instance.export_screenshots_button.setFixedSize(180, 40)
-        # חיבור לפונקציה שתקרא למחלקת ScreenshotPDFExporter
+        #  # Connect the export button to the export_screenshots method
         instance.export_screenshots_button.clicked.connect(instance.export_pdf_screenshots)
         top_nav.addWidget(instance.export_screenshots_button)
         # Preferences row - second line

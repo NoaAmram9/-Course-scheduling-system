@@ -134,7 +134,6 @@ class ExcelManager(FileManager):
             if day == 0:
                 errors.append(ValidationError("Invalid or missing day", context=row_context))
 
-
             try:
                 start_time = datetime.strptime(f"{start_hour:02}:00", "%H:%M")
                 end_time = datetime.strptime(f"{end_hour:02}:00", "%H:%M")
@@ -175,7 +174,6 @@ class ExcelManager(FileManager):
                         context=row_context
                     )
                 )
-
             course_key = f"{main_code}_{name}"
 
             lesson = Lesson(
@@ -188,7 +186,6 @@ class ExcelManager(FileManager):
                 weeklyHours=weekly_hours,
                 groupCode=group_code
             )
-
             if course_key not in courses_dict:
                 courses_dict[course_key] = Course(name=name, code=main_code, semester=semester, notes=notes)
 
@@ -206,8 +203,7 @@ class ExcelManager(FileManager):
             elif lesson_type == "training":
                 course.training.append(lesson)
             else:
-                course.departmentHours.append(lesson) #אשנב???
-
+                course.departmentHours.append(lesson)
         # Post-validation: check for duplicate group codes and mismatched course names
         seen_group_codes = {} 
         code_to_names = {}     

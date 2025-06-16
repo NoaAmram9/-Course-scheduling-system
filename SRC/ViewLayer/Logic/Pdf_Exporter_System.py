@@ -16,8 +16,9 @@ from datetime import datetime
 from PIL import Image
 import io
 
+
 class ScreenshotPDFExportDialog(QDialog):
-    """דיאלוג לבחירת אפשרויות ייצוא PDF מ-screenshots"""
+    """Dialog for selecting PDF export options using screenshots"""
     
     def __init__(self, total_timetables, current_index, parent=None):
         super().__init__(parent)
@@ -33,7 +34,7 @@ class ScreenshotPDFExportDialog(QDialog):
         
         layout = QVBoxLayout()
         
-        # כותרת
+        # Title
         title = QLabel("Screenshot PDF Export")
         title.setFont(QFont("Arial", 14, QFont.Bold))
         title.setAlignment(Qt.AlignCenter)
@@ -44,22 +45,22 @@ class ScreenshotPDFExportDialog(QDialog):
         info.setAlignment(Qt.AlignCenter)
         layout.addWidget(info)
         
-        # בחירת מערכות
+        # Timetable selection
         self.create_timetable_selection_group(layout)
         
-        # אפשרויות screenshot
+        # Screenshot options
         self.create_screenshot_options_group(layout)
         
-        # שם קובץ
+        # Output file name
         self.create_filename_group(layout)
         
-        # כפתורי פעולה
+        # Action buttons
         self.create_action_buttons(layout)
         
         self.setLayout(layout)
         
     def create_timetable_selection_group(self, parent_layout):
-        """יצירת קבוצת בחירת מערכות"""
+        """Create timetable selection group"""
         group = QGroupBox("Select Timetables to Export")
         layout = QVBoxLayout()
         
@@ -74,7 +75,7 @@ class ScreenshotPDFExportDialog(QDialog):
         self.export_group.addButton(self.all_timetables, 1)
         layout.addWidget(self.all_timetables)
         
-        # טווח מותאם אישית
+        # Custom range
         range_layout = QHBoxLayout()
         self.custom_range = QRadioButton("Custom range:")
         self.export_group.addButton(self.custom_range, 2)
@@ -100,11 +101,11 @@ class ScreenshotPDFExportDialog(QDialog):
         parent_layout.addWidget(group)
         
     def create_screenshot_options_group(self, parent_layout):
-        """יצירת אפשרויות screenshot"""
+        """Create screenshot options group"""
         group = QGroupBox("Screenshot Options")
         layout = QVBoxLayout()
         
-        # איכות תמונה
+        # Image quality
         quality_layout = QHBoxLayout()
         quality_layout.addWidget(QLabel("Image Quality:"))
         self.quality_combo = QComboBox()
@@ -112,7 +113,7 @@ class ScreenshotPDFExportDialog(QDialog):
         quality_layout.addWidget(self.quality_combo)
         layout.addLayout(quality_layout)
         
-        # גודל עמוד
+        # Page size
         size_layout = QHBoxLayout()
         size_layout.addWidget(QLabel("Page Size:"))
         self.page_size_combo = QComboBox()
@@ -120,7 +121,7 @@ class ScreenshotPDFExportDialog(QDialog):
         size_layout.addWidget(self.page_size_combo)
         layout.addLayout(size_layout)
         
-        # השהיה בין screenshots
+        # Delay between screenshots
         delay_layout = QHBoxLayout()
         delay_layout.addWidget(QLabel("Delay between captures (ms):"))
         self.delay_spin = QSpinBox()
@@ -134,7 +135,7 @@ class ScreenshotPDFExportDialog(QDialog):
         parent_layout.addWidget(group)
         
     def create_filename_group(self, parent_layout):
-        """יצירת קבוצת שם קובץ"""
+        """Create output filename group"""
         group = QGroupBox("Output File")
         layout = QVBoxLayout()
         
@@ -149,7 +150,7 @@ class ScreenshotPDFExportDialog(QDialog):
         parent_layout.addWidget(group)
         
     def create_action_buttons(self, parent_layout):
-        """יצירת כפתורי פעולה"""
+        """Create action buttons"""
         button_layout = QHBoxLayout()
         
         button_layout.addStretch()
@@ -166,7 +167,7 @@ class ScreenshotPDFExportDialog(QDialog):
         parent_layout.addLayout(button_layout)
         
     def get_export_options(self):
-        """קבלת אפשרויות הייצוא שנבחרו"""
+        """Get the selected export options"""
         selection_id = self.export_group.checkedId()
         
         if selection_id == 0:  # Current only
@@ -187,7 +188,7 @@ class ScreenshotPDFExportDialog(QDialog):
         }
         
     def accept_export(self):
-        """אישור ייצוא"""
+        """Confirm export"""
         self.export_options = self.get_export_options()
         
         if not self.export_options['filename']:
@@ -205,22 +206,22 @@ class ScreenshotPDFExportDialog(QDialog):
 
 
 class ScreenshotPDFExporter:
-    """מחלקה לייצוא PDF באמצעות screenshots"""
+    """Class to export PDF using screenshots"""
     
     def __init__(self, parent_window):
         self.parent = parent_window
         self.screenshots = []
         self.current_screenshot_index = 0
         self.export_options = {}
-        self.temp_files = []  # לניקוי קבצים זמניים
+        self.temp_files = []  # For cleaning up temporary files
         
     def export_pdf_screenshots(self):
-        """התחלת תהליך ייצוא screenshots"""
+        """Start the screenshot export process"""
         if not hasattr(self.parent, 'all_options') or not self.parent.all_options:
             QMessageBox.warning(self.parent, "No Data", "No timetable options to export.")
             return
             
-        # פתיחת דיאלוג
+        # Open dialog
         dialog = ScreenshotPDFExportDialog(
             len(self.parent.all_options), 
             self.parent.current_index, 
@@ -232,62 +233,62 @@ class ScreenshotPDFExporter:
             
         self.export_options = dialog.export_options
         
-        # התחלת תהליך הצילום
+        # Start screenshot process
         self.start_screenshot_process()
         
     def start_screenshot_process(self):
-        """התחלת תהליך צילום המסכים"""
+        """Start the screen capture process"""
         self.screenshots = []
         self.current_screenshot_index = 0
         timetable_indices = self.export_options['timetable_indices']
         
-        # יצירת progress dialog
+        # Create progress dialog
         self.progress_dialog = QMessageBox(self.parent)
         self.progress_dialog.setWindowTitle("Capturing Screenshots")
         self.progress_dialog.setText("Preparing to capture screenshots...")
         self.progress_dialog.setStandardButtons(QMessageBox.Cancel)
         self.progress_dialog.setWindowModality(Qt.WindowModal)
         
-        # הוספת progress bar
+        # Add progress bar
         self.progress_bar = QProgressBar()
         self.progress_bar.setMinimum(0)
         self.progress_bar.setMaximum(len(timetable_indices))
         self.progress_dialog.layout().addWidget(self.progress_bar, 1, 0, 1, 2)
         
-        # חיבור כפתור ביטול
+        # Connect cancel button
         self.progress_dialog.buttonClicked.connect(self.cancel_export)
         
         self.progress_dialog.show()
         
-        # התחלת הצילום עם delay
+        # Start timed screenshot capture
         self.timer = QTimer()
         self.timer.timeout.connect(self.capture_next_screenshot)
         self.timer.start(self.export_options['delay'])
         
     def capture_next_screenshot(self):
-        """צילום המסך הבא"""
+        """Capture the next screenshot"""
         timetable_indices = self.export_options['timetable_indices']
         
         if self.current_screenshot_index >= len(timetable_indices):
-            # סיימנו עם כל הצילומים
+            # All screenshots captured
             self.timer.stop()
             self.progress_dialog.close()
             self.create_pdf_from_screenshots()
             return
         
         try:
-            # עבור למערכת הנוכחית
+            # Switch to current timetable
             target_index = timetable_indices[self.current_screenshot_index]
             self.parent.current_index = target_index
-            self.parent.update_view()  # עדכון התצוגה
+            self.parent.update_view()  # Update display
             
-            # עדכון progress
+            # Update progress
             self.progress_bar.setValue(self.current_screenshot_index)
             self.progress_dialog.setText(f"Capturing screenshot {self.current_screenshot_index + 1} of {len(timetable_indices)}")
             
-            QApplication.processEvents()  # עדכון UI
+            QApplication.processEvents()  # UI update
             
-            # צילום המסך של אזור מערכת השעות
+            # Capture screenshot of timetable widget
             screenshot = self.capture_timetable_widget()
             if screenshot:
                 self.screenshots.append(screenshot)
@@ -300,34 +301,32 @@ class ScreenshotPDFExporter:
             QMessageBox.critical(self.parent, "Screenshot Error", f"Failed to capture screenshot: {str(e)}")
             
     def capture_timetable_widget(self):
-        """צילום המסך של widget מערכת השעות"""
+        """Capture screenshot of the timetable widget"""
         try:
-            # מציאת widget מערכת השעות (תתאים לשם ה-widget שלך)
             timetable_widget = None
             
-            # חיפוש אוטומטי של widget מערכת השעות
+            # Try finding timetable widget
             if hasattr(self.parent, 'timetable_widget'):
                 timetable_widget = self.parent.timetable_widget
             elif hasattr(self.parent, 'centralWidget'):
-                # חיפוש בכל ה-children
                 for child in self.parent.centralWidget().findChildren(object):
                     if 'timetable' in child.objectName().lower() or 'table' in child.objectName().lower():
                         timetable_widget = child
                         break
             
             if not timetable_widget:
-                # כברירת מחדל - צילום כל החלון
+                # Default to full window
                 timetable_widget = self.parent
             
-            # יצירת QPixmap מהWidget
+            # Create QPixmap from widget
             pixmap = timetable_widget.grab()
             
-            # המרה לPIL Image לעיבוד נוסף
+            # Convert to PIL Image
             qimage = pixmap.toImage()
             buffer = qimage.bits().asstring(qimage.byteCount())
             img = Image.frombytes("RGBA", (qimage.width(), qimage.height()), buffer, "raw", "RGBA")
             
-            # המרה ל-RGB (להסרת שקיפות)
+            # Remove transparency
             if img.mode == 'RGBA':
                 background = Image.new('RGB', img.size, (255, 255, 255))
                 background.paste(img, mask=img.split()[3])
@@ -338,9 +337,10 @@ class ScreenshotPDFExporter:
         except Exception as e:
             print(f"Error capturing screenshot: {e}")
             return None
+
             
     def create_pdf_from_screenshots(self):
-        """יצירת PDF מהscreenshots"""
+        """ Create PDF from captured screenshots """
         try:
             file_path = self.export_options['filename']
             page_size = A4 if self.export_options['page_size'] == 'A4' else letter
@@ -349,22 +349,22 @@ class ScreenshotPDFExporter:
             elements = []
             
             for i, img in enumerate(self.screenshots):
-                # שמירה זמנית של התמונה
+                # save image to temporary file
                 temp_img_path = tempfile.mktemp(suffix='.png')
                 self.temp_files.append(temp_img_path)
                 
-                # קביעת איכות לפי בחירת המשתמש
+                # set image quality
                 quality_map = {"High (Recommended)": 95, "Medium": 75, "Low": 50}
                 quality = quality_map.get(self.export_options['quality'], 95)
                 
                 img.save(temp_img_path, 'PNG', quality=quality)
                 
-                # הוספה ל-PDF
-                # חישוב גודל מתאים לעמוד
+                # add image to PDF
+                # calculate dimensions
                 img_width, img_height = img.size
                 page_width, page_height = page_size
                 
-                # שמירה על יחס גובה-רוחב
+                # scale image to fit within margins
                 scale = min((page_width - 72) / img_width, (page_height - 72) / img_height)  # 72 = 1 inch margins
                 
                 new_width = img_width * scale
@@ -373,23 +373,23 @@ class ScreenshotPDFExporter:
                 rl_img = RLImage(temp_img_path, width=new_width, height=new_height)
                 elements.append(rl_img)
                 
-                # הוספת מעבר עמוד אם לא התמונה האחרונה
+                #  add spacer
                 if i < len(self.screenshots) - 1:
                     elements.append(PageBreak())
             
-            # בניית ה-PDF
+            # build the PDF
             doc.build(elements)
             
-            # ניקוי קבצים זמניים
+            # cleanup temporary files
             self.cleanup_temp_files()
             
-            # הצגת הודעת הצלחה
+            # show success message
             QMessageBox.information(
                 self.parent, "Export Complete",
                 f"Successfully exported PDF with {len(self.screenshots)} screenshots to:\n{file_path}"
             )
             
-            # פתיחת הקובץ
+            # open the PDF file
             self.open_pdf_file(file_path)
             
         except Exception as e:
@@ -397,7 +397,7 @@ class ScreenshotPDFExporter:
             QMessageBox.critical(self.parent, "Export Failed", f"Failed to create PDF: {str(e)}")
             
     def cleanup_temp_files(self):
-        """ניקוי קבצים זמניים"""
+        """ckean up temporary files created during the export"""
         for temp_file in self.temp_files:
             try:
                 if os.path.exists(temp_file):
@@ -407,13 +407,13 @@ class ScreenshotPDFExporter:
         self.temp_files.clear()
         
     def cancel_export(self):
-        """ביטול תהליך הייצוא"""
+        """cancel the export process"""
         if hasattr(self, 'timer'):
             self.timer.stop()
         self.cleanup_temp_files()
         
     def open_pdf_file(self, file_path):
-        """פתיחת קובץ PDF"""
+        """open pdf """
         try:
             if sys.platform.startswith('win'):
                 os.startfile(file_path)

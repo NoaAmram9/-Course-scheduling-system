@@ -208,11 +208,9 @@ class MainPageQt5(QMainWindow):
         self.previous_constraints = self.selector.get_constraints()  # Save them
         self.controller.apply_time_constraints(self.previous_constraints)
         self.dialog.close()
-
-
-    
-
         
+        
+    #closeEvent method to handle window close event
     def closeEvent(self, event):
         """Handle window close event"""
         reply = QMessageBox.question(self, 'Exit', 'Are you sure you want to exit?',

@@ -1,37 +1,32 @@
 # layout_timetable.py - PyQt5 Version
 
-# Import necessary PyQt5 modules for creating the GUI
 from PyQt5.QtWidgets import (QWidget, QGridLayout, QLabel, QFrame,
                              QSizePolicy, QVBoxLayout, QHBoxLayout)
-from PyQt5.QtCore import Qt, QSize  # Qt for alignment and other core functionalities, QSize for size definitions
-from PyQt5.QtGui import QFont, QPalette # QFont for text styling, QPalette for widget colors (though not directly used here, good to have for potential theming)
-
-# Import constants (DAYS, HOURS) from your application's logic file
-# This helps in separating the UI from the data/logic
+from PyQt5.QtCore import Qt, QSize  
+from PyQt5.QtGui import QFont, QPalette 
 from SRC.ViewLayer.Logic.TimeTable import DAYS, HOURS
 
-#מקביל  לשורה 102
 def get_lesson_type_color_class(lesson_type):
    # Dictionary mapping lesson types to their corresponding CSS class names
     type_classes = {
-        "Lecture": "lectureCell",  # Class for lecture cells
-        "Lab": "labCell",          # Class for lab cells
-        "Exercise": "exerciseCell", # Class for exercise cells
-        "Reinforcement": "reinforcementCell",  # Class for reinforcement cells
-        "Training": "trainingCell",  # Class for training cells
-        "DepartmentHour": "departmentHourCell",  # Class for department hour cells
-        "default": "defaultCell"   # Default class for any other type or if not specified
+        "Lecture": "lectureCell",  
+        "Lab": "labCell",         
+        "Exercise": "exerciseCell", 
+        "Reinforcement": "reinforcementCell", 
+        "Training": "trainingCell",  
+        "DepartmentHour": "departmentHourCell",  
+        "default": "defaultCell"  
         
     }
     # Return the class for the given lesson_type, or "defaultCell" if not found
     return type_classes.get(lesson_type, "defaultCell")
 
-#מקביל לשורה 109
+
 def format_course_info(course_data):
     lines = []  # Initialize an empty list to store lines of text
 
     # Add course code if available (first line)
-    if course_data.get("code"):  # Safely get "code", returns None if key doesn't exist
+    if course_data.get("code"): 
         lines.append(course_data["code"])
 
     # Add course name if available (second line)
@@ -42,11 +37,11 @@ def format_course_info(course_data):
             name = name[:17] + "..."  # Take the first 17 characters and add an ellipsis
         lines.append(name)
 
-    # Add lesson type if available (third line)
+   
     if course_data.get("type") and not course_data.get("code", "").startswith("BLOCKED"):
         lines.append(course_data["type"])
 
-    # Add location if available (fourth line)
+    
     if course_data.get("location"):
         lines.append(course_data["location"])
 
@@ -102,7 +97,7 @@ class TimetableGridWidget(QWidget):
                              course data dictionaries.
             parent (QWidget, optional): The parent widget. Defaults to None.
         """
-        super().__init__(parent)  # Call the QWidget constructor
+        super().__init__(parent)  
         self.slot_map = slot_map  # Store the course data
         # Set an object name for styling with Qt Style Sheets (QSS)
         self.setObjectName("timetableGrid")
@@ -116,24 +111,23 @@ class TimetableGridWidget(QWidget):
         """
         # Create a QGridLayout to arrange cells in rows and columns
         grid_layout = QGridLayout()
-        grid_layout.setSpacing(3)  # Set spacing between cells to 3 pixels
-        # Set margins around the grid layout (left, top, right, bottom)
+        grid_layout.setSpacing(3)  
         grid_layout.setContentsMargins(10, 10, 10, 10)
 
         # Set size policies to allow the widget to expand and fill available space
-        # QSizePolicy.Expanding means the widget can grow if space is available.
+
         self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
 
-        # Create the header row (displaying days of the week)
+        # Create the header row 
         self.create_header_row(grid_layout)
 
-        # Create the time column (displaying hours) and the main timetable cells
+        # Create the time column and the main timetable cells
         self.create_timetable_cells(grid_layout)
 
         # Set the grid_layout as the main layout for this widget
         self.setLayout(grid_layout)
 
-#מקביל לשוה 64
+
     def create_header_row(self, grid_layout):
         """
         Create the header row of the timetable, which displays the day names.
@@ -173,34 +167,34 @@ class TimetableGridWidget(QWidget):
             for col, day in enumerate(DAYS, start=1):
                 # Retrieve course data for the current day and hour from slot_map
                 # slot_map is expected to be a dict like {(day, hour): course_info_dict}
-                course_data = self.slot_map.get((day, hour)) # Returns None if no course at this slot
+                course_data = self.slot_map.get((day, hour))
                 # Create a course cell (either empty or with course info)
                 cell = self.create_course_cell(course_data)
                 # Add the course cell to the grid at the current row and column
                 grid_layout.addWidget(cell, row, col)
 
     def create_empty_header_cell(self):
-        cell = QFrame()  # Create a new QFrame
-        cell.setObjectName("emptyCell")  # Set object name for QSS styling
-        cell.setFixedSize(150, 90)  # Set a fixed size for this cell
+        cell = QFrame()  
+        cell.setObjectName("emptyCell")  
+        cell.setFixedSize(150, 90)  
         return cell
 
     def create_day_header_cell(self, day):
-        cell = QFrame()  # Create a new QFrame
-        cell.setObjectName("dayHeader")  # Set object name for QSS styling
-        cell.setFixedSize(150, 90)  # Set a fixed size
+        cell = QFrame()  
+        cell.setObjectName("dayHeader")
+        cell.setFixedSize(150, 90)
 
         # Use a QVBoxLayout to center the label within the frame
         layout = QVBoxLayout()
-        layout.setContentsMargins(8, 8, 8, 8)  # Margins inside the cell
-        layout.setAlignment(Qt.AlignCenter)    # Align content to the center
+        layout.setContentsMargins(8, 8, 8, 8)  
+        layout.setAlignment(Qt.AlignCenter)    
 
         label = QLabel(day)  # Create a QLabel with the day's name
-        label.setObjectName("dayHeaderLabel")  # Set object name for QSS styling of the label
-        label.setAlignment(Qt.AlignCenter)     # Center the text within the label
+        label.setObjectName("dayHeaderLabel")  
+        label.setAlignment(Qt.AlignCenter)   
 
-        layout.addWidget(label)  # Add the label to the layout
-        cell.setLayout(layout)   # Set the layout for the frame
+        layout.addWidget(label)
+        cell.setLayout(layout)  
         return cell
 
     def create_time_cell(self, time_text):
@@ -214,28 +208,28 @@ class TimetableGridWidget(QWidget):
         Returns:
             QFrame: The configured time cell.
         """
-        cell = QFrame()  # Create a new QFrame
-        cell.setObjectName("timeCell")  # Set object name for QSS styling
-        cell.setFixedSize(150, 90)  # Set a fixed size
+        cell = QFrame() 
+        cell.setObjectName("timeCell") 
+        cell.setFixedSize(150, 90) 
 
         # Use a QVBoxLayout to center the label within the frame
         layout = QVBoxLayout()
-        layout.setContentsMargins(8, 8, 8, 8)  # Margins inside the cell
-        layout.setAlignment(Qt.AlignCenter)    # Alשign content to the center
+        layout.setContentsMargins(8, 8, 8, 8)
+        layout.setAlignment(Qt.AlignCenter)  
 
         label = QLabel(time_text)  # Create a QLabel with the time text
-        label.setObjectName("timeCellLabel")  # Set object name for QSS styling of the label
-        label.setAlignment(Qt.AlignCenter)    # Center the text within the label
+        label.setObjectName("timeCellLabel")  
+        label.setAlignment(Qt.AlignCenter) 
 
         layout.addWidget(label)  # Add the label to the layout
         cell.setLayout(layout)   # Set the layout for the frame
         return cell
 
     def create_course_cell(self, course_data):
-        cell = QFrame()  # Create a new QFrame
-        cell.setFixedSize(150, 90)  # Set a fixed size for the cell
+        cell = QFrame() 
+        cell.setFixedSize(150, 90) 
 
-        layout = QVBoxLayout()  # Layout for the cell's content
+        layout = QVBoxLayout() 
         layout.setContentsMargins(6, 6, 6, 6) # Margins inside the cell
 
         if course_data:  # If there is course data for this slot
@@ -254,32 +248,31 @@ class TimetableGridWidget(QWidget):
                 cell.setObjectName(cell_class)
 
 
-            layout.setSpacing(2)  # Set spacing between widgets in the layout
-
+            layout.setSpacing(2) 
             # Format the course information for display
             course_text = format_course_info(course_data)
-            lines = course_text.split('\n')  # Split into lines for separate labels if needed
+            lines = course_text.split('\n')  
 
-            # Display course code/name (first line, potentially styled differently)
+            # Display course code/name (f
             if lines:  # If there's at least one line of text
-                name_label = QLabel(lines[0])  # Create label for the first line (code or name)
+                name_label = QLabel(lines[0])  
                 if is_blocked:
                     name_label.setObjectName("blockedLabel")
                 else:
-                    name_label.setObjectName("courseNameLabel")# Style for primary info
+                    name_label.setObjectName("courseNameLabel")
                                                                 
-                name_label.setAlignment(Qt.AlignCenter)       # Center text
-                name_label.setWordWrap(True)                 # Allow text to wrap if it's too long
-                layout.addWidget(name_label)                 # Add to cell layout
+                name_label.setAlignment(Qt.AlignCenter)     
+                name_label.setWordWrap(True)                 
+                layout.addWidget(name_label)                 
 
                 # Display other information (remaining lines)
                 if len(lines) > 1:  # If there are more lines
-                    info_text = '\n'.join(lines[1:])  # Join remaining lines
+                    info_text = '\n'.join(lines[1:])  
                     info_label = QLabel(info_text)    # Create label for additional info
-                    info_label.setObjectName("courseCellLabel") # Style for secondary info
-                    info_label.setAlignment(Qt.AlignCenter)    # Center text
-                    info_label.setWordWrap(True)              # Allow text to wrap
-                    layout.addWidget(info_label)              # Add to cell layout
+                    info_label.setObjectName("courseCellLabel") 
+                    info_label.setAlignment(Qt.AlignCenter) 
+                    info_label.setWordWrap(True)             
+                    layout.addWidget(info_label)             
 
             # Set a tooltip with more detailed information for the cell
             tooltip_text = get_tooltip_text(course_data)
