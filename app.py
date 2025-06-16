@@ -1,7 +1,6 @@
 import sys
 from PyQt5.QtWidgets import QApplication
 from SRC.ViewLayer.View.LandPageView import LandPageView
-from SRC.Controller.Controller import Controller
 from SRC.Controller.FileController import FileController
 from SRC.ViewLayer.Logic.LandPageController import LandPageController
 
