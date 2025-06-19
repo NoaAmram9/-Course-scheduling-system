@@ -1,0 +1,123 @@
+QGroupBox#CourseDetails {
+    border: 1px solid #888888;
+    border-radius: 8px;
+    padding: 6px;
+    background-color: #4c4848;
+}
+
+QListWidget#CourseList {
+    border: none;
+    background-color: #686565;
+    padding: 6px;
+    border-radius: 6px;
+    color: #e0e0e0;
+}
+
+QLabel#TitleLabel {
+    font-size: 18px;
+    font-weight: bold;
+    color: #a0b8f7;
+}
+
+QFrame#detailsFrame {
+    border: 2px solid #d1a15a;
+    border-radius: 12px;
+    background-color: #4a4545;
+}
+
+QFrame#detailRowFrame {
+    padding-left: 6px;
+    padding-right: 6px;
+}
+
+QLabel#detailLabel {
+    font-size: 14px;
+    font-weight: 500;
+    color: #dddddd;
+}
+
+QFrame#courseTreeFrame {
+    border: 2px solid #d1a15a;
+    border-radius: 12px;
+    background-color: #695c5c;
+}
+
+QTreeWidget#courseTree {
+    font-size: 14px;
+    alternate-background-color: #5b4848;
+    background-color: #3b3b3b;
+    border: none;
+    color: #e8e8e8;
+}
+
+QLineEdit#searchInput {
+    padding: 6px 10px;
+    border: 1px solid #666666;
+    border-radius: 8px;
+    font-size: 13px;
+    background-color: #2c2c2c;
+    color: #e0e0e0;
+}
+
+#panelTitle {
+    font-size: 18px;
+    font-weight: bold;
+    color: #dddddd;
+    padding: 6px;
+    border-bottom: 1px solid #555555;
+}
+
+#countLabel {
+    font-size: 14px;
+    color: #bbbbbb;
+}
+
+#selectedTable {
+    border: 1px solid #555555;
+    border-radius: 10px;
+    background-color: #353535;
+    alternate-background-color: #2d2d2d;
+    font-size: 14px;
+    outline: none;
+    color: #dddddd;
+}
+
+#selectedTable::item {
+    padding: 6px;
+    border: none;
+}
+
+#selectedTable::item:selected {
+    background-color: #d9b382;
+    color: #1a1a1a;
+    border-radius: 8px;
+}
+
+QHeaderView::section {
+    background-color: #484848;
+    padding: 6px;
+    font-weight: bold;
+    color: #e0e0e0;
+    border: none;
+    border-bottom: 1px solid #666666;
+}
+
+QWidget {
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 13px;
+    color: #eeeeee;
+    background-color: transparent;
+}
+
+QPushButton#DetailsButton {
+    background-color: #6b6b35;
+    border: none;
+    color: #f0f0f0;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+QPushButton#DetailsButton:hover {
+    background-color: #868647;
+}
