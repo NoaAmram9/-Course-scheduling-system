@@ -240,9 +240,12 @@ class TimetableGridWidget(QWidget):
 
             lesson_type = course_data.get("type", "")
             is_blocked = course_data.get("code", "").startswith("BLOCKED")
+            is_available = course_data.get("type") == "available"  # Check if the course type is "available"
 
             if is_blocked:
                 cell.setObjectName("blockedCell")
+            if is_available:
+                cell.setObjectName("availableCell")
             else:
                 cell_class = get_lesson_type_color_class(lesson_type)
                 cell.setObjectName(cell_class)
@@ -266,7 +269,7 @@ class TimetableGridWidget(QWidget):
                 layout.addWidget(name_label)                 
 
                 # Display other information (remaining lines)
-                if len(lines) > 1:  # If there are more lines
+                if len(lines) > 1 and not is_available:  # If there are more lines
                     info_text = '\n'.join(lines[1:])  
                     info_label = QLabel(info_text)    # Create label for additional info
                     info_label.setObjectName("courseCellLabel") 

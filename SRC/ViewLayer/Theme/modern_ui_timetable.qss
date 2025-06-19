@@ -168,3 +168,10 @@ QLabel#blockedLabel {
     font-style: italic;
     font-size: 12px;
 }
+
+QFrame#availableCell {
+    background-color:rgb(177, 133, 108);
+    border: 1px solid  #944e25;
+    border-radius: 5px;
+}
+

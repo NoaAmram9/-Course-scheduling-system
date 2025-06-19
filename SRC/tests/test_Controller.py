@@ -1,5 +1,5 @@
 import pytest
-from SRC.Services.ScheduleService import ScheduleService
+from SRC.Services.AutoScheduleService import ScheduleService
 from SRC.Models.Course import Course
 from SRC.Models.Lesson import Lesson
 from SRC.Models.LessonTimes import LessonTimes
