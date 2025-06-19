@@ -5,7 +5,7 @@ from PyQt5.QtGui import *
 from SRC.ViewLayer.Layout.TimeConstraintsSelector import TimeConstraintsSelector
 from SRC.ViewLayer.Logic.course_manager_qt5 import CourseManagerQt5
 from SRC.ViewLayer.Layout.course_list_panel_qt5 import CourseListPanelQt5
-from SRC.ViewLayer.Layout.course_details_panel_qt5 import CourseDetailsPanelQt5
+from SRC.ViewLayer.Layout.MainPage.CourseDetailsPanelQt5 import CourseDetailsPanelQt5
 from SRC.ViewLayer.Layout.selected_courses_panel_qt5 import SelectedCoursesPanelQt5
 from SRC.ViewLayer.Theme.ModernUIQt5 import ModernUIQt5
 
