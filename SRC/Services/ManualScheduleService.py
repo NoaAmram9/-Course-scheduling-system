@@ -25,6 +25,13 @@ class ManualScheduleService:
             "reinforcement": "_reinforcement",
             "training": "_training",
         }
+    
+    def get_dynamic_schedule(self):
+        """
+        Returns the current schedule as a list of tuples (course_id, lesson).
+        This is used to get the current schedule from the controller.
+        """
+        return self.schedule
 
     def extract_courses_with_required_lessons(self):
         """
@@ -32,21 +39,25 @@ class ManualScheduleService:
         - course_name
         - course_id
         - available_lesson_types: list of non-empty lesson type names
+        - lessons: list of lessons for each type
         """
 
         result = []
         for course_id, course in self.repository.items():
-            required_lessons = []
+            required_lesson_type = []
+            lesson_options = {}
 
             for display_name, attr_name in self.lesson_type_map.items():
                 lessons = getattr(course, attr_name, []) or []
                 if lessons:
-                    required_lessons.append(display_name)
+                    required_lesson_type.append(display_name)
+                    lesson_options[display_name] = lessons
 
             result.append({
                 "course_name": getattr(course, "name", "Unknown"),
                 "course_id": getattr(course, "code", None),
-                "required_lessons": required_lessons
+                "required_lessons": required_lesson_type,
+                "lessons": lesson_options # Store lessons for each type
             })
 
         return result
@@ -55,18 +66,29 @@ class ManualScheduleService:
         """
         Returns a list of available lessons for a given course ID and lesson type.
         """
-        for course_code, course in self.repository.items():
-            if course.code == course_id:
-                attr_name = self.lesson_type_map.get(lesson_type)
-                lessons = getattr(course, attr_name, []) or []
-                return self.prevent_collision(lessons)
-        return None
+        # for course_code, course in self.repository.items():
+        #     if course.code == course_id:
+        #         attr_name = self.lesson_type_map.get(lesson_type)
+        #         lessons = getattr(course, attr_name, []) or []
+        #         return self.prevent_collision(lessons)
+        # return None
+        
+        all_courses = self.extract_courses_with_required_lessons()
+        for course in all_courses:
+            if course['course_id'] == course_id:
+                lessons = course['lessons'].get(lesson_type, [])
+                return lessons if lessons else []
+        return []  # Return empty list if no lessons found for the course and type
 
     def extract_all_available_lessons(self):
         self.slot_map = defaultdict(list)  # Initialize an empty slot map
         
         for course_id, course in self.repository.items():
             for lesson_type, attr_name in self.lesson_type_map.items():
+                # Check if this lesson type has already been added to the schedule for this course
+                # If it has, skip adding available slots for this type
+                if self.is_lesson_type_taken(course_id, lesson_type):
+                    continue  # skip adding available slots for this type
                 lessons = getattr(course, attr_name, [])
                 if lessons:
                     for lesson in lessons:
@@ -78,8 +100,10 @@ class ManualScheduleService:
                             self.slot_map[(day, hour)].append({
                                 "name": course.name,
                                 "code": course.code,
+                                "lesson": lesson,
                                 "type": lesson_type,
-                                "location": f"{lesson.building}-{lesson.room}"
+                                "location": f"{lesson.building}-{lesson.room}",
+                                "teachers": lesson.instructors,
                             })
                         
                         # # Store lessons in the slot map by day and start_hour
@@ -90,15 +114,55 @@ class ManualScheduleService:
                         #     "lesson": lesson
                         # })
         
-         # Print the slot map in a nicely formatted way
-        for (day, hour), lessons in self.slot_map.items():
-            print(f"Day: {day}, Hour: {hour}")
-            for lesson in lessons:
-                print(f"  - Name: {lesson['name']}, Code: {lesson['code']}, "
-                    f"Type: {lesson['type']}, Location: {lesson['location']}")
+        #  # Print the slot map in a nicely formatted way
+        # for (day, hour), lessons in self.slot_map.items():
+        #     print(f"Day: {day}, Hour: {hour}")
+        #     for lesson in lessons:
+        #         print(f"  - Name: {lesson['name']}, Code: {lesson['code']}, "
+        #             f"Type: {lesson['type']}, Location: {lesson['location']}")
         
         return self.slot_map
-
+    
+    def get_occupied_windows(self):
+        """
+        Returns a dictionary of occupied time slots in the schedule.
+        Each key is a tuple (day, hour) and value is a lesson (available of fixed) scheduled at that time.
+        """
+        occupied_windows = defaultdict(list)
+        
+        available_lessons = self.extract_all_available_lessons()  # Get all available lessons
+        
+        for (day, hour), lessons in available_lessons.items():
+            occupied_windows[(day, hour)] = {"name": " ", "code": " ",
+                                             "type": "available", "location": " ",
+                                             "lessons": lessons}
+        # Populate occupied windows with lessons from the schedule - the real lessons run over the optional ones
+        for course_id, lesson in self.schedule:
+            day = DAYS[lesson.time.day - 1]
+            start = lesson.time.start_hour
+            end = lesson.time.end_hour
+            
+            for course_code, course in self.repository.items():
+                if course_code == course_id:
+                    course_name = course.name
+                    break
+                
+            for hour in range(start, end):
+                occupied_windows[(day, hour)] = {
+                    "name": course_name,
+                    "code": course_id,
+                    "lesson": lesson,
+                    "type": lesson.lesson_type,
+                    "location": f"{lesson.building}-{lesson.room}",
+                    "teachers": lesson.instructors,
+                }
+        
+        return occupied_windows
+    
+    def get_available_lessons_by_time(self, day, hour):
+        all_lessons = self.extract_all_available_lessons()
+        return all_lessons.get((day, hour), []) if (day, hour) in all_lessons else []
+    
     def prevent_collision(self, lessons):
         """
         Filters out lessons that collide with already selected lessons in the schedule.
@@ -129,6 +193,7 @@ class ManualScheduleService:
         """
         if len(self.undo_stack) >= self.MAX_UNDO_STACK_SIZE:
             self.undo_stack.pop(0) # Remove the oldest action if stack is full
+        
         self.undo_stack.append((course_id, lesson)) # Add the lesson to the undo stack
         self.schedule.append((course_id, lesson)) # Add the lesson to the schedule
     
@@ -178,7 +243,14 @@ class ManualScheduleService:
         metricsService.generate_metrics(timetable)  # Generate metrics for the timetable
         return timetable
 
-
+    def is_lesson_type_taken(self, course_id, lesson_type):
+        """
+        Returns True if a lesson of this type was already selected for this course.
+        """
+        for cid, lesson in self.schedule:
+            if cid == course_id and lesson.lesson_type == lesson_type:
+                return True
+        return False
 
 
 

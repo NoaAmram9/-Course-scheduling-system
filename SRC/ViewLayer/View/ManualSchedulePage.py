@@ -4,6 +4,7 @@ from SRC.ViewLayer.Logic.ManualScheduleLogic import ManualScheduleLogic
 from SRC.ViewLayer.Layout.Timetable_qt5 import TimetableGridWidget
 from SRC.ViewLayer.Layout.ManualScheduleComponents.header_navbar import HeaderNavbar
 from SRC.ViewLayer.Layout.ManualScheduleComponents.bottom_navbar import BottomNavBar
+from SRC.ViewLayer.Layout.ManualScheduleComponents.LessonSelectionDialog import LessonSelectionDialog
 from SRC.ViewLayer.Theme.ModernUIQt5 import ModernUIQt5
 
 from PyQt5.QtWidgets import (QWidget, QGridLayout, QLabel, QFrame, QPushButton,
@@ -11,12 +12,13 @@ from PyQt5.QtWidgets import (QWidget, QGridLayout, QLabel, QFrame, QPushButton,
 from PyQt5.QtCore import Qt
 import os
 from PyQt5.QtGui import QPixmap
+from PyQt5.QtWidgets import QDialog, QVBoxLayout, QLabel, QPushButton, QDialogButtonBox, QListWidget
 
 class ManualSchedulePage(QWidget):
     def __init__(self, controller, file_path):
         super().__init__()
         self.logic = ManualScheduleLogic(controller, file_path)
-        self.courses_info = self.logic.courses_info
+        self.courses_info = self.logic.limited_courses_info
         
         self.setWindowTitle("Manual Schedule")
         
@@ -35,16 +37,16 @@ class ManualSchedulePage(QWidget):
         self.save_button, self.reset_button, self.undo_button = self.header.get_buttons()
         
         # ====== CONTENT LAYOUT: HORIZONTAL ======
-        content_layout = QHBoxLayout()
-        main_layout.addLayout(content_layout)
+        self.content_layout = QHBoxLayout()
+        main_layout.addLayout(self.content_layout)
 
         # Course list component (left)
         self.course_list_component = ExpandableCourseList(self.courses_info, self)
-        content_layout.addWidget(self.course_list_component, stretch=1)
+        self.content_layout.addWidget(self.course_list_component, stretch=1)
 
         # Timetable container (right)
-        self.create_timetable_container(content_layout)
-        content_layout.setStretch(1, 3)  # timetable = 3/4 of the width
+        self.create_timetable_container(self.content_layout)
+        self.content_layout.setStretch(1, 3)  # timetable = 3/4 of the width
         
         bottom_layout = BottomNavBar(self)
         main_layout.addLayout(bottom_layout.create_layout())  
@@ -69,10 +71,9 @@ class ManualSchedulePage(QWidget):
         self.setStyleSheet(ModernUIQt5.get_manual_schedule_stylesheet())
         
         # Create and show new timetable grid
-        timetable_grid = TimetableGridWidget(self.logic.occupied_windows)
-        # slot = self.logic.lessons_slot_map
-        # timetable_grid = TimetableGridWidget({})
-        self.timetable_layout.addWidget(timetable_grid)
+        self.timetable_grid = TimetableGridWidget(self.logic.occupied_windows, 
+                                             on_available_click = self.handle_available_cell_click)
+        self.timetable_layout.addWidget(self.timetable_grid)
         self.timetable_layout.addStretch()
         
         # Set size policies to allow the widget to expand and fill available space
@@ -80,12 +81,33 @@ class ManualSchedulePage(QWidget):
         
     def handle_lesson_type_click(self, course_id, lesson_type):
         self.logic.handle_lesson_type_click(course_id, lesson_type)
+        # self.update_view()  # Update the view after handling the click
     
     def handle_course_click(self, course_id):
         self.logic.handle_course_click(course_id)
     
+    def handle_available_cell_click(self, day, hour):
+        """Handle cell click event to show available lessons."""
+        available_lessons = self.logic.get_available_lessons_by_time(day, hour)
+        if not available_lessons:
+            return
+        # Show a dialog to select a lesson
+        dialog = LessonSelectionDialog(available_lessons, self)
+        if dialog.exec_() == QDialog.Accepted:
+            selected_lesson = dialog.get_selected_lesson()
+            if selected_lesson:
+                # print("User selected:", selected_lesson)
+                # Do something with selected_lesson
+                self.logic.add_lesson_to_schedule(day, hour, selected_lesson.get('code'), selected_lesson.get('lesson'))
+        else:
+            print("User canceled the selection")
+        self.update_view()  # Update the view after selection
+    
+    
     def update_view(self):
-        pass
+        # self.create_timetable_container(self.content_layout)
+        self.timetable_grid.update_timetable(self.logic.occupied_windows)
+        
     
     def handle_reset(self):
         """Reset the current schedule."""
@@ -93,6 +115,7 @@ class ManualSchedulePage(QWidget):
         # Optionally, you can update the view or notify the user
         print("Schedule reset")
         self.reset_button.setEnabled(False)  # Disable reset button after reset
+        self.update_view()
         
     def save_schedule(self):
         """Save the current schedule to a file."""
@@ -105,5 +128,4 @@ class ManualSchedulePage(QWidget):
         self.logic.undo_last_action()
         # Optionally, you can update the view or notify the user
         print("Last action undone")
-        if self.logic.is_schedule_empty():
-            self.reset_button.setEnabled(False)
+        self.update_view()

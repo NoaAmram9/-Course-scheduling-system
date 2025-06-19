@@ -3,8 +3,7 @@ from SRC.Services.TxtManager import TxtManager
 from SRC.Interfaces.FileManager import FileManager
 from SRC.Services.AutoScheduleService import ScheduleService
 from SRC.Services.TimeConstraintsService import TimeConstraintsService
-from SRC.Services.ManualScheduleService import ManualScheduleService
-
+from SRC.Controller.ManualScheduleController import ManualScheduleController
 class FileController:
     def __init__(self, file_type: str, filePath: str = None):
         self.filePath = filePath
@@ -16,7 +15,7 @@ class FileController:
             raise ValueError("Unsupported file type. Use 'excel' or 'txt'.")
         self.time_constraints_service = TimeConstraintsService()
         self._injected_constraints = []
-        self.manual_service = None  # Initialize manual service to None
+        self.manual_controller = None  # Initialize manual controller to None
 
 
 
@@ -68,16 +67,20 @@ class FileController:
     
     def get_selected_courses_limited_info(self, file_path1, file_path2):
         selected_courses_info = self.get_selected_courses_info(file_path1, file_path2)
-        self.manual_service = ManualScheduleService(selected_courses_info)
-        return self.manual_service.extract_courses_with_required_lessons()  # Extract courses with required lessons from the selected courses info
+        self.manual_controller = ManualScheduleController(selected_courses_info)
+        return self.manual_controller.get_selected_courses_limited_info()  # Extract courses with required lessons from the selected courses info
     
     def get_available_lessons_by_course(self, course_id, lesson_type):
-        return self.manual_service.extract_available_lessons_by_course(course_id, lesson_type)
+        return self.manual_controller.get_available_lessons_by_course(course_id, lesson_type)
     
-    def get_available_lessons(self):
+    def get_occupied_windows(self):
         """Returns all available lessons from the selected courses info."""
         
-        return self.manual_service.extract_all_available_lessons() if self.manual_service else []
+        return self.manual_controller.get_occupied_windows() if self.manual_controller else None
+    
+    def get_dynamic_schedule(self):
+        """Returns the dynamic schedule based on the selected courses info."""
+        return self.manual_service.get_dynamic_schedule() if self.manual_service else None
         
     def get_all_options(self, file_path1, file_path2, batch_size=100):
         """

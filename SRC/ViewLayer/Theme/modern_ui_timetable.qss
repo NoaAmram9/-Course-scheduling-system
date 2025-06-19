@@ -170,8 +170,13 @@ QLabel#blockedLabel {
 }
 
 QFrame#availableCell {
-    background-color:rgb(177, 133, 108);
-    border: 1px solid  #944e25;
-    border-radius: 5px;
+    background-color:rgb(250, 228, 188); /* בז' חם, טבעי */
+    border-radius: 10px;
+    border: 1px solid rgb(249, 214, 150); /* חום מדברי בינוני */
 }
 
+QFrame#availableCell:hover {
+    background-color:rgb(249, 214, 150); /* בז' חם, טבעי */
+    border-radius: 10px;
+    border: 1px solid rgb(249, 214, 150); /* חום מדברי בינוני */
+}
