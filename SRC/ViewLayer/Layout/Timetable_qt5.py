@@ -92,7 +92,7 @@ class TimetableGridWidget(QWidget):
     This widget arranges course information in a grid of days and hours.
     """
 
-    def __init__(self, slot_map,  on_available_click=None, parent=None):
+    def __init__(self, slot_map, editing_mode=False, on_available_click=None, on_selected_lesson_click = None, parent=None):
         """
         Constructor for TimetableGridWidget.
 
@@ -103,7 +103,9 @@ class TimetableGridWidget(QWidget):
         """
         super().__init__(parent)  
         self.slot_map = slot_map  # Store the course data
-        self.on_available_click = on_available_click  # Save callback for clicking cell
+        self.editing_mode = editing_mode
+        self.on_available_click = on_available_click  # Save callback for clicking available cell
+        self.on_selected_lesson_click = on_selected_lesson_click # Save callback for clicking edited lesson
         # Set an object name for styling with Qt Style Sheets (QSS)
         self.setObjectName("timetableGrid")
         self.init_ui()  # Initialize the user interface components
@@ -253,11 +255,22 @@ class TimetableGridWidget(QWidget):
 
             if is_blocked:
                 cell.setObjectName("blockedCell")
-            if is_available:
+            elif is_available:
                 cell.setObjectName("availableCell")
             else:
                 cell_class = get_lesson_type_color_class(lesson_type)
                 cell.setObjectName(cell_class)
+                
+                if self.editing_mode and self.on_selected_lesson_click:
+                    cell.setProperty("customTag", "manual_selected")
+                    cell.setCursor(Qt.PointingHandCursor)
+                    cell.mouseReleaseEvent = lambda event: self.on_selected_lesson_click(course_data.get("code", ""), course_data.get("lesson", ""))
+            # print(f"hello {self.editing_mode} - {course_data.get("matches requested lesson","")}")
+            # print(f"Full course_data: {course_data}")
+
+            if self.editing_mode and course_data.get("matches requested lesson",""):
+                cell.setObjectName("requestedCell")
+
 
 
             layout.setSpacing(2) 

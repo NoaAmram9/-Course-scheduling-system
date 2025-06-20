@@ -7,7 +7,7 @@ from SRC.ViewLayer.Layout.ManualScheduleComponents.bottom_navbar import BottomNa
 from SRC.ViewLayer.Layout.ManualScheduleComponents.LessonSelectionDialog import LessonSelectionDialog
 from SRC.ViewLayer.Theme.ModernUIQt5 import ModernUIQt5
 
-from PyQt5.QtWidgets import (QWidget, QGridLayout, QLabel, QFrame, QPushButton,
+from PyQt5.QtWidgets import (QWidget, QGridLayout, QLabel, QFrame, QPushButton, QMessageBox,
                              QSizePolicy, QVBoxLayout, QHBoxLayout, QSpacerItem)
 from PyQt5.QtCore import Qt
 import os
@@ -72,7 +72,9 @@ class ManualSchedulePage(QWidget):
         
         # Create and show new timetable grid
         self.timetable_grid = TimetableGridWidget(self.logic.occupied_windows, 
-                                             on_available_click = self.handle_available_cell_click)
+                                                    editing_mode=True,
+                                                    on_available_click = self.handle_available_cell_click,
+                                                    on_selected_lesson_click = self.handle_selected_lesson_click)
         self.timetable_layout.addWidget(self.timetable_grid)
         self.timetable_layout.addStretch()
         
@@ -81,7 +83,7 @@ class ManualSchedulePage(QWidget):
         
     def handle_lesson_type_click(self, course_id, lesson_type):
         self.logic.handle_lesson_type_click(course_id, lesson_type)
-        # self.update_view()  # Update the view after handling the click
+        self.update_view()  # Update the view after handling the click
     
     def handle_course_click(self, course_id):
         self.logic.handle_course_click(course_id)
@@ -103,18 +105,24 @@ class ManualSchedulePage(QWidget):
             print("User canceled the selection")
         self.update_view()  # Update the view after selection
     
+    def handle_selected_lesson_click(self, course_id, lesson):
+        reply = QMessageBox.question(
+            self, 'Delete', 'Are you sure you want to delete this lesson?',
+            QMessageBox.Yes | QMessageBox.No, defaultButton=QMessageBox.Yes
+        )
+
+        if reply == QMessageBox.Yes:
+            self.logic.handle_lesson_click(course_id, lesson)
+            self.update_view()    
     
     def update_view(self):
         # self.create_timetable_container(self.content_layout)
         self.timetable_grid.update_timetable(self.logic.occupied_windows)
         
-    
     def handle_reset(self):
         """Reset the current schedule."""
         self.logic.reset()
-        # Optionally, you can update the view or notify the user
-        print("Schedule reset")
-        self.reset_button.setEnabled(False)  # Disable reset button after reset
+        # self.reset_button.setEnabled(False)  # Disable reset button after reset
         self.update_view()
         
     def save_schedule(self):
@@ -126,6 +134,4 @@ class ManualSchedulePage(QWidget):
     def undo_last_action(self):
         """Undo the last action in the schedule."""
         self.logic.undo_last_action()
-        # Optionally, you can update the view or notify the user
-        print("Last action undone")
         self.update_view()

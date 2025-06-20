@@ -18,12 +18,12 @@ class ManualScheduleService:
         self.schedule = [] # Initialize an empty schedule - this will hold the lessons added to the schedule
         self.undo_stack = [] # Initialize an empty undo stack
         self.lesson_type_map = {
-            "lecture": "_lectures",
-            "exercise": "_exercises",
-            "lab": "_labs",
-            "department hours": "_departmentHours",
-            "reinforcement": "_reinforcement",
-            "training": "_training",
+            "Lecture": "_lectures",
+            "Exercise": "_exercises",
+            "Lab": "_labs",
+            "Department hours": "_departmentHours",
+            "Reinforcement": "_reinforcement",
+            "Training": "_training",
         }
     
     def get_dynamic_schedule(self):
@@ -74,11 +74,23 @@ class ManualScheduleService:
         # return None
         
         all_courses = self.extract_courses_with_required_lessons()
+        lessons = []
         for course in all_courses:
             if course['course_id'] == course_id:
                 lessons = course['lessons'].get(lesson_type, [])
-                return lessons if lessons else []
-        return []  # Return empty list if no lessons found for the course and type
+                break
+                # return lessons if lessons else []
+        slot_map = {}
+        for lesson in lessons:
+            day = DAYS[lesson.time.day - 1]
+            start = lesson.time.start_hour
+            end = lesson.time.end_hour
+
+            for hour in range(start, end):
+                slot_map[(day, hour)] = lesson
+        return slot_map
+                
+        # return []  # Return empty list if no lessons found for the course and type
 
     def extract_all_available_lessons(self):
         self.slot_map = defaultdict(list)  # Initialize an empty slot map
@@ -123,25 +135,39 @@ class ManualScheduleService:
         
         return self.slot_map
     
-    def get_occupied_windows(self):
+    def get_occupied_windows(self, received_course_id=None, lesson_type=None):
         """
         Returns a dictionary of occupied time slots in the schedule.
         Each key is a tuple (day, hour) and value is a lesson (available of fixed) scheduled at that time.
         """
         occupied_windows = defaultdict(list)
-        
-        available_lessons = self.extract_all_available_lessons()  # Get all available lessons
-        
+        ############# צריך להוסיף גם סימון חלונות שלא במערכת ולא בזמינים, כלומר טיםול במקרה שבחרתי כבר הרצאה ולכן בחלונות הזמינים לא יהיו את שאר ההרצאות שלה, ואז במערכת לא יסומנו שאר החלונות של ההרצאה
+        available_lessons = self.extract_all_available_lessons()  # Get all available lessons as a map
+   
         for (day, hour), lessons in available_lessons.items():
+            matches_requested_lesson = False
+            # If one of the lessons at this time slot belongs to the user's requested lessons (by course and type), mark this time slot as a requested
+            # for lesson in lessons:
+            #     if lesson.get("code", "") == received_course_id:
+            #         if lesson.get("lesson") in available_lessons_by_course:
+            #             matches_requested_lesson = True
             occupied_windows[(day, hour)] = {"name": " ", "code": " ",
-                                             "type": "available", "location": " ",
+                                             "type": "available", "location": " ", "matches requested lesson": matches_requested_lesson,
                                              "lessons": lessons}
+        
         # Populate occupied windows with lessons from the schedule - the real lessons run over the optional ones
         for course_id, lesson in self.schedule:
             day = DAYS[lesson.time.day - 1]
             start = lesson.time.start_hour
             end = lesson.time.end_hour
             
+            matches_requested_lesson = False
+            ######### אני חושבת שעדיף פשוט לשנות שהשיעורים לפי קורסים יהיו map slot (day, hour) בעצמם ואז פשוט לסמן כל יום ושעה מהמפה הזו, כי ככה מפספסתי דברים, למשל אם יש הרצאה בזמן של שיעור מקובע, לא יראו אותה ככה
+        
+            # if course_id == received_course_id:
+            #     if lesson in available_lessons_by_course:
+            #         matches_requested_lesson = True
+                    
             for course_code, course in self.repository.items():
                 if course_code == course_id:
                     course_name = course.name
@@ -152,11 +178,25 @@ class ManualScheduleService:
                     "name": course_name,
                     "code": course_id,
                     "lesson": lesson,
-                    "type": lesson.lesson_type,
+                    "type": lesson.lesson_type.capitalize(),
                     "location": f"{lesson.building}-{lesson.room}",
                     "teachers": lesson.instructors,
+                    "matches requested lesson": matches_requested_lesson,
                 }
-        
+        if received_course_id and lesson_type:
+            available_lessons_by_course = self.extract_available_lessons_by_course(received_course_id, lesson_type) # Tuple: (course_id,list of lessons)
+            for (day,hour) in available_lessons_by_course:
+                if occupied_windows[(day, hour)]:
+                    occupied_windows[(day, hour)]["matches requested lesson"] = True
+                else:
+                    occupied_windows[(day, hour)] = {"name": " ", "code": " ",
+                                             "type": "available", "location": " ", "matches requested lesson": True,
+                                             "lessons": []}
+            
+        for (day,hour) in occupied_windows:
+            # print(f"time slot NOT marked: {day, hour}")
+            if occupied_windows[(day, hour)].get("matches requested lesson", ""):
+                print(f"time slot marked: {day, hour}")
         return occupied_windows
     
     def get_available_lessons_by_time(self, day, hour):
@@ -186,24 +226,74 @@ class ManualScheduleService:
                 non_colliding.append(lesson)
 
         return non_colliding
-    
+
     def add_lesson_to_schedule(self, course_id, lesson):
         """
-        Adds a lesson to the schedule and manages the undo stack.
+        Adds a lesson to the schedule, removes conflicting lessons, and pushes both to the undo stack.
         """
+        removed_conflicts = [] # List to keep track of removed conflicting lessons
+        for existing_lesson in self.schedule[:]: # Copy the current schedule to avoid modifying it while iterating
+            _, scheduled = existing_lesson
+            if self._lessons_overlap(lesson, scheduled):
+                removed_conflicts.append(existing_lesson)
+                self.schedule.remove(existing_lesson) # Remove the conflicting lesson from the schedule
+
+        self.schedule.append((course_id, lesson))
+
         if len(self.undo_stack) >= self.MAX_UNDO_STACK_SIZE:
             self.undo_stack.pop(0) # Remove the oldest action if stack is full
-        
-        self.undo_stack.append((course_id, lesson)) # Add the lesson to the undo stack
-        self.schedule.append((course_id, lesson)) # Add the lesson to the schedule
-    
+
+        self.undo_stack.append({
+            "action": "add",
+            "added": (course_id, lesson),
+            "removed": removed_conflicts # a list of removed conflicting lessons in format: (course_id, lesson)
+        })
+
+    def remove_lesson_from_schedule(self, course_id, lesson):
+        """
+        Removes a lesson from the schedule and logs the removal for undo.
+        """
+        if (course_id, lesson) not in self.schedule:
+            return
+
+        self.schedule.remove((course_id, lesson))
+
+        if len(self.undo_stack) >= self.MAX_UNDO_STACK_SIZE:
+            self.undo_stack.pop(0)
+
+        self.undo_stack.append({
+            "action": "remove",
+            "removed": [(course_id, lesson)]
+        })
+
     def undo_last_action(self):
-        """        
-        Undoes the last action by removing the last lesson from the schedule and undo stack.
-        """        
-        if self.undo_stack:
-            course_id, last_lesson = self.undo_stack.pop()
-            self.schedule.remove((course_id, last_lesson))
+        """
+        Undoes the last action, restoring removed lessons or removing added ones.
+        """
+        if not self.undo_stack:
+            return
+
+        last_action = self.undo_stack.pop()
+
+        if last_action["action"] == "add":
+            if last_action["added"] in self.schedule:
+                self.schedule.remove(last_action["added"])
+            self.schedule.extend(last_action["removed"])
+
+        elif last_action["action"] == "remove":
+            self.schedule.extend(last_action["removed"])
+
+    def reset_schedule(self):
+        self.schedule = []
+
+    def _lessons_overlap(self, l1, l2):
+        """
+        Returns True if l1 and l2 overlap (even partitial overlaping) in time on the same day.
+        """
+        return l1.time.day == l2.time.day and not (
+            l1.time.end_hour <= l2.time.start_hour or
+            l1.time.start_hour >= l2.time.end_hour
+        )
 
     def create_schedule(self):
         """
@@ -214,6 +304,7 @@ class ManualScheduleService:
         grouped_lessons = defaultdict(lambda: defaultdict(list))  
         for course_id, lesson in self.schedule:
             grouped_lessons[course_id][lesson.lesson_type].append(lesson)
+            # print(f"Adding lesson {lesson.lesson_type} for course {course_id} to grouped lessons.")
 
         result_courses = []
         # שלב 2: עבור כל קורס שבוצעה בו בחירה
@@ -228,10 +319,10 @@ class ManualScheduleService:
                 name=course_data._name,
                 code=course_data._code,
                 semester=course_data._semester,
-                lectures=lessons_by_type.get("lectures", []),
-                exercises=lessons_by_type.get("exercises", []),
-                labs=lessons_by_type.get("labs", []),
-                departmentHours=lessons_by_type.get("department hours", []),
+                lectures=lessons_by_type.get("lecture", []),
+                exercises=lessons_by_type.get("exercise", []),
+                labs=lessons_by_type.get("lab", []),
+                departmentHours=lessons_by_type.get("departmentHours", []),
                 reinforcement=lessons_by_type.get("reinforcement", []),
                 training=lessons_by_type.get("training", []),
                 notes=course_data._notes
@@ -248,95 +339,6 @@ class ManualScheduleService:
         Returns True if a lesson of this type was already selected for this course.
         """
         for cid, lesson in self.schedule:
-            if cid == course_id and lesson.lesson_type == lesson_type:
+            if cid == course_id and lesson.lesson_type.capitalize() == lesson_type:
                 return True
         return False
-
-
-
-
-
-
-
-
-
-
-
-
-
-# def main():
-#     """
-#     Main function to demonstrate the usage of ManualScheduleService.
-#     """
-#     # Example repository with dummy data
-#     class Course:
-#         def __init__(self, code, name, lectures, exercises, labs, departmentHours, reinforcement, training):
-#             self.code = code
-#             self.name = name
-#             self._lectures = lectures
-#             self._exercises = exercises
-#             self._labs = labs
-#             self._departmentHours = departmentHours
-#             self._reinforcement = reinforcement
-#             self._training = training
-
-#     repository = [
-#         Course("CS101", "Computer Science 101", ["Lecture 1", "Lecture 2"], ["Exercise 1"], [], [], [], []),
-#         Course("MATH101", "Mathematics 101", ["Lecture 1"], ["Exercise 1", "Exercise 2"], ["Lab 1"], [], [], []),
-#     ]
-
-#     service = ManualScheduleService(repository)
-#     courses_info = service.extract_courses_with_required_lessons()
-#     print(courses_info)
-#     for course in courses_info:
-#         lessons = service.extract_available_lessons_by_course(course['course_id'], 'lectures')
-#         print(f"Course: {course['course_name']}, lessons: {lessons}")
-    
-# def main():
-#     """
-#     Test the ManualScheduleService using actual Lesson model structure.
-#     """
-#     # Create LessonTimes objects
-#     time1 = LessonTimes(day=1, start_time="09:00", end_time="10:00")
-#     time2 = LessonTimes(day=3, start_time="11:00", end_time="12:00")
-#     time3 = LessonTimes(day=4, start_time="14:00", end_time="15:00")
-
-#     # Create Lesson objects using your model
-#     cs_lecture = Lesson(time=time1, lesson_type="lectures", building=1, room=101, instructors=["Dr. A"], creditPoints=3, weeklyHours=2.0, groupCode=1)
-#     cs_exercise = Lesson(time=time2, lesson_type="exercises", building=1, room=102, instructors=["TA B"], creditPoints=1, weeklyHours=1.0, groupCode=2)
-#     math_lab = Lesson(time=time3, lesson_type="labs", building=2, room=201, instructors=["Prof. C"], creditPoints=2, weeklyHours=1.5, groupCode=3)
-
-#     # Create Course objects
-#     course_cs = Course(code="CS101", name="Intro to CS", semester=1,
-#                        lectures=[cs_lecture], exercises=[cs_exercise],
-#                        labs=[], departmentHours=[], reinforcement=[], training=[])
-
-#     course_math = Course(code="MATH101", name="Math Basics", semester=1,
-#                          lectures=[], exercises=[], labs=[math_lab],
-#                          departmentHours=[], reinforcement=[], training=[])
-
-#     repository = [course_cs, course_math]
-#     service = ManualScheduleService(repository)
-
-#     print("== Courses and Available Lesson Types ==")
-#     for course_info in service.extract_courses_with_required_lessons():
-#         print(course_info)
-
-#     # Simulate manual selections
-#     service.add_lesson_to_schedule("CS101", cs_lecture)
-#     service.add_lesson_to_schedule("CS101", cs_exercise)
-#     service.add_lesson_to_schedule("MATH101", math_lab)
-
-#     # Generate timetable
-#     timetable = service.create_schedule()
-
-#     print("\n== Final Schedule ==")
-#     for course in timetable.courses:
-#         print(f"\nCourse: {course._name} ({course._code})")
-#         print(f"  Lectures: {[l.time.to_string() for l in course._lectures]}")
-#         print(f"  Exercises: {[l.time.to_string() for l in course._exercises]}")
-#         print(f"  Labs: {[l.time.to_string() for l in course._labs]}")
-#         print(f"  Notes: {course._notes}")
-            
-# if __name__ == "__main__":
-#     main()

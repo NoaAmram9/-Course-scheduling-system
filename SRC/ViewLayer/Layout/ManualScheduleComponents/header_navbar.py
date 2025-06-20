@@ -15,9 +15,9 @@ class HeaderNavbar:
         self.reset_button.clicked.connect(lambda: self.instance.handle_reset())
         header_layout.addWidget(self.reset_button)
         # self.undo_button.setVisible(False)  # Initially hidden, can be shown later if needed
-        self.reset_button.setEnabled(False)  # Initially disabled, can be enabled later if needed
+        # self.reset_button.setEnabled(False)  # Initially disabled, can be enabled later if needed
         # header_layout.addStretch()  # Push undo button to the left
-            
+        
             
         self.undo_button = QPushButton("Undo")
         self.undo_button.setObjectName("undoButton")

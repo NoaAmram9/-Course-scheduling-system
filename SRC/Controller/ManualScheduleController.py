@@ -19,11 +19,14 @@ class ManualScheduleController:
     def get_available_lessons_by_time(self, day, hour):
         return self.service.get_available_lessons_by_time(day, hour)
     
-    def get_occupied_windows(self):
-        return self.service.get_occupied_windows()
+    def get_occupied_windows(self, course_id=None, lesson_type=None):
+        return self.service.get_occupied_windows(course_id, lesson_type)
         
     def add_lesson_to_schedule(self, course_id, lesson):
         self.service.add_lesson_to_schedule(course_id, lesson)
+    
+    def remove_lesson_from_schedule(self, course_id, lesson):
+        self.service.remove_lesson_from_schedule(course_id, lesson)
     
     def reset_schedule(self):
         self.service.reset_schedule()

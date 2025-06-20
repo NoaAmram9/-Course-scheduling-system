@@ -459,25 +459,34 @@ class TimetablesPageQt5(QMainWindow):
             event.accept()
             return
 
-        self.stop_background_loading()
-
+        # Pause the worker, but do not stop it yet
         if self.worker is not None and self.worker.isRunning():
-            self.worker.stop()
-            if not self.worker.wait(2000):
-                print("Worker did not stop gracefully, attempting to terminate.")
-                self.worker.terminate()
-                self.worker.wait(500)
+            self.worker.pause()
+        
+        # self.stop_background_loading()
+
+        # if self.worker is not None and self.worker.isRunning():
+        #     self.worker.stop()
+        #     if not self.worker.wait(2000):
+        #         print("Worker did not stop gracefully, attempting to terminate.")
+        #         self.worker.terminate()
+        #         self.worker.wait(500)
 
         reply = QMessageBox.question(
-            self, 'Exit', 'Are you sure you want to exit?',
-            QMessageBox.Yes | QMessageBox.No, QMessageBox.No
+            self, 
+            'Exit', 'Are you sure you want to exit?',
+            QMessageBox.Yes | QMessageBox.No, 
+            defaultButton=QMessageBox.Yes
         )
 
         if reply == QMessageBox.Yes:
+            self.stop_background_loading()
             if hasattr(self.controller, 'handle_exit') and callable(self.controller.handle_exit):
                 self.controller.handle_exit()
             event.accept()
         else:
+            if self.worker is not None:
+                self.worker.resume()
             event.ignore()
 
     def apply_display_sort(self, key, ascending):
