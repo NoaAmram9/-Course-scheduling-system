@@ -99,3 +99,11 @@ class ModernUIQt5:
         except Exception as e:
             print(f"Failed to load {filename}: {e}")
             return ""
+    
+    @staticmethod
+    def get_Start_Page_stylesheet():
+        """Load and combine base + selection styles"""
+        base = ModernUIQt5._load_stylesheet("modern_ui_base.qss")
+        start = ModernUIQt5._load_stylesheet("modern_ui_start.qss")
+        return base + "\n" + start
+    
