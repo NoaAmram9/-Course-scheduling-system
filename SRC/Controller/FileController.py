@@ -3,6 +3,7 @@ from SRC.Services.TxtManager import TxtManager
 from SRC.Interfaces.FileManager import FileManager
 from SRC.Services.ScheduleService import ScheduleService
 from SRC.Services.TimeConstraintsService import TimeConstraintsService
+from SRC.Services.ExcelExportManager import ExcelExportManager
 
 class FileController:
     def __init__(self, file_type: str, filePath: str = None):
@@ -94,6 +95,15 @@ class FileController:
             print(f"Error in batch generator: {str(e)}")
             return []  # החזר רשימה ריקה במקום 
 
+    def save_courses_to_file(self, file_path: str, courses : list):
+        """
+        Save the courses to a file.
+        This method will save the courses to the specified file path.
+        """
+        export_manager = ExcelExportManager()
+        # ייצוא בסיסי
+        export_manager.export_courses_to_excel(courses, file_path)
+    
        
     def handle_exit(self):
         """

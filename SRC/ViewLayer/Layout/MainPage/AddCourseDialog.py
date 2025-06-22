@@ -453,7 +453,7 @@ class AddCourseDialog(QDialog):
         notes = self.form_fields['notes'].toPlainText().strip()
 
         # Create course object
-        course = Course(name=name, code=code, semester=semester, notes=notes)
+        course = Course(name=name, code=code, semester=semester)
         
         # Add lessons to appropriate lists
         for lesson in self.lessons_list:
@@ -472,6 +472,9 @@ class AddCourseDialog(QDialog):
             else:
                 course.departmentHours.append(lesson)
         
+        course.notes = notes
+
+
         return course
 
     def clear_form(self):

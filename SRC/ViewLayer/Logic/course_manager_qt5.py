@@ -99,8 +99,10 @@ class CourseManagerQt5:
         # Log
         print(f"New course added: {course.code} - {course.name}")
         
+    
+        
     def delete_selected_course(self):
-        course = self.course_details_panel.get_current_course()  # You must implement this method if it doesn't exist
+        course = self.course_details_panel.get_current_course()  # make sure this returns the selected course
 
         if not course:
             QMessageBox.warning(None, "No Selection", "Please select a course to delete.")
@@ -114,13 +116,13 @@ class CourseManagerQt5:
         )
 
         if confirm == QMessageBox.Yes:
-            # Remove from internal data
-            self.Data = [c for c in self.Data if c.code != course.code]
+            # Modify the existing list in place
+            self.Data[:] = [c for c in self.Data if c.code != course.code]
 
-            # Reload UI
+            # Reload UI components
             self.course_list_panel.load_courses(self.Data)
             self.selected_courses_panel.set_course_map({c.code: c for c in self.Data})
-            
 
             print(f"Deleted course: {course.code} - {course.name}")
+
 
