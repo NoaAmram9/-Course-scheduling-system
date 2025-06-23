@@ -81,6 +81,11 @@ class LandPageView(QWidget):
         send_layout = QHBoxLayout()
         send_layout.addStretch()
         send_layout.addWidget(self.send_button)
+        
+        # BackButton
+        self.back_button = QPushButton("BACK")
+        self.back_button.setObjectName("BackButton")
+        send_layout.insertWidget(0, self.back_button)  
 
         footer = QLabel("All rights reserved to the SchedSquad team.")
         footer.setObjectName("FooterLabel")

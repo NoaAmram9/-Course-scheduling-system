@@ -250,7 +250,7 @@ class LandPageController:
         self.file_uploaded = False
         self.uploaded_path = None
         self.Data = None
-        
+        self.view.back_button.clicked.connect(self.go_back_to_start)
         # Connect buttons and signals
         self.view.upload_button.clicked.connect(self.upload_file)
         self.view.send_button.clicked.connect(self.send_action)
@@ -302,8 +302,8 @@ class LandPageController:
         )
         if file_path:
             self.handle_uploaded_file(file_path)
-    
     def send_action(self):
+        self.clear_database_on_new_upload()
         if not self.file_uploaded:
             QMessageBox.warning(self.view, "Missing File", "Please upload a .txt or .xlsx file before proceeding.")
             return
@@ -313,9 +313,6 @@ class LandPageController:
             return
 
         try:
-            # Clear database before importing new data
-            self.clear_database_on_new_upload()
-            
             # Read courses from file and import to database
             courses, errors = self.file_controller.read_courses_from_file(self.uploaded_path)
             
@@ -328,14 +325,7 @@ class LandPageController:
                 QMessageBox.warning(self.view, "Invalid Course File", f"The following errors were found:\n\n{error_messages}")
                 return
 
-            # Import courses to database
-            if self.file_controller.use_database:
-                try:
-                    self.file_controller.import_courses_to_database(courses)
-                    print(f"Successfully imported {len(courses)} courses to database")
-                except Exception as e:
-                    QMessageBox.critical(self.view, "Database Error", f"Failed to import courses to database:\n{str(e)}")
-                    return
+           
 
             self.view.close()
             self.Data = courses
@@ -349,14 +339,13 @@ class LandPageController:
             QMessageBox.critical(self.view, "Error", f"Failed to process file:\n{str(e)}")
     
     def clear_database_on_new_upload(self):
-        """Clear database when uploading new file"""
+       
         if self.file_controller and self.file_controller.use_database:
             try:
                 self.file_controller.clear_database()
                 print("Database cleared for new import")
             except Exception as e:
                 print(f"Error clearing database: {e}")
-    
     def add_back_button(self):
         """Add a back button to return to start page"""
         from PyQt5.QtWidgets import QPushButton
@@ -374,7 +363,7 @@ class LandPageController:
             else:
                 # Fallback: create new start page
                 self.view.close()
-                from SRC.ViewLayer.View.StartPageView import StartPageView
+                from SRC.ViewLayer.View.StartPage import StartPageView
                 from SRC.ViewLayer.Logic.StartPageController import StartPageController
                 
                 start_view = StartPageView()
