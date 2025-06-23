@@ -28,4 +28,7 @@ __pycache__/
 Data/chosen_courses.txt
 Data/selected_courses.txt
 Data/courses.txt
+Data/courses.xlsx
+credentials.json
 schedule.txt
+token.json

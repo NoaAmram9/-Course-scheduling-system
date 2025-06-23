@@ -46,6 +46,35 @@ pip install pandas openpyxl PyQt5 pytest xlrd
 - Export schedule to PDF.
 - Dynamic sorting and filtering of schedule results (e.g., by number of free windows or study days).
 
+## 📌 Google Calendar Export — Setup Instructions  
+
+This app allows you to export your timetable to **Google Calendar**.
+
+### ✨ First-time setup
+When you export to Google Calendar for the first time:
+- ✅ A browser window will open asking you to log in to your Google account.
+- ✅ Grant permission for the app to manage your calendar (required to create calendar events).
+- ✅ The app will save a file called `token.json` so you won’t need to log in again next time.
+
+---
+
+### 🗂 Required file: `credentials.json`
+The app requires a **Google OAuth credentials file** (`credentials.json`).  
+This file identifies the app to Google.
+
+#### How to get it?
+- You may receive `credentials.json` bundled with the app (check the app folder).
+- If not provided, follow these steps to create it yourself:
+  1. Go to [Google Cloud Console](https://console.cloud.google.com/apis/credentials).  
+  2. Create a project (if you don’t have one).  
+  3. Create **OAuth 2.0 Client ID** → choose **Desktop App**.  
+  4. Download the JSON file → rename it to `credentials.json` → place it in the app folder.
+
+---
+
+### 🔑 Keep your credentials safe
+- **DO NOT upload `credentials.json` or `token.json` to GitHub or any public place.**
+- These files contain sensitive information.
 
 ## ✍️ Authors
 

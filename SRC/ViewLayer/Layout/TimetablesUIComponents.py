@@ -134,6 +134,14 @@ class TimetableUIComponents:
         #  # Connect the export button to the export_screenshots method
         instance.export_screenshots_button.clicked.connect(instance.export_pdf_screenshots)
         top_nav.addWidget(instance.export_screenshots_button)
+
+        # Export Google Calendar button
+        instance.export_google_button = QPushButton("Export to Google Calendar")
+        instance.export_google_button.setObjectName("googleCalendarButton")
+        instance.export_google_button.setFixedSize(200, 40)
+        instance.export_google_button.clicked.connect(instance.export_to_google_calendar)
+        top_nav.addWidget(instance.export_google_button)
+
         # Preferences row - second line
         preferences_jump_row = QHBoxLayout()
         
