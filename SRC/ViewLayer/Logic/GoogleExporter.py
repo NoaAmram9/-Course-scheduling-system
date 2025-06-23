@@ -6,6 +6,7 @@ from googleapiclient.discovery import build
 from google.auth.transport.requests import Request
 from PyQt5.QtWidgets import QProgressDialog
 from PyQt5.QtCore import Qt
+import requests
 
 SCOPES = [
     'openid',
@@ -49,6 +50,26 @@ def get_google_credentials():
 
     return creds
 
+def fetch_israeli_holidays(year):
+    """
+    Fetch *all* Israeli holidays for the given year using Hebcal API.
+    Returns a set of datetime.date objects representing holiday dates.
+    """
+    url = f"https://www.hebcal.com/hebcal/?v=1&year={year}&cfg=json&maj=on&mod=on&nx=on&s=on&geo=il&c=on&m=50"
+    response = requests.get(url)
+    data = response.json()
+
+    holiday_dates = set()
+
+    for item in data.get('items', []):
+        if item.get('category') == 'holiday':
+            date_str = item.get('date')
+            date_obj = datetime.date.fromisoformat(date_str[:10])
+            holiday_dates.add(date_obj)
+
+    return holiday_dates
+
+
 def export_timetable_to_google_calendar(slot_map, start_date, end_date, calendar_name='Course Schedule', parent=None):
     creds = get_google_credentials()
     service = build('calendar', 'v3', credentials=creds)
@@ -69,25 +90,38 @@ def export_timetable_to_google_calendar(slot_map, start_date, end_date, calendar
         "Training": "1",
     }
 
-    # Count total events
+    # Fetch holidays for relevant years
+    holiday_years = {start_date.year, end_date.year}
+    holiday_dates = set()
+    for year in holiday_years:
+        holiday_dates.update(fetch_israeli_holidays(year))
+
+    # Count total events (excluding holidays)
     total_events = 0
     for (day_name, hour), _ in slot_map.items():
         model_day = DAYS.index(day_name) + 1
         event_date = get_next_date_for_day(model_day, start_date)
         while event_date <= end_date:
-            total_events += 1
+            if event_date.strftime('%Y-%m-%d') not in holiday_dates:
+                total_events += 1
             event_date += datetime.timedelta(weeks=1)
 
     progress = QProgressDialog("Exporting events...", "Cancel", 0, total_events, parent)
+    progress.setWindowTitle("Exporting Timetable")
     progress.setWindowModality(Qt.WindowModal)
     progress.setMinimumDuration(0)
-    progress.setWindowTitle("Exporting to Google Calendar...")
 
     done = 0
     for (day_name, hour), course in slot_map.items():
         model_day = DAYS.index(day_name) + 1
         event_date = get_next_date_for_day(model_day, start_date)
         while event_date <= end_date:
+            #event_date_str = event_date.strftime('%Y-%m-%d')
+            if event_date in holiday_dates:
+                event_date += datetime.timedelta(weeks=1)
+                continue
+
+
             start_datetime = datetime.datetime.combine(event_date, datetime.time(hour, 0))
             end_datetime = start_datetime + datetime.timedelta(hours=1)
 
@@ -120,4 +154,5 @@ def export_timetable_to_google_calendar(slot_map, start_date, end_date, calendar
     print("Export complete!")
 
 
-#pip install google-api-python-client google-auth-httplib2 google-auth-oauthlib
+
+#pip install google-api-python-client google-auth-httplib2 google-auth-oauthlib requests
