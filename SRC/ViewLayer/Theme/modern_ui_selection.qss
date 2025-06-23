@@ -19,7 +19,7 @@ QLabel#TitleLabel {
     color:rgb(68, 107, 146);
 }
 QFrame#detailsFrame {
-    border: 2px solid #FFA500; /* orange */
+    border: 2px solidrgb(226, 218, 202); 
     border-radius: 12px;
     background-color: #fffef6;
 }

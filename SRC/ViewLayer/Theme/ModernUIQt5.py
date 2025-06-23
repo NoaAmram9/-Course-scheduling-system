@@ -32,12 +32,13 @@ class ModernUIQt5:
     }
 
     @staticmethod
-    def create_button(text, style="primary", min_width=120):
+    def create_button(text, style="light_pink", min_width=120):
         button = QPushButton(text)
         button.setMinimumWidth(min_width)
         button.setMinimumHeight(35)
 
-        bg_color = ModernUIQt5.COLORS.get(style, ModernUIQt5.COLORS["primary"])
+        bg_color = ModernUIQt5.COLORS.get(style, ModernUIQt5.COLORS["light_blue"])
+        hover_color = "#7f8c8d" if style == "light_pink" else "#95a5a6"
         button.setStyleSheet(f"""
             QPushButton {{
                 background-color: {bg_color};
@@ -47,7 +48,7 @@ class ModernUIQt5:
                 padding: 6px 12px;
             }}
             QPushButton:hover {{
-                background-color: #944e25;
+                background-color: {hover_color};
                 opacity: 0.85;
             }}
         """)
