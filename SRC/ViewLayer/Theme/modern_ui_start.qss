@@ -1,0 +1,38 @@
+/* General QWidget background */
+StartPageView {
+    background-color:rgb(215, 216, 219);
+}
+
+/* Title label */
+QLabel#TitleLabel {
+    font-size: 22px;
+    font-weight: bold;
+    color:rgb(26, 49, 72);
+    margin-bottom: 5px;
+}
+
+/* Subtitle label */
+QLabel#SubtitleLabel {
+    font-size: 14px;
+    color: #555;
+}
+
+/* Buttons */
+QPushButton {
+    background-color:rgb(77, 110, 131);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 12px;
+    font-size: 16px;
+    font-weight: bold;
+  
+}
+
+QPushButton:hover {
+    background-color: #2980b9;
+}
+
+QPushButton:pressed {
+    background-color: #1f6391;
+}

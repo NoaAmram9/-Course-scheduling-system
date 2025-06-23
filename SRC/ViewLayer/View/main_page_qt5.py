@@ -5,7 +5,7 @@ from PyQt5.QtGui import *
 from SRC.ViewLayer.Layout.TimeConstraintsSelector import TimeConstraintsSelector
 from SRC.ViewLayer.Logic.course_manager_qt5 import CourseManagerQt5
 from SRC.ViewLayer.Layout.course_list_panel_qt5 import CourseListPanelQt5
-from SRC.ViewLayer.Layout.course_details_panel_qt5 import CourseDetailsPanelQt5
+from SRC.ViewLayer.Layout.MainPage.CourseDetailsPanelQt5 import CourseDetailsPanelQt5
 from SRC.ViewLayer.Layout.selected_courses_panel_qt5 import SelectedCoursesPanelQt5
 from SRC.ViewLayer.Theme.ModernUIQt5 import ModernUIQt5
 
@@ -174,6 +174,7 @@ class MainPageQt5(QMainWindow):
     def save_selection(self):
         """Save the current course selection and go to timetable page"""
         if self.course_manager.save_selection():
+            self.controller.save_courses_to_file("Data/All_Courses.xlsx", self.Data)
             self.show_timetables()    
     def show_timetables(self):
         """Show the timetables page"""
@@ -242,6 +243,7 @@ class MainPageQt5(QMainWindow):
                                    QMessageBox.No)
         
         if reply == QMessageBox.Yes:
+            self.controller.save_courses_to_file( "Data/All_Courses.xlsx", self.Data)
             self.controller.handle_exit()
             event.accept()
         else:

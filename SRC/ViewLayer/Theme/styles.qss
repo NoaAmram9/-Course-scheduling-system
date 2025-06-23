@@ -1,16 +1,16 @@
-/* === Base Widget === */
+/* === Base Widget === */ 
 QWidget {
-    background-color: #F8F9FA;
+    background-color: #F8F9FA; /* OFF-WHITE מהפלטה */
     font-family: "Inter", "Segoe UI", "system-ui", sans-serif;
     font-size: 14px;
-    color: #2E2E2E;
+    color: #3C3D3D; /* אפור כהה */
 }
 
 /* === Header === */
 QLabel#HeaderLabel {
     font-size: 28px;
     font-weight: 600;
-    color: #2E2E2E;
+    color: #3C3D3D;
     background: transparent;
     padding: 12px 0;
     margin-top: 16px;
@@ -22,21 +22,20 @@ QLabel#logoLabel {
     margin-top: 10px;
     margin-bottom: 6px;
     qproperty-alignment: AlignCenter;
-    border-radius : 20px
+    border-radius: 20px;
 }
 
 /* === Drop Area === */
 QFrame#DropFrame {
-    background-color: #f3efec;  /* === צבע OFFWHITE של הפלטה === */
-    border: 2px dashed #CED4DA;
+    background-color: #F3EFEC;  /* רקע בהיר */
+    border: 2px dashed #BAA898; /* ורדרד-חום */
     border-radius: 12px;
     padding: 20px;
     margin: 10px;
-   
 }
 
 QLabel#DropLabel {
-    color: #6C757D;
+    color: #839788; /* ירקרק-חאקי */
     font-size: 14px;
     qproperty-alignment: AlignCenter;
     padding: 8px;
@@ -44,8 +43,8 @@ QLabel#DropLabel {
 
 /* === Upload Button === */
 QPushButton#UploadButton {
-    background-color:rgb(247, 252, 190);
-    color:rgb(51, 52, 53);
+    background-color: #BFD7EA;  /* תכלת */
+    color: #3C3D3D;
     min-height: 36px;
     min-width: 110px;
     border: none;
@@ -56,7 +55,7 @@ QPushButton#UploadButton {
 }
 
 QPushButton#UploadButton:hover {
-    background-color:rgb(238, 225, 168);
+    background-color: #A8C9E4; /* תכלת כהה מעט */
 }
 
 /* === File Label === */
@@ -69,7 +68,7 @@ QLabel#FileLabel {
 
 /* === Send Button === */
 QPushButton#SendButton {
-    background-color:#ecac57; /* === צבע כתום של הפלטה === */
+    background-color: #BAA898; /* ורדרד חום */
     color: #212529;
     border: none;
     min-height: 36px;
@@ -82,7 +81,24 @@ QPushButton#SendButton {
 }
 
 QPushButton#SendButton:hover {
-    background-color:#944e25 ; /* === צבע חום  של הפלטה === */
+    background-color: #944E25; /* חום כהה */
+}
+
+/* === Back Button === */
+QPushButton#BackButton {
+    background-color: #839788; /* ירקרק-חאקי */
+    color: white;
+    border: none;
+    min-height: 36px;
+    min-width: 110px;
+    border-radius: 20px;
+    padding: 8px 18px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+QPushButton#BackButton:hover {
+    background-color: #6E8274; /* ירוק כהה יותר */
 }
 
 /* === Footer === */
