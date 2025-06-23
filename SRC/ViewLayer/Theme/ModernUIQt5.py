@@ -4,7 +4,6 @@ from PyQt5.QtWidgets import QPushButton
 class ModernUIQt5:
     """Modern UI styling and components for Qt5"""
 
-    # Color palette
     COLORS = {
         "primary": "#ecac57",
         "secondary": "#944e25",
@@ -20,7 +19,6 @@ class ModernUIQt5:
         "exercise": "#e8ffff",
         "light_blue": "#9F9BFF",
         "light_pink": "#FFDAB9",
-        # Timetable specific colors
         "timetable_bg": "#f8f9fa",
         "timetable_header": "#e9ecef",
         "timetable_border": "#dee2e6",
@@ -35,7 +33,6 @@ class ModernUIQt5:
 
     @staticmethod
     def create_button(text, style="primary", min_width=120):
-        """Create a modern styled QPushButton with custom background"""
         button = QPushButton(text)
         button.setMinimumWidth(min_width)
         button.setMinimumHeight(35)
@@ -55,43 +52,42 @@ class ModernUIQt5:
             }}
         """)
         return button
-    
-    
+
     @staticmethod
-    def get_main_stylesheet():
-        """Load and combine base + selection styles"""
-        base = ModernUIQt5._load_stylesheet("modern_ui_base.qss")
-        selection = ModernUIQt5._load_stylesheet("modern_ui_selection.qss")
+    def get_main_stylesheet(dark=False):
+        if dark:
+            base = ModernUIQt5._load_stylesheet("modern_ui_base_dark.qss")
+            selection = ModernUIQt5._load_stylesheet("modern_ui_selection_dark.qss")
+        else:
+            base = ModernUIQt5._load_stylesheet("modern_ui_base.qss")
+            selection = ModernUIQt5._load_stylesheet("modern_ui_selection.qss")
         return base + "\n" + selection
     
-    
     @staticmethod
-    def get_timetable_stylesheet():
+    def get_timetable_stylesheet(dark=False):
         base = ModernUIQt5._load_stylesheet("modern_ui_base.qss")
         timetable = ModernUIQt5._load_stylesheet("modern_ui_timetable.qss")
         navbar = ModernUIQt5._load_stylesheet("NavBars_ui.qss")
         dropdown = ModernUIQt5._load_stylesheet("dropdown.qss")
-        return base + "\n" + timetable + "\n" + navbar + '\n' + dropdown
-        # return base + "\n" + timetable + "\n" + navbar
+        dark_theme = ModernUIQt5._load_stylesheet("dark_theme.qss") if dark else ""
+        return base + "\n" + timetable + "\n" + navbar + "\n" + dropdown + "\n" + dark_theme
 
     @staticmethod
-    def get_navbars_stylesheet():
-        """Load and combine base + selection styles"""
+    def get_navbars_stylesheet(dark=False):
         base = ModernUIQt5._load_stylesheet("modern_ui_base.qss")
         navbar = ModernUIQt5._load_stylesheet("NavBars_ui.qss")
         dropdown = ModernUIQt5._load_stylesheet("dropdown_menu.qss")
-        return base + "\n" + navbar + "\n" + dropdown
-        # return base + "\n" + navbar
-    
-    @staticmethod
-    def get_dropdown_stylesheet():
-        """Load QSS for dropdown (QMenu) components"""
-        return ModernUIQt5._load_stylesheet("dropdown.qss")
+        dark_theme = ModernUIQt5._load_stylesheet("dark_theme.qss") if dark else ""
+        return base + "\n" + navbar + "\n" + dropdown + "\n" + dark_theme
 
-    
+    @staticmethod
+    def get_dropdown_stylesheet(dark=False):
+        dropdown = ModernUIQt5._load_stylesheet("dropdown.qss")
+        dark_theme = ModernUIQt5._load_stylesheet("dark_theme.qss") if dark else ""
+        return dropdown + "\n" + dark_theme
+
     @staticmethod
     def _load_stylesheet(filename):
-        """Load a QSS file from the theme folder"""
         try:
             path = os.path.join(os.path.dirname(__file__), filename)
             with open(path, "r", encoding="utf-8") as f:
