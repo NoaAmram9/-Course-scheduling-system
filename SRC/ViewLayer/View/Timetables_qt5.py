@@ -283,7 +283,6 @@ class TimetablesPageQt5(QMainWindow):
         try:
             self.worker = TimetableWorker(
                 self.controller,
-                self.filePath,  # Main data file
                 "Data/selected_courses.txt",
                 batch_size=50  # Load in batches of 50
             )

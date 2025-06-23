@@ -53,7 +53,7 @@ class CourseListPanelQt5(QWidget):
         line1 = QFrame()
         line1.setFrameShape(QFrame.HLine)
         line1.setFrameShadow(QFrame.Sunken)
-        line1.setStyleSheet("color: #FFA500;")
+        # line1.setStyleSheet("color: #FFA500;")
         frame_layout.addWidget(line1)
 
         # Frame around the course list
@@ -79,7 +79,7 @@ class CourseListPanelQt5(QWidget):
         line2 = QFrame()
         line2.setFrameShape(QFrame.HLine)
         line2.setFrameShadow(QFrame.Sunken)
-        line2.setStyleSheet("color: #FFA500;")
+        # line2.setStyleSheet("color: #D3D4D9;")
         frame_layout.addWidget(line2)
 
         # Search input
@@ -164,7 +164,7 @@ class CourseListPanelQt5(QWidget):
         for i in range(self.course_tree.topLevelItemCount()):
             item = self.course_tree.topLevelItem(i)
             if item.data(0, Qt.UserRole) == course_code:
-                item.setBackground(0, QColor("#EFD8C5"))
+                item.setBackground(0, QColor("#e3f2fd"))
                 break
         
         # Add to selected courses

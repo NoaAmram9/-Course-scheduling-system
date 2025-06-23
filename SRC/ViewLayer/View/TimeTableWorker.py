@@ -13,10 +13,10 @@ class TimetableWorker(QThread):
     loading_finished = pyqtSignal()           # Says "we're done loading!"
     error_occurred = pyqtSignal(str)          # Sends an error message if something goes wrong
 
-    def __init__(self, controller, file_path1, file_path2, batch_size=50):
+    def __init__(self, controller, file_path2, batch_size=50):
         super().__init__()
         self.controller = controller          # The logic/controller part of your app
-        self.file_path1 = file_path1          # Path to the first input file
+                   # Path to the first input file
         self.file_path2 = file_path2          # Path to the second input file
         self.batch_size = batch_size          # How many results to send at a time
         self._stop_requested = False          # If True, the thread should stop
@@ -27,8 +27,7 @@ class TimetableWorker(QThread):
         """This is what runs when you start the thread."""
         try:
             # Get a generator that gives us batches of timetables
-            batch_generator = self.controller.get_all_options(
-                self.file_path1, 
+            batch_generator = self.controller.get_all_options(None,
                 self.file_path2, 
                 batch_size=self.batch_size
             )

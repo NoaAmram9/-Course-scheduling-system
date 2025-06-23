@@ -9,6 +9,7 @@ from SRC.DataBase.DataBaseManager import DatabaseManager
 class FileController:
     def __init__(self, file_type: str, filePath: str = None, use_database: bool = True):
         self.filePath = filePath
+        self.file_type = file_type  # הוספתי את השורה הזו שחסרה
         self.use_database = use_database
         
         # Initialize database if requested
@@ -44,6 +45,115 @@ class FileController:
         
         return courses_data
 
+    def write_courses(self, file_path: str, courses):
+        self.file_manager.write_courses_to_file(file_path, courses)
+       
+    # Function to get the selected courses from the user    
+    def get_selected_courses(self, file_path):
+        dataManager = FileManager()
+        return dataManager.read_course_numbers_from_file(file_path)   
+    
+    # Function to get the selected courses info from the repository
+    def selected_courses_info(self, courses_info, selected_courses):
+        selected_courses_info = []
+        for course in courses_info:
+            if course.code in selected_courses:
+                selected_courses_info.append(course)
+        return selected_courses_info
+    
+    # Function to create the schedual from selected courses file
+    def create_selected_courses_file(self, selected_courses, file_path):
+        dataManager = FileManager()
+        dataManager.write_course_numbers_to_file(file_path, selected_courses)
+      
+    # Function to create the schedules based on the selected courses
+    def create_schedules(self, selected_courses):
+        scheduleService = ScheduleService()
+        return scheduleService.generate_schedules(selected_courses, limit=1000)
+
+    def get_all_options(self, file_path1, file_path2, batch_size=100):
+        """
+        Returns batches of timetables instead of individual timetables
+        This replaces the old method that returned individual timetables
+        **שומר על הפרמטרים המקוריים בדיוק**
+        """
+        # אם יש דאטהבייס ולא נשלח file_path1, נשתמש בדאטהבייס
+        if self.use_database and file_path1 is None:
+            courses_info = self.get_courses_from_database()
+        else:
+            # אם נשלח file_path1 או שאין דאטהבייס, נשתמש בקובץ
+            if file_path1 is None:
+                raise ValueError("file_path1 is required when not using database")
+            courses_info = self.read_courses_from_file(file_path1)[0]  # Get the first element which is the courses info
+        
+        selected_courses = self.get_selected_courses(file_path2)
+        selected_courses_info = self.selected_courses_info(courses_info, selected_courses)
+        
+        # Optional: Include dummy blocked courses if added earlier
+        if hasattr(self, "_injected_constraints"):
+            selected_courses_info.extend(self._injected_constraints)
+
+        try:
+            schedule_service = ScheduleService()
+            
+            # Get the progressive generator (no limit)
+            schedule_generator = schedule_service.generate_schedules_progressive(
+                selected_courses_info,  
+                limit=None # No limit, to get all possible schedules
+            )
+            
+            # Collect into batches
+            batch = []
+            for timetable in schedule_generator:
+                batch.append(timetable)
+                
+                # When batch is full, yield it
+                if len(batch) >= batch_size:
+                    yield batch
+                    batch = []  # Reset for next batch
+                    
+            # Yield final batch if it has any items
+            if batch:
+                yield batch
+                            
+        except Exception as e:
+            print(f"Error in batch generator: {str(e)}")
+            return []  # החזר רשימה ריקה במקום 
+
+    def save_courses_to_file(self, file_path: str, courses: list):
+        """
+        Save the courses to a file.
+        This method will save the courses to the specified file path.
+        """
+        export_manager = ExcelExportManager()
+        # ייצוא בסיסי
+        export_manager.export_courses_to_excel(courses, file_path)
+    
+    def handle_exit(self):
+        """
+        Handle the exit of the application.
+        This method is called when the application is about to exit.
+        delete the temporary files
+        """
+        # file_path1 = self.filePath
+        # file_path2 = "Data/courses.xlsx"
+        # file_path2 = "Data/selected_courses.txt"
+        files = ["Data/courses.xlsx", "Data/selected_courses.txt"]
+        if self.filePath:
+            files.append(self.filePath)
+        dataManager = FileManager()
+        dataManager.delete_temp_files(files)
+
+    def apply_time_constraints(self, constraints: list[dict]):
+        """Set the dummy courses to be injected as blocked time slots."""
+        self._injected_constraints = self.time_constraints_service.generate_busy_slots(constraints)
+
+    def clear_time_constraints(self):
+        """Clear any previously set time constraints (remove dummy courses)."""
+        self._injected_constraints = []
+
+    # === פונקציות דאטהבייס נוספות (לא משנות את הפונקציונליות המקורית) ===
+    
     def get_courses_from_database(self, semester: int = None, search_term: str = None):
         """
         Get courses from database with optional filtering
@@ -58,107 +168,6 @@ class FileController:
         else:
             return self.db_manager.get_all_courses()
 
-    def write_courses(self, file_path: str, courses):
-        self.file_manager.write_courses_to_file(file_path, courses)
-       
-    def get_selected_courses(self, file_path):
-        dataManager = FileManager()
-        return dataManager.read_course_numbers_from_file(file_path)   
-    
-    def selected_courses_info(self, courses_info, selected_courses):
-        selected_courses_info = []
-        for course in courses_info:
-            if course.code in selected_courses:
-                selected_courses_info.append(course)
-        return selected_courses_info
-    
-    def create_selected_courses_file(self, selected_courses, file_path):
-        dataManager = FileManager()
-        dataManager.write_course_numbers_to_file(file_path, selected_courses)
-        
-    def create_schedules(self, selected_courses):
-        scheduleService = ScheduleService()
-        return scheduleService.generate_schedules(selected_courses, limit=1000)
-
-    def get_all_options(self, file_path1=None, file_path2=None, batch_size=100, use_db_for_courses=False):
-        """
-        Returns batches of timetables. Can work with files or database.
-        
-        Args:
-            file_path1: Path to courses file (if not using database)
-            file_path2: Path to selected courses file
-            batch_size: Number of schedules per batch
-            use_db_for_courses: If True, get courses from database instead of file
-        """
-        
-        # Get courses info
-        if use_db_for_courses and self.use_database:
-            courses_info = self.get_courses_from_database()
-        else:
-            if not file_path1:
-                raise ValueError("file_path1 is required when not using database")
-            courses_info = self.read_courses_from_file(file_path1)[0]
-        
-        # Get selected courses
-        if not file_path2:
-            raise ValueError("file_path2 is required for selected courses")
-        selected_courses = self.get_selected_courses(file_path2)
-        selected_courses_info = self.selected_courses_info(courses_info, selected_courses)
-        
-        # Include time constraints if any
-        if hasattr(self, "_injected_constraints"):
-            selected_courses_info.extend(self._injected_constraints)
-
-        try:
-            schedule_service = ScheduleService()
-            
-            schedule_generator = schedule_service.generate_schedules_progressive(
-                selected_courses_info,  
-                limit=None
-            )
-            
-            batch = []
-            for timetable in schedule_generator:
-                batch.append(timetable)
-                
-                if len(batch) >= batch_size:
-                    yield batch
-                    batch = []
-                    
-            if batch:
-                yield batch
-                            
-        except Exception as e:
-            print(f"Error in batch generator: {str(e)}")
-            return []
-
-    def save_courses_to_file(self, file_path: str, courses: list):
-        """
-        Save the courses to a file.
-        """
-        export_manager = ExcelExportManager()
-        export_manager.export_courses_to_excel(courses, file_path)
-    
-    def handle_exit(self):
-        """
-        Handle the exit of the application.
-        """
-        files = ["Data/courses.xlsx", "Data/selected_courses.txt"]
-        if self.filePath:
-            files.append(self.filePath)
-        dataManager = FileManager()
-        dataManager.delete_temp_files(files)
-
-    def apply_time_constraints(self, constraints: list[dict]):
-        """Set the dummy courses to be injected as blocked time slots."""
-        self._injected_constraints = self.time_constraints_service.generate_busy_slots(constraints)
-
-    def clear_time_constraints(self):
-        """Clear any previously set time constraints."""
-        self._injected_constraints = []
-
-    # === Database Management Methods ===
-    
     def clear_database(self):
         """Clear all data from database"""
         if not self.use_database:
@@ -183,7 +192,6 @@ class FileController:
         if not self.use_database:
             raise ValueError("Database is not enabled")
         return self.db_manager.search_courses(search_term)
-    
     
     
     
