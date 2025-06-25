@@ -265,11 +265,12 @@ class TimetableGridWidget(QWidget):
                     cell.setProperty("customTag", "manual_selected")
                     cell.setCursor(Qt.PointingHandCursor)
                     cell.mouseReleaseEvent = lambda event: self.on_selected_lesson_click(course_data.get("code", ""), course_data.get("lesson", ""))
-            # print(f"hello {self.editing_mode} - {course_data.get("matches requested lesson","")}")
-            # print(f"Full course_data: {course_data}")
-
+    
             if self.editing_mode and course_data.get("matches requested lesson",""):
-                cell.setObjectName("requestedCell")
+                if course_data.get("scheduled", ""):
+                    cell.setProperty("customTag", "requested_and_scheduled")
+                else:
+                    cell.setObjectName("requestedCell")
 
 
 

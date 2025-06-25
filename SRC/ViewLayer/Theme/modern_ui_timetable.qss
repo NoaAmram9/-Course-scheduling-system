@@ -192,3 +192,7 @@ QFrame#requestedCell {
     border:1px solid rgb(154, 106, 78);
     border-radius: 10px;
 }
+QFrame[custonTag="requested_and_scheduled"] {
+    border:1px solid rgb(154, 106, 78);
+    border-radius: 10px;
+}
