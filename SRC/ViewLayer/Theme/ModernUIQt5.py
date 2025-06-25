@@ -73,6 +73,16 @@ class ModernUIQt5:
         dark_theme = ModernUIQt5._load_stylesheet("dark_theme.qss") if dark else ""
         return base + "\n" + timetable + "\n" + navbar + "\n" + dropdown + "\n" + dark_theme
 
+
+    @staticmethod
+    def get_manual_schedule_stylesheet(): #TODO: add dark mode support
+        """Load and combine base + manual schedule styles"""
+        base = ModernUIQt5._load_stylesheet("modern_ui_base.qss")
+        selection = ModernUIQt5._load_stylesheet("modern_ui_selection.qss")
+        timetable = ModernUIQt5._load_stylesheet("modern_ui_timetable.qss")
+        # return base + "\n" + selection + "\n" + timetable
+        return base + "\n" +timetable
+      
     @staticmethod
     def get_navbars_stylesheet(dark=False):
         base = ModernUIQt5._load_stylesheet("modern_ui_base.qss")

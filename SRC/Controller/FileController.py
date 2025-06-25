@@ -1,8 +1,9 @@
 from SRC.Services.ExcelManager import ExcelManager
 from SRC.Services.TxtManager import TxtManager
 from SRC.Interfaces.FileManager import FileManager
-from SRC.Services.ScheduleService import ScheduleService
+from SRC.Services.AutoScheduleService import ScheduleService
 from SRC.Services.TimeConstraintsService import TimeConstraintsService
+from SRC.Controller.ManualScheduleController import ManualScheduleController
 from SRC.Services.ExcelExportManager import ExcelExportManager
 from SRC.DataBase.DataBaseManager import DatabaseManager 
 
@@ -24,6 +25,7 @@ class FileController:
             raise ValueError("Unsupported file type. Use 'excel' or 'txt'.")
         self.time_constraints_service = TimeConstraintsService()
         self._injected_constraints = []
+        self.manual_controller = None  # Initialize manual controller to None
 
     def get_file_type(self) -> str:
         return self.file_type
@@ -70,13 +72,47 @@ class FileController:
     def create_schedules(self, selected_courses):
         scheduleService = ScheduleService()
         return scheduleService.generate_schedules(selected_courses, limit=1000)
-
+  
+    def get_selected_courses_info(self, file_path1, file_path2):
+        """
+        Returns the selected courses info based on the courses file and selected courses file.
+        """
+        courses_info = self.read_courses_from_file(file_path1)[0]  # Get the first element which is the courses info
+        selected_courses = self.get_selected_courses(file_path2)
+        selected_courses_info = self.selected_courses_info(courses_info, selected_courses)
+        # Include dummy blocked courses if added earlier
+        if hasattr(self, "_injected_constraints"):
+            selected_courses_info.extend(self._injected_constraints)
+        return selected_courses_info
+    
+    def get_selected_courses_limited_info(self, file_path1, file_path2):
+        selected_courses_info = self.get_selected_courses_info(file_path1, file_path2)
+        self.manual_controller = ManualScheduleController(selected_courses_info)
+        return self.manual_controller.get_selected_courses_limited_info()  # Extract courses with required lessons from the selected courses info
+    
+    def get_available_lessons_by_course(self, course_id, lesson_type):
+        return self.manual_controller.get_available_lessons_by_course(course_id, lesson_type)
+    
+    def get_occupied_windows(self):
+        """Returns all available lessons from the selected courses info."""
+        
+        return self.manual_controller.get_occupied_windows() if self.manual_controller else None
+    
+    def get_dynamic_schedule(self):
+        """Returns the dynamic schedule based on the selected courses info."""
+        return self.manual_service.get_dynamic_schedule() if self.manual_service else None
+        
     def get_all_options(self, file_path1, file_path2, batch_size=100):
         """
         Returns batches of timetables instead of individual timetables
         This replaces the old method that returned individual timetables
         **שומר על הפרמטרים המקוריים בדיוק**
         """
+
+        # courses_info = self.read_courses_from_file(file_path1)[0]  # Get the first element which is the courses info
+        # selected_courses = self.get_selected_courses(file_path2)
+        # selected_courses_info = self.selected_courses_info(courses_info, selected_courses)
+
         # אם יש דאטהבייס ולא נשלח file_path1, נשתמש בדאטהבייס
         if self.use_database and file_path1 is None:
             courses_info = self.get_courses_from_database()
@@ -88,10 +124,12 @@ class FileController:
         
         selected_courses = self.get_selected_courses(file_path2)
         selected_courses_info = self.selected_courses_info(courses_info, selected_courses)
+
         
-        # Optional: Include dummy blocked courses if added earlier
-        if hasattr(self, "_injected_constraints"):
-            selected_courses_info.extend(self._injected_constraints)
+        # # Include dummy blocked courses if added earlier
+        # if hasattr(self, "_injected_constraints"):
+        #     selected_courses_info.extend(self._injected_constraints)
+        selected_courses_info = self.get_selected_courses_info(file_path1, file_path2)
 
         try:
             schedule_service = ScheduleService()
@@ -120,6 +158,7 @@ class FileController:
             print(f"Error in batch generator: {str(e)}")
             return []  # החזר רשימה ריקה במקום 
 
+
     def save_courses_to_file(self, file_path: str, courses: list):
         """
         Save the courses to a file.
@@ -129,6 +168,7 @@ class FileController:
         # ייצוא בסיסי
         export_manager.export_courses_to_excel(courses, file_path)
     
+
     def handle_exit(self):
         """
         Handle the exit of the application.

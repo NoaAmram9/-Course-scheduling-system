@@ -37,10 +37,10 @@ class TimetableMetricsService:
         )
         
         self.timetable.metrics = metrics
-        # print(f"applied preferences: {self.timetable.preferences_details.active_days} active days, "
-        #       f"{self.timetable.preferences_details.free_windows_number} free windows, "
-        #       f"avg start time: {self.timetable.preferences_details.average_start_time}, "
-        #       f"avg end time: {self.timetable.preferences_details.average_end_time}")
+        # print(f"applied preferences: {self.timetable._metrics.active_days} active days, "
+        #       f"{self.timetable._metrics.free_windows_number} free windows, "
+        #       f"avg start time: {self.timetable._metrics.average_start_time}, "
+        #       f"avg end time: {self.timetable._metrics.average_end_time}")
  
     # Method to get the lesson times from the timetable.
     def get_lesson_times(self):

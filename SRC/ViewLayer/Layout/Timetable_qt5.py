@@ -77,6 +77,10 @@ def get_tooltip_text(course_data):
     # Add location if available
     if course_data.get("location"):
         tooltip_parts.append(f"Location: {course_data['location']}")
+    if course_data.get("teacher"):
+        if isinstance(course_data['teachers'], list):
+            for teacher in course_data['teachers']:
+                tooltip_parts.append(f"Teacher: {teacher}")
 
     # Join the parts with newline characters for a multi-line tooltip
     return '\n'.join(tooltip_parts)
@@ -88,7 +92,7 @@ class TimetableGridWidget(QWidget):
     This widget arranges course information in a grid of days and hours.
     """
 
-    def __init__(self, slot_map, parent=None):
+    def __init__(self, slot_map, editing_mode=False, on_available_click=None, on_selected_lesson_click = None, parent=None):
         """
         Constructor for TimetableGridWidget.
 
@@ -99,6 +103,9 @@ class TimetableGridWidget(QWidget):
         """
         super().__init__(parent)  
         self.slot_map = slot_map  # Store the course data
+        self.editing_mode = editing_mode
+        self.on_available_click = on_available_click  # Save callback for clicking available cell
+        self.on_selected_lesson_click = on_selected_lesson_click # Save callback for clicking edited lesson
         # Set an object name for styling with Qt Style Sheets (QSS)
         self.setObjectName("timetableGrid")
         self.init_ui()  # Initialize the user interface components
@@ -110,22 +117,26 @@ class TimetableGridWidget(QWidget):
         header cells and timetable cells.
         """
         # Create a QGridLayout to arrange cells in rows and columns
-        grid_layout = QGridLayout()
-        grid_layout.setSpacing(3)  
-        grid_layout.setContentsMargins(10, 10, 10, 10)
-
+        # grid_layout = QGridLayout()
+        # grid_layout.setSpacing(3)  
+        # grid_layout.setContentsMargins(10, 10, 10, 10)
+        
+        self.grid_layout = QGridLayout()
+        self.grid_layout.setSpacing(3)  
+        self.grid_layout.setContentsMargins(10, 10, 10, 10)
+        
         # Set size policies to allow the widget to expand and fill available space
 
         self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
 
         # Create the header row 
-        self.create_header_row(grid_layout)
+        self.create_header_row(self.grid_layout)
 
         # Create the time column and the main timetable cells
-        self.create_timetable_cells(grid_layout)
+        self.create_timetable_cells(self.grid_layout)
 
         # Set the grid_layout as the main layout for this widget
-        self.setLayout(grid_layout)
+        self.setLayout(self.grid_layout)
 
 
     def create_header_row(self, grid_layout):
@@ -169,7 +180,7 @@ class TimetableGridWidget(QWidget):
                 # slot_map is expected to be a dict like {(day, hour): course_info_dict}
                 course_data = self.slot_map.get((day, hour))
                 # Create a course cell (either empty or with course info)
-                cell = self.create_course_cell(course_data)
+                cell = self.create_course_cell(course_data, day, hour)
                 # Add the course cell to the grid at the current row and column
                 grid_layout.addWidget(cell, row, col)
 
@@ -225,7 +236,7 @@ class TimetableGridWidget(QWidget):
         cell.setLayout(layout)   # Set the layout for the frame
         return cell
 
-    def create_course_cell(self, course_data):
+    def create_course_cell(self, course_data, day=None, hour=None):
         cell = QFrame() 
         cell.setFixedSize(150, 90) 
 
@@ -240,12 +251,27 @@ class TimetableGridWidget(QWidget):
 
             lesson_type = course_data.get("type", "")
             is_blocked = course_data.get("code", "").startswith("BLOCKED")
+            is_available = course_data.get("type") == "available"  # Check if the course type is "available"
 
             if is_blocked:
                 cell.setObjectName("blockedCell")
+            elif is_available:
+                cell.setObjectName("availableCell")
             else:
                 cell_class = get_lesson_type_color_class(lesson_type)
                 cell.setObjectName(cell_class)
+                
+                if self.editing_mode and self.on_selected_lesson_click:
+                    cell.setProperty("customTag", "manual_selected")
+                    cell.setCursor(Qt.PointingHandCursor)
+                    cell.mouseReleaseEvent = lambda event: self.on_selected_lesson_click(course_data.get("code", ""), course_data.get("lesson", ""))
+    
+            if self.editing_mode and course_data.get("matches requested lesson",""):
+                if course_data.get("scheduled", ""):
+                    cell.setProperty("customTag", "requested_and_scheduled")
+                else:
+                    cell.setObjectName("requestedCell")
+
 
 
             layout.setSpacing(2) 
@@ -266,7 +292,7 @@ class TimetableGridWidget(QWidget):
                 layout.addWidget(name_label)                 
 
                 # Display other information (remaining lines)
-                if len(lines) > 1:  # If there are more lines
+                if len(lines) > 1 and not is_available:  # If there are more lines
                     info_text = '\n'.join(lines[1:])  
                     info_label = QLabel(info_text)    # Create label for additional info
                     info_label.setObjectName("courseCellLabel") 
@@ -274,12 +300,45 @@ class TimetableGridWidget(QWidget):
                     info_label.setWordWrap(True)             
                     layout.addWidget(info_label)             
 
-            # Set a tooltip with more detailed information for the cell
-            tooltip_text = get_tooltip_text(course_data)
-            cell.setToolTip(tooltip_text)
+            if not is_available:
+                # Set a tooltip with more detailed information for the cell
+                tooltip_text = get_tooltip_text(course_data)
+                cell.setToolTip(tooltip_text)
+            
+            if is_available:
+                tooltip_parts = []
+                for lesson in course_data['lessons']:
+                    tooltip_parts.append(f"{lesson['name']} ({lesson['code']}) - {lesson['type']} | {lesson['location']}")
+                tooltip_text = '\n'.join(tooltip_parts)
+                cell.setToolTip(tooltip_text)
+
+            # add clickable behavior only for 'available' cells and only if a handler is provided
+            if is_available and self.on_available_click:
+                cell.setCursor(Qt.PointingHandCursor)
+                cell.mouseReleaseEvent = lambda event: self.on_available_click(day, hour)
 
         else:  # If there is no course data for this slot (empty cell)
             cell.setObjectName("emptyCell")  # Style as an empty cell
 
         cell.setLayout(layout)  # Apply the layout to the cell
         return cell
+
+    def update_timetable(self, new_slot_map):
+        """
+        Update the timetable with a new slot map.
+
+        Args:
+            new_slot_map (dict): A new dictionary mapping (day, hour) tuples to course data.
+        """
+        self.slot_map = new_slot_map
+        
+        # Clean existing course cells (but leave header row and time column)
+        for i in reversed(range(self.grid_layout.count())):
+            widget = self.grid_layout.itemAt(i).widget()
+            position = self.grid_layout.getItemPosition(i)
+            row, col = position[0], position[1]
+            if row != 0 and col != 0:  # Don't delete headers
+                widget.setParent(None)
+
+        # Re-create only the timetable cells (not headers)
+        self.create_timetable_cells(self.grid_layout)

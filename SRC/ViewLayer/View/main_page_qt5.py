@@ -7,6 +7,7 @@ from SRC.ViewLayer.Logic.course_manager_qt5 import CourseManagerQt5
 from SRC.ViewLayer.Layout.course_list_panel_qt5 import CourseListPanelQt5
 from SRC.ViewLayer.Layout.MainPage.CourseDetailsPanelQt5 import CourseDetailsPanelQt5
 from SRC.ViewLayer.Layout.selected_courses_panel_qt5 import SelectedCoursesPanelQt5
+from SRC.ViewLayer.View.ManualSchedulePage import ManualSchedulePage
 from SRC.ViewLayer.Theme.ModernUIQt5 import ModernUIQt5
 
 
@@ -139,10 +140,16 @@ class MainPageQt5(QMainWindow):
         footer_layout.addStretch()
     
         # Save Selection button (right-aligned)
-        save_button = ModernUIQt5.create_button("Save Selection", "primary")
-        save_button.clicked.connect(self.save_selection)
-        save_button.setFixedHeight(36)
-        footer_layout.addWidget(save_button, alignment=Qt.AlignRight)
+        auto_ganerate_button = ModernUIQt5.create_button("Auto-Generate Schedules", "primary")
+        auto_ganerate_button.clicked.connect(self.auto_ganerate_schedules)
+        auto_ganerate_button.setFixedHeight(36)
+        footer_layout.addWidget(auto_ganerate_button, alignment=Qt.AlignRight)
+        
+        # Save Selection button (right-aligned)
+        manual_button = ModernUIQt5.create_button("Create Manually", "primary")
+        manual_button.clicked.connect(self.manual_schedule)
+        manual_button.setFixedHeight(36)
+        footer_layout.addWidget(manual_button, alignment=Qt.AlignRight)
     
         parent_layout.addWidget(footer_widget)
 
@@ -171,11 +178,12 @@ class MainPageQt5(QMainWindow):
             
     #         self.timetable_window = TimetablesPage(self.controller, self)  
     #         self.timetable_window.show()
-    def save_selection(self):
+    def auto_ganerate_schedules(self):
         """Save the current course selection and go to timetable page"""
         if self.course_manager.save_selection():
             self.controller.save_courses_to_file("Data/All_Courses.xlsx", self.Data)
             self.show_timetables()    
+    
     def show_timetables(self):
         """Show the timetables page"""
         # Import the PyQt5 timetables page
@@ -232,8 +240,13 @@ class MainPageQt5(QMainWindow):
         self.previous_constraints = self.selector.get_constraints()  # Save them
         self.controller.apply_time_constraints(self.previous_constraints)
         self.dialog.close()
-        
-    
+
+    def manual_schedule(self):
+        if self.course_manager.save_selection():
+            selected_courses = self.get_selected_courses()
+            self.manual_schedule_page = ManualSchedulePage(self.controller, self.filePath)
+            self.manual_schedule_page.show()
+
         
     #closeEvent method to handle window close event
     def closeEvent(self, event):

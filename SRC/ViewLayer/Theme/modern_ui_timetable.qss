@@ -168,3 +168,31 @@ QLabel#blockedLabel {
     font-style: italic;
     font-size: 12px;
 }
+
+QFrame#availableCell {
+    background-color:rgb(250, 228, 188); /* בז' חם, טבעי */
+    border-radius: 10px;
+    border: 1px solid rgb(249, 214, 150); /* חום מדברי בינוני */
+}
+
+QFrame#availableCell:hover {
+    background-color:rgb(249, 214, 150); /* בז' חם, טבעי */
+    border-radius: 10px;
+    border: 1px solid rgb(249, 214, 150); /* חום מדברי בינוני */
+}
+
+QFrame[customTag="manual_selected"]:hover {
+    background-color: rgb(249, 63, 63);
+    border-radius : 10px;
+    border:1px solid rgb(249, 63, 63);
+}
+
+QFrame#requestedCell {
+    background-color:rgb(162, 136, 120);
+    border:1px solid rgb(154, 106, 78);
+    border-radius: 10px;
+}
+QFrame[custonTag="requested_and_scheduled"] {
+    border:1px solid rgb(154, 106, 78);
+    border-radius: 10px;
+}
