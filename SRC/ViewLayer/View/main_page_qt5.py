@@ -5,7 +5,7 @@ from PyQt5.QtGui import *
 from SRC.ViewLayer.Layout.TimeConstraintsSelector import TimeConstraintsSelector
 from SRC.ViewLayer.Logic.course_manager_qt5 import CourseManagerQt5
 from SRC.ViewLayer.Layout.course_list_panel_qt5 import CourseListPanelQt5
-from SRC.ViewLayer.Layout.course_details_panel_qt5 import CourseDetailsPanelQt5
+from SRC.ViewLayer.Layout.MainPage.CourseDetailsPanelQt5 import CourseDetailsPanelQt5
 from SRC.ViewLayer.Layout.selected_courses_panel_qt5 import SelectedCoursesPanelQt5
 from SRC.ViewLayer.View.ManualSchedulePage import ManualSchedulePage
 from SRC.ViewLayer.Theme.ModernUIQt5 import ModernUIQt5
@@ -19,18 +19,17 @@ class MainPageQt5(QMainWindow):
         self.selected_course_ids = set()
         self.course_map = {}
         self.previous_constraints = []
-        self.Data= Data
+        self.Data = Data
+        self.dark_mode = False  
         self.init_ui()
         self.setup_course_manager()
         self.filePath = filePath
-     
-        
     def init_ui(self):
         """Initialize the user interface"""
         self.setWindowTitle("Course Selector")
         self.setGeometry(100, 100, 1200, 650)
-        self.setStyleSheet(ModernUIQt5.get_main_stylesheet())
-        
+        self.setStyleSheet(ModernUIQt5.get_main_stylesheet(dark=self.dark_mode))
+
         # Central widget
         central_widget = QWidget()
         self.setCentralWidget(central_widget)
@@ -60,7 +59,31 @@ class MainPageQt5(QMainWindow):
         header_layout.addWidget(header_label)
         header_layout.addStretch()
         
+        # כפתור מצב לילה
+        self.dark_mode_btn = QPushButton()
+        self.dark_mode_btn.setCheckable(True)
+        self.dark_mode_btn.setChecked(self.dark_mode)
+        self.update_dark_mode_button_text()
+        self.dark_mode_btn.clicked.connect(self.toggle_dark_mode)
+        header_layout.addWidget(self.dark_mode_btn, alignment=Qt.AlignRight)
+            
         parent_layout.addWidget(header_widget)
+        
+    def update_dark_mode_button_text(self):
+        if self.dark_mode:
+            self.dark_mode_btn.setText("מצב רגיל")
+        else:
+            self.dark_mode_btn.setText("מצב לילה")
+            
+    def toggle_dark_mode(self):
+        self.dark_mode = not self.dark_mode
+        self.setStyleSheet(ModernUIQt5.get_main_stylesheet(dark=self.dark_mode))
+        self.style().polish(self)
+        for widget in self.findChildren(QWidget):
+            widget.style().polish(widget)
+        self.update_dark_mode_button_text()
+        self.dark_mode_btn.setChecked(self.dark_mode)
+
         
     def create_content_area(self, parent_layout):
         """Create the main content area with 3 panels"""
@@ -158,6 +181,7 @@ class MainPageQt5(QMainWindow):
     def auto_ganerate_schedules(self):
         """Save the current course selection and go to timetable page"""
         if self.course_manager.save_selection():
+            self.controller.save_courses_to_file("Data/All_Courses.xlsx", self.Data)
             self.show_timetables()    
     
     def show_timetables(self):
@@ -216,12 +240,13 @@ class MainPageQt5(QMainWindow):
         self.previous_constraints = self.selector.get_constraints()  # Save them
         self.controller.apply_time_constraints(self.previous_constraints)
         self.dialog.close()
-        
+
     def manual_schedule(self):
         if self.course_manager.save_selection():
             selected_courses = self.get_selected_courses()
             self.manual_schedule_page = ManualSchedulePage(self.controller, self.filePath)
             self.manual_schedule_page.show()
+
         
     #closeEvent method to handle window close event
     def closeEvent(self, event):
@@ -231,6 +256,7 @@ class MainPageQt5(QMainWindow):
                                    QMessageBox.No)
         
         if reply == QMessageBox.Yes:
+            self.controller.save_courses_to_file( "Data/All_Courses.xlsx", self.Data)
             self.controller.handle_exit()
             event.accept()
         else:
@@ -240,3 +266,5 @@ class MainPageQt5(QMainWindow):
         """Run the application"""
         self.load_courses()
         self.show()
+        
+        

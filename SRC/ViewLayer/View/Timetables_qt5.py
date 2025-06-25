@@ -13,6 +13,8 @@ from PyQt5.QtWidgets import (QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QPu
                              QGridLayout, QSizePolicy, QProgressBar)
 from PyQt5.QtCore import Qt, QSize, QTimer, pyqtSignal
 from PyQt5.QtGui import QFont, QPalette
+from PyQt5.QtWidgets import QDialog, QVBoxLayout, QLabel, QDateEdit, QPushButton
+from PyQt5.QtCore import QDate
 
 # Import modules for PDF generation using reportlab
 from reportlab.platypus import SimpleDocTemplate, PageBreak
@@ -26,6 +28,7 @@ from SRC.ViewLayer.Theme.ModernUIQt5 import ModernUIQt5
 from SRC.ViewLayer.View.TimeTableWorker import TimetableWorker
 from SRC.ViewLayer.Layout.TimetablesUIComponents import TimetableUIComponents
 from SRC.ViewLayer.Logic.Pdf_Exporter_System import ScreenshotPDFExporter
+from SRC.ViewLayer.Logic.GoogleExporter import export_timetable_to_google_calendar
 
 class TimetablesPageQt5(QMainWindow):
     """
@@ -157,6 +160,117 @@ class TimetablesPageQt5(QMainWindow):
                 f"Failed to export PDF screenshots:\n{str(e)}"
             )
 
+    def export_to_google_calendar(self):
+        SCOPES = [
+        'openid',
+        'https://www.googleapis.com/auth/calendar',
+        'https://www.googleapis.com/auth/userinfo.email'
+        ]
+
+        if self.display_sorted:
+            timetable = self.sorted_timetables[self.current_index]
+        else:
+            timetable = self.all_options[self.current_index]
+
+        slot_map = map_courses_to_slots(timetable)
+
+        start_date, end_date = self.ask_date_range()
+        if not start_date or not end_date:
+            return  # User cancelled or error
+
+        try:
+            export_timetable_to_google_calendar(slot_map, start_date, end_date, parent=self)
+            QMessageBox.information(self, "Export Complete", "Timetable exported to Google Calendar!")
+        except Exception as e:
+            QMessageBox.critical(self, "Export Failed", f"An error occurred:\n{e}")
+
+    def get_user_email(self, scopes):
+        """Fetch the current Google user email (if authenticated)"""
+        if os.path.exists('token.json'):
+            from google.oauth2.credentials import Credentials
+            from googleapiclient.discovery import build
+            creds = Credentials.from_authorized_user_file('token.json', scopes)
+            try:
+                user_info_service = build('oauth2', 'v2', credentials=creds)
+                user_info = user_info_service.userinfo().get().execute()
+                return user_info.get('email', '')
+            except Exception as e:
+                return f"Could not retrieve user info: {e}"
+        return "No user authenticated"
+
+    def ask_date_range(self):
+        """Open the date range dialog and show dynamic Google account info"""
+
+        SCOPES = [
+        'openid',
+        'https://www.googleapis.com/auth/calendar',
+        'https://www.googleapis.com/auth/userinfo.email'
+        ]
+
+        dialog = QDialog(self)
+        dialog.setWindowTitle("Select Date Range")
+        dialog.resize(400, 200)
+        layout = QVBoxLayout()
+
+        # Fetch user email dynamically
+        user_email = self.get_user_email(SCOPES)
+        self.user_email_label = QLabel(f"Google Account Authenticated as: {user_email}")
+        layout.addWidget(self.user_email_label)
+
+        # Switch account button
+        switch_account_button = QPushButton("Switch Google Account")
+        switch_account_button.clicked.connect(lambda: self.handle_switch_account(dialog))
+        layout.addWidget(switch_account_button)
+
+        # Start date
+        layout.addWidget(QLabel("Select start date:"))
+        start_picker = QDateEdit()
+        start_picker.setCalendarPopup(True)
+        start_picker.setDate(QDate.currentDate())
+        layout.addWidget(start_picker)
+
+        # End date
+        layout.addWidget(QLabel("Select end date:"))
+        end_picker = QDateEdit()
+        end_picker.setCalendarPopup(True)
+        end_picker.setDate(QDate.currentDate().addMonths(3))
+        layout.addWidget(end_picker)
+
+        # OK button
+        ok_button = QPushButton("OK")
+        ok_button.clicked.connect(dialog.accept)
+        layout.addWidget(ok_button)
+
+        dialog.setLayout(layout)
+
+        if dialog.exec_() == QDialog.Accepted:
+            start_date = start_picker.date().toPyDate()
+            end_date = end_picker.date().toPyDate()
+            if start_date > end_date:
+                QMessageBox.warning(self, "Invalid Range", "Start date must be before end date.")
+                return None, None
+            return start_date, end_date
+
+        return None, None
+
+    def handle_switch_account(self, dialog):
+        """Handle clearing token and refreshing email label"""
+        if os.path.exists('token.json'):
+            os.remove('token.json')
+            QMessageBox.information(self, "Switch Account", "Google token cleared. Please sign in again.")
+        else:
+            QMessageBox.information(self, "Switch Account", "No token found. You'll be asked to log in at next export.")
+    
+        # Update email label
+        SCOPES = [
+            'openid',
+            'https://www.googleapis.com/auth/calendar',
+            'https://www.googleapis.com/auth/userinfo.email'
+        ]
+        new_email = self.get_user_email(SCOPES)
+        self.user_email_label.setText(f"Google Account Authenticated as: {new_email}")
+
+
     ########################
     # Worker thread control
     ########################
@@ -169,7 +283,6 @@ class TimetablesPageQt5(QMainWindow):
         try:
             self.worker = TimetableWorker(
                 self.controller,
-                self.filePath,  # Main data file
                 "Data/selected_courses.txt",
                 batch_size=50  # Load in batches of 50
             )

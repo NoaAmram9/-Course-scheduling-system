@@ -1,0 +1,54 @@
+QWidget {
+    background-color: #D3D9D4;  /* רקע בהיר רך */
+    color: #212A31;             /* טקסט כהה */
+    font-family: "Segoe UI", sans-serif;
+    font-size: 14px;
+}
+
+QPushButton {
+    background-color: #124E66;
+    color: #D3D9D4;
+    border-radius: 10px;
+    padding: 6px 12px;
+    min-height: 30px;
+    font-weight: bold;
+    border: 1px solid #748D92;
+}
+
+QPushButton:hover {
+    background-color: #2E3944;
+    border-color: #124E66;
+}
+
+QLineEdit, QTextEdit, QComboBox {
+    background-color: #FFFFFF;
+    color: #212A31;
+    border: 1px solid #748D92;
+    border-radius: 6px;
+    padding: 4px 8px;
+    selection-background-color: #124E66;
+    selection-color: #ffffff;
+}
+
+QScrollBar:vertical, QScrollBar:horizontal {
+    background: transparent;
+    width: 8px;
+    height: 8px;
+}
+
+QScrollBar::handle {
+    background: #748D92;
+    border-radius: 4px;
+}
+
+QScrollBar::handle:hover {
+    background: #124E66;
+}
+
+#logoLabel {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    color: #2E3944;
+}
+
+
