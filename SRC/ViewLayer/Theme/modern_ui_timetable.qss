@@ -1,9 +1,9 @@
 /* בסיס */
 QMainWindow {
-    background-color: #f9f9fb;
+    background-color: #F5EFE7;
     font-family: 'Segoe UI', sans-serif;
     font-size: 14px;
-    color: #333;
+    color: #4A3F35;
     border-radius: 6px;
     padding: 6px;
 }
@@ -13,13 +13,13 @@ QMainWindow {
     background-color: #ffffff;
     border-radius: 12px;
     padding: 12px;
-    border: 1px solid #ddd;
+    border: 1px solid #D8C4B6;
 }
 
 #titleLabel {
     font-size: 18px;
     font-weight: bold;
-    color: #2a2a2a;
+    color: #3C2F2F;
 }
 
 /* אזור תצוגה גלילה */
@@ -32,13 +32,12 @@ QMainWindow {
 #timetableWidgetContainer {
     background-color: #ffffff;
     border-radius: 16px;
-    border: 1px solid #ddd;
-
+    border: 1px solid #D8C4B6;
 }
 
 /* תווית שאין נתונים */
 #noDataLabel {
-    color: #777;
+    color: #A4907C;
     font-style: italic;
     padding: 30px;
     font-size: 16px;
@@ -46,27 +45,27 @@ QMainWindow {
 
 /* סרגל טעינה */
 #loadingFrame {
-    background-color: #f2f2f2;
+    background-color: #F1E9E2;
     border-radius: 10px;
     padding: 10px;
-    border: 1px solid #ccc;
+    border: 1px solid #D8C4B6;
 }
 
 /* סרגל התקדמות */
 QProgressBar {
     height: 16px;
     border-radius: 8px;
-    background-color: #e6e6e6;
+    background-color: #EADCD1;
 }
 
 QProgressBar::chunk {
-    background-color: #4a90e2;
+    background-color: #B4886B;
     border-radius: 8px;
 }
 
 /* כפתורים כלליים */
 QPushButton {
-    background-color: #4a90e2;
+    background-color: #BAA898;
     color: white;
     border: none;
     padding: 8px 16px;
@@ -75,124 +74,118 @@ QPushButton {
 }
 
 QPushButton:hover {
-    background-color: #357ABD;
+    background-color: #A38B7C;
 }
 
 QPushButton:pressed {
-    background-color: #2C5FA3;
+    background-color: #8F7564;
 }
 
 QPushButton[disabled="true"] {
-    background-color: #cccccc;
-    color: #888;
+    background-color: #D3C4B5;
+    color: #9E9285;
 }
 
 /* כפתור עצור/הפעל */
 #autoDisplayButton {
-    background-color: #7ed6df;
+    background-color: #BFD7EA;
 }
 
 #autoDisplayButton:hover {
-    background-color: #63cdda;
+    background-color: #A3C6E3;
 }
 
 /* תוויות סטטוס */
 #statusLabel {
     font-size: 14px;
-    color: #555;
+    color: #665A4F;
 }
 
 #progressLabel, #loadingRateLabel {
     font-size: 12px;
-    color: #888;
+    color: #A5958A;
 }
 
 
+/* תאים לפי סוג שיעור */
 QFrame#lectureCell {
-    background-color: #EFD8C5; /* בז' חם, טבעי */
+    background-color: #E8D3C5;
     border-radius: 10px;
-    border: 1px solid #C9A66B; /* חום מדברי בינוני */
+    border: 1px solid #D8C4B6;
 }
 
 QFrame#labCell {
-    background-color: #D6EFD8; /* ירקרק רך */
+    background-color: #E2ECE5;
     border-radius: 10px;
-    border: 1px solid #91C7A9; /* ירוק עלים בינוני */
+    border: 1px solid #B8C9BE;
 }
 
 QFrame#exerciseCell {
-    background-color: #D8E4EF; /* תכלת בהיר */
+    background-color: #DCE4EC;
     border-radius: 10px;
-    border: 1px solid #8CAFD1; /* כחול בינוני רך */
+    border: 1px solid #A7B8C5;
 }
 
 QFrame#reinforcementCell {
-    background-color: #F0E5D8; /* גוון חול בהיר */
+    background-color: #EFE6DE;
     border-radius: 10px;
-    border: 1px solid #C2B29B; /* חום־אפור */
+    border: 1px solid #C9BBAE;
 }
 
 QFrame#trainingCell {
-    background-color: #F7EFD8; /* צהבהב רך */
+    background-color: #F3EAD3;
     border-radius: 10px;
-    border: 1px solid #D1C187; /* זהוב־צהוב טבעי */
+    border: 1px solid #D8C4B6;
 }
 
 QFrame#departmentHourCell {
-    background-color: #EFD8E6; /* ורדרד בהיר */
+    background-color: #EAD6DE;
     border-radius: 10px;
-    border: 1px solid #C9A6BA; /* ורוד־סגלגל בינוני */
+    border: 1px solid #C8AAB7;
 }
 
 QFrame#defaultCell {
-    background-color: #E0E0E0; /* אפור בהיר נייטרלי */
+    background-color: #F5F0E6;
     border-radius: 10px;
-    border: 1px solid #B0B0B0; /* אפור בינוני */
-}
-
-
-QFrame#defaultCell {
-    background-color: #F5F0E6; /* בז' בהיר מאוד */
-    border-radius: 10px;
-    border: 1px solid #BFAF9B; /* בז' מדברי רגוע */
+    border: 1px solid #BFAF9B;
 }
 
 QFrame#blockedCell {
-    background-color:rgb(212, 210, 210);  /* very light gray */
-    border: 1px dashed #999999;
+    background-color: #E8E2DD;
+    border: 1px dashed #A38B7C;
     border-radius: 10px;
 }
 
 QLabel#blockedLabel {
-    color: #666666;
+    color: #7D6C62;
     font-style: italic;
     font-size: 12px;
 }
 
 QFrame#availableCell {
-    background-color:rgb(250, 228, 188); /* בז' חם, טבעי */
+    background-color: #FAE4BC;
     border-radius: 10px;
-    border: 1px solid rgb(249, 214, 150); /* חום מדברי בינוני */
+    border: 1px solid #EBCB97;
 }
 
 QFrame#availableCell:hover {
-    background-color:rgb(249, 214, 150); /* בז' חם, טבעי */
-    border-radius: 10px;
-    border: 1px solid rgb(249, 214, 150); /* חום מדברי בינוני */
+    background-color: #EBCB97;
+    border: 1px solid #EBCB97;
 }
 
 QFrame[customTag="manual_selected"]:hover {
-    background-color: rgb(249, 63, 63);
-    border-radius : 10px;
-    border:1px solid rgb(249, 63, 63);
+    background-color: #F96767;
+    border-radius: 10px;
+    border: 1px solid #F96767;
 }
 
 QFrame#requestedCell {
-    background-color:rgb(162, 136, 120);
-    border:1px solid rgb(154, 106, 78);
+    background-color: #A28878;
+    border: 1px solid #9A6A4E;
     border-radius: 10px;
 }
+
 QFrame[custonTag="requested_and_scheduled"] {
-    border:1px solid rgb(154, 106, 78);
+    border: 1px solid #9A6A4E;
     border-radius: 10px;
 }

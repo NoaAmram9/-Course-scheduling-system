@@ -9,7 +9,7 @@ QWidget {
 /* === Header === */
 QLabel#HeaderLabel {
     font-size: 36px;
-    font-weight: 600;
+    
     color: #213555;
     background: transparent;
     padding: 12px 0;

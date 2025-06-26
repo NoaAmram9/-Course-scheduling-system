@@ -13,7 +13,7 @@ class TimeConstraintsSelector(QWidget):
         super().__init__()
         self.setStyleSheet("""
             QPushButton#timeSlotButton[selected="true"] {
-                background-color: orange;
+                background-color: #D8C4B6;
                 color: white;
                 border: 1px solid #dee2e6;
             }

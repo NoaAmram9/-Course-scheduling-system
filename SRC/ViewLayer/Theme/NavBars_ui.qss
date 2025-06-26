@@ -1,14 +1,13 @@
 /* כללי */
 QFrame#navFrame, QFrame#statusFrame {
-    background-color: #f3efec;
+    background-color: #F5EFE7;
     border-radius: 10px;
-    
-    border: 1px solid #944e25;
+    border: 1px solid #3E5879;
 }
 
 /* תוויות כלליות */
 QLabel {
-    color: #944e25;
+    color: #213555;
     font-family: "Segoe UI", sans-serif;
     font-size: 14px;
 }
@@ -17,111 +16,116 @@ QLabel {
 QLabel#titleLabel {
     font-size: 20px;
     font-weight: bold;
-    color: #944e25;
+    color: #213555;
 }
 
 QLabel#statusLabel, QLabel#loadingRateLabel {
     font-style: italic;
-    color: #944e25;
+    color: #3E5879;
 }
 
 QLabel#jumpLabel {
     font-weight: 500;
-    color: #944e25;
+    color: #213555;
 }
 
 /* כפתור חזרה */
 QPushButton#backButton {
-    background-color: #ecac57;
+    background-color: #D8C4B6;
     color: white;
     font-weight: bold;
-    border: none;
+    border: 1px solid #3E5879;
     border-radius: 8px;
     padding: 8px;
 }
 
 QPushButton#backButton:hover {
-    background-color: #dfa448;
+    background-color: #3E5879;
+    border: 1px solid #3E5879;
+    color: white;
 }
 
 /* כפתורי ניווט */
 QPushButton#navButton {
-    background-color: #944e25;
+    background-color: #D8C4B6;
     color: white;
     font-weight: bold;
-    border: none;
+    border: 1px solid #3E5879;
     border-radius: 8px;
     padding: 6px;
 }
 
 QPushButton#navButton:hover {
-    background-color: #7a3e1d;
+    background-color: #3E5879;
+    border: 1px solid #213555;
 }
 
 /* כפתורי קפיצה */
 QPushButton#jumpButton {
     background-color: transparent;
-    color: #944e25;
-    border: 1px solid #944e25;
+    color: #213555;
+    border: 1px solid #3E5879;
     font-weight: 600;
     border-radius: 6px;
     padding: 4px 6px;
 }
 
 QPushButton#jumpButton:hover {
-    background-color: #dfa448;
-    color: #fff
+    background-color: #3E5879;
+    color: #fff;
 }
 
+/* שדה קלט לקפיצה */
 QLineEdit#jumpInput {
     background-color: transparent;
-    color: #944e25;
+    color: #213555;
     font-weight: 800;
-    border: 1px solid #944e25;
+    border: 1px solid #3E5879;
     border-radius: 6px;
     padding: 4px 6px;
 }
 
-
-
 /* כפתור ייצוא PDF */
 QPushButton#exportButton {
-    background-color: #944e25;
+    background-color: #D8C4B6;
     color: white;
     font-weight: bold;
-    border: none;
+    border: 1px solid #3E5879;
     border-radius: 8px;
     padding: 6px;
 }
 
 QPushButton#exportButton:hover {
-    background-color: #7a3e1d;
+    background-color: #3E5879;
+    border: 1px solid #3E5879;
 }
 
 /* כפתורי טעינה (pause/stop) */
 QPushButton {
-    background-color: #ecac57;
+    background-color: #D8C4B6;
     color: white;
     border-radius: 6px;
-    border: none;
+    border: 1px solid #3E5879;
     padding: 6px 10px;
 }
 
 QPushButton:hover {
-    background-color: #dfa448;
+    background-color: #3E5879;
+    color: white;
+    border: 1px solid #213555;
 }
 
 /* פס התקדמות */
 QProgressBar {
-    background-color: #f3efec;
-    border: 1px solid #944e25;
+    background-color: #F5EFE7;
+    border: 1px solid #3E5879;
     border-radius: 6px;
     height: 16px;
     text-align: center;
-    color: #944e25;
+    color: #213555;
 }
 
 QProgressBar::chunk {
-    background-color: #ecac57;
+    background-color: #3E5879;
     border-radius: 6px;
 }

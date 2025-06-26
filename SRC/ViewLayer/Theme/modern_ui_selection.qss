@@ -6,7 +6,15 @@ QGroupBox#CourseDetails {
     padding: 6px;
    
 }
-
+QLabel#headerLabel {
+    font-size: 40px;
+    font-weight: 1000;
+    color: #213555;
+    background: transparent;
+    padding: 12px 0;
+    margin-top: 16px;
+    qproperty-alignment: AlignCenter;
+}
 QListWidget#CourseList {
     background-color: #ffffff;
     border: none;

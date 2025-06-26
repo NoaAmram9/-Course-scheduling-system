@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLabel
 from PyQt5.QtCore import Qt, pyqtSignal
-from PyQt5.QtGui import QFont
-from PyQt5.QtGui import QPixmap 
+from PyQt5.QtGui import QFont, QIcon, QPixmap
+
 from SRC.ViewLayer.Theme.ModernUIQt5 import ModernUIQt5
 
 class StartPageView(QWidget):
@@ -22,7 +22,9 @@ class StartPageView(QWidget):
         main_layout = QVBoxLayout()
         main_layout.setAlignment(Qt.AlignCenter)
         main_layout.setSpacing(30)
-       
+       # Set window icon
+        icon_path = "Data/Logo.png"
+        self.setWindowIcon(QIcon(icon_path))
         logo_label = QLabel()
         logo_pixmap = QPixmap("Data/Logo.png")
         if not logo_pixmap.isNull():

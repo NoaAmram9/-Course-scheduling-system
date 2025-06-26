@@ -155,7 +155,8 @@ class SelectedCoursesPanelQt5(QWidget):
             if course_code in self.course_map:
                 selected_courses.append(self.course_map[course_code])
         return selected_courses
-        
+    def remove_course_by_code(self, code: str):
+        self.remove_course(code)  
     def clear_selection(self):
         """Clear all selected courses"""
         while self.selected_table.topLevelItemCount() > 0:

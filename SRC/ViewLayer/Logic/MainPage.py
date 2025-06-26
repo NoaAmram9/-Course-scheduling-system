@@ -22,6 +22,7 @@ class MainPageLogic:
         self.previous_constraints = []
           # Connect signals
         self.course_list_panel.course_selected.connect(self.show_course_details)
+        self.course_list_panel.course_double_clicked.connect(self.add_course)
         self.selected_courses_panel.course_removed.connect(self.on_course_removed)
         
         # Create buttons
@@ -71,19 +72,7 @@ class MainPageLogic:
     
     
     
-    def save_selection(self):
-        """Save selected courses - Business Logic"""
-        selected_courses = self.selected_courses_panel.get_selected_courses()
-        
-        if not selected_courses:
-            if self.main_view:
-                self.main_view.show_info_dialog("No Courses", "You haven't selected any courses yet.")
-            return False
-        
-        course_codes = [course._code for course in selected_courses]
-        self.controller.create_selected_courses_file(course_codes, "Data/selected_courses.txt")
-        return True
-    
+  
     
 
     # ===========================
@@ -132,14 +121,21 @@ class MainPageLogic:
             dialog.close()
     
     def handle_auto_generate(self):
+        
+        self.sync_to_database()
+        self.refresh_from_database()
         """Handle auto-generate schedules - Business Logic"""
+        self.save_selection()
         if self.save_selection():
-            # Save courses to file
+            # Save all courses to file
             self.controller.save_courses_to_file("Data/All_Courses.xlsx", self.Data)
             
-            # Show timetables page
+            # Show timetables page if main_view קיים
             if self.main_view:
                 self.main_view.show_timetables_page()
+        else:
+            # אפשר כאן להוסיף טיפול אם השמירה נכשלה
+            print("Failed to save selection - auto-generate cancelled.")
     
     def handle_manual_schedule(self):
         """Handle manual schedule creation - Business Logic"""
@@ -199,7 +195,7 @@ class MainPageLogic:
         self.course_list_panel.load_courses(self.Data)
         self.course_map = {c.code: c for c in self.Data}
         self.selected_courses_panel.set_course_map(self.course_map)
-        
+        self.sync_to_database()
         # Remove from selected courses if it was selected
         self.selected_course_ids.discard(course.code)
 
@@ -302,7 +298,11 @@ class MainPageLogic:
     def show_course_details(self, course):
         """Display full details of a given course in the details panel"""
         self.course_details_panel.update_details(course)
-    
+    def add_course(self, course_code):
+        """Try to add a course to the selection list"""
+        success = self.selected_courses_panel.add_course(course_code)
+        if success:
+            self.course_list_panel.mark_course_as_selected(course_code)
     
     def on_course_removed(self, course_code):
         """Callback from selected panel: course was removed"""
@@ -313,15 +313,26 @@ class MainPageLogic:
         self.selected_courses_panel.remove_selected_course()
     
     def save_selection(self):
-        """Save the user's selected courses to a file"""
+        """Save the user's selected courses to a file after checking they exist in DB"""
         selected_courses = self.selected_courses_panel.get_selected_courses()
         
         if not selected_courses:
             QMessageBox.information(None, "No Courses", "You haven't selected any courses yet.")
             return False
+      
+        missing_courses =  self.controller.check_if_courses_in_database(selected_courses)
         
+        if missing_courses:
+            # אם יש קורסים שלא קיימים, אפשר להודיע למשתמש ולבטל שמירה
+            missing_names = "\n".join(f"{c.code} - {c.name}" for c in missing_courses)
+            QMessageBox.warning(None, "Missing Courses",
+                                f"The following courses are not in the database and cannot be saved:\n{missing_names}")
+            return False
+        
+        # 2. אם כל הקורסים קיימים, נמשיך לשמור
         course_codes = [course._code for course in selected_courses]
         self.controller.create_selected_courses_file(course_codes, "Data/selected_courses.txt")
+        
         self.refresh_from_database()
         # self.sync_to_database()
         return True
@@ -395,6 +406,8 @@ class MainPageLogic:
             
             # Modify the existing list in place
             self.Data[:] = [c for c in self.Data if c.code != course.code]
+             # Remove from selected courses panel ⭐️
+            self.selected_courses_panel.remove_course_by_code(course.code)  # <-- ✅ מוסיף את זה
 
             # Reload UI components
             self.course_list_panel.load_courses(self.Data)

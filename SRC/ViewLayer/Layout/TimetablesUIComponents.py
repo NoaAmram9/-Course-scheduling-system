@@ -243,7 +243,7 @@ class TimetableUIComponents:
         logo_label = QLabel()
         logo_label.setObjectName("logoLabel")
         current_dir = os.path.dirname(__file__)
-        logo_pixmap = QPixmap(os.path.normpath(os.path.join(current_dir, "../Icons/Logo.jpg")))
+        logo_pixmap = QPixmap(os.path.normpath(os.path.join(current_dir, "../Icons/Logo.png")))
         logo_pixmap = logo_pixmap.scaled(80, 80, Qt.KeepAspectRatio, Qt.SmoothTransformation)
         logo_label.setPixmap(logo_pixmap)
         logo_label.setAlignment(Qt.AlignCenter)

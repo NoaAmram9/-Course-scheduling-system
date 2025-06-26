@@ -9,7 +9,7 @@ from SRC.ViewLayer.Layout.MainPage.CourseDetailsPanelQt5 import CourseDetailsPan
 from SRC.ViewLayer.Layout.selected_courses_panel_qt5 import SelectedCoursesPanelQt5
 from SRC.ViewLayer.View.ManualSchedulePage import ManualSchedulePage
 from SRC.ViewLayer.Theme.ModernUIQt5 import ModernUIQt5
-
+from SRC.ViewLayer.View.Timetables_qt5 import TimetablesPageQt5
 
 class MainPageView(QMainWindow):
     """VIEW Layer - Pure UI component for main page display"""
@@ -27,17 +27,23 @@ class MainPageView(QMainWindow):
         
         # Initialize course manager (LOGIC layer)
         self.course_manager = MainPageLogic(
-            controller=self.controller,
-            Data=self.Data,
-            course_list_panel=self.course_list_panel,
-            details_panel=self.details_panel,
-            selected_courses_panel=self.selected_courses_panel,
+            self.controller,
+            self.Data,
+            self.course_list_panel,
+            self.details_panel,
+            self.selected_courses_panel,
             main_view=self  # Pass reference to view for callbacks
         )
         
     def init_ui(self):
         """Initialize the user interface - Pure UI setup"""
+        """Initialize the user interface - Pure UI setup"""
         self.setWindowTitle("Course Selector")
+       
+        # Set window icon
+        icon_path = "Data/Logo.png"
+        self.setWindowIcon(QIcon(icon_path))
+
         self.setGeometry(100, 100, 1200, 650)
         self.setStyleSheet(ModernUIQt5.get_main_stylesheet(dark=self.dark_mode))
 
@@ -63,6 +69,13 @@ class MainPageView(QMainWindow):
         
         header_label = QLabel("Course Selector")
         header_label.setObjectName("headerLabel")
+
+      
+        font = QFont("Segoe UI")
+        
+        font.setBold(True)
+        header_label.setFont(font)
+
         header_layout.addWidget(header_label)
         header_layout.addStretch()
         
@@ -73,6 +86,19 @@ class MainPageView(QMainWindow):
         self.update_dark_mode_button_text()
         self.dark_mode_btn.clicked.connect(self.toggle_dark_mode)
         header_layout.addWidget(self.dark_mode_btn, alignment=Qt.AlignRight)
+        self.logo_label = QLabel()
+        logo_pixmap = QPixmap("Data/Logo.png")
+        if not logo_pixmap.isNull():
+            logo_pixmap = logo_pixmap.scaled(200, 200, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+            self.logo_label.setPixmap(logo_pixmap)
+        else:
+            self.logo_label.setText("LOGO")
+            self.logo_label.setStyleSheet("color: gray; font-size: 16px;")
+
+        self.logo_label.setAlignment(Qt.AlignHCenter | Qt.AlignTop)
+        self.logo_label.setObjectName("logoLabel")
+        header_layout.addWidget(self.logo_label, alignment=Qt.AlignRight)
+       
             
         parent_layout.addWidget(header_widget)
         
@@ -204,9 +230,6 @@ class MainPageView(QMainWindow):
         dialog.exec_()
         
     def show_timetables_page(self):
-        """Show timetables page - Called by LOGIC layer"""
-        from SRC.ViewLayer.View.Timetables_qt5 import TimetablesPageQt5
-        
         def return_to_main_page():
             if hasattr(self, 'timetables_window') and self.timetables_window:
                 self.timetables_window.close()

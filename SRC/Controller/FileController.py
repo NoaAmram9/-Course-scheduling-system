@@ -201,7 +201,27 @@ class FileController:
         """Clear any previously set time constraints (remove dummy courses)."""
         self._injected_constraints = []
 
-    # === פונקציות דאטהבייס נוספות (לא משנות את הפונקציונליות המקורית) ===
+    def check_if_courses_in_database(self, list_of_courses: list) -> list:
+        """
+        Check which courses are NOT in the database.
+
+        Returns:
+            List[Course]: Courses that are not in the DB
+        """
+        if not self.use_database:
+            raise ValueError("Database is not enabled for this controller")
+
+        # Get existence dict
+        existence_dict = self.db_manager.check_courses_exist(list_of_courses)
+
+        # Return only those not found
+        not_in_db = [
+            course for course in list_of_courses
+            
+            if not existence_dict.get(f"{course.code.strip()}|{course.name.strip()}", False)
+        ]
+        return not_in_db
+
     
     def get_courses_from_database(self, semester: int = None, search_term: str = None):
         """
