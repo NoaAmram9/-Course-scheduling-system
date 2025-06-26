@@ -1,16 +1,16 @@
-/* === Base Widget === */ 
+/* === Base Widget === */  
 QWidget {
-    background-color: #F8F9FA; /* OFF-WHITE מהפלטה */
+    background-color: #f3efec;  /* רקע כללי */
     font-family: "Inter", "Segoe UI", "system-ui", sans-serif;
     font-size: 14px;
-    color: #3C3D3D; /* אפור כהה */
+    color: #213555;  /* טקסט כהה מהפלטה */
 }
 
 /* === Header === */
 QLabel#HeaderLabel {
-    font-size: 28px;
+    font-size: 36px;
     font-weight: 600;
-    color: #3C3D3D;
+    color: #213555;
     background: transparent;
     padding: 12px 0;
     margin-top: 16px;
@@ -27,15 +27,15 @@ QLabel#logoLabel {
 
 /* === Drop Area === */
 QFrame#DropFrame {
-    background-color: #F3EFEC;  /* רקע בהיר */
-    border: 2px dashed #BAA898; /* ורדרד-חום */
+    background-color: #F5EFE7;
+    border: 2px dashed #D8C4B6;
     border-radius: 12px;
     padding: 20px;
     margin: 10px;
 }
 
 QLabel#DropLabel {
-    color: #839788; /* ירקרק-חאקי */
+    color: #3E5879;
     font-size: 14px;
     qproperty-alignment: AlignCenter;
     padding: 8px;
@@ -43,11 +43,11 @@ QLabel#DropLabel {
 
 /* === Upload Button === */
 QPushButton#UploadButton {
-    background-color: #BFD7EA;  /* תכלת */
-    color: #3C3D3D;
+    background-color: #3E5879;
+    color: white;
     min-height: 36px;
     min-width: 110px;
-    border: none;
+    border: 2px solid #213555;
     border-radius: 18px;
     padding: 8px 18px;
     font-size: 14px;
@@ -55,12 +55,12 @@ QPushButton#UploadButton {
 }
 
 QPushButton#UploadButton:hover {
-    background-color: #A8C9E4; /* תכלת כהה מעט */
+    background-color: #213555;
 }
 
 /* === File Label === */
 QLabel#FileLabel {
-    color: #495057;
+    color: #3E5879;
     font-size: 13px;
     margin-top: 10px;
     qproperty-alignment: AlignCenter;
@@ -68,9 +68,9 @@ QLabel#FileLabel {
 
 /* === Send Button === */
 QPushButton#SendButton {
-    background-color: #BAA898; /* ורדרד חום */
-    color: #212529;
-    border: none;
+    
+    color: #213555;
+    border: 2px solid #3E5879;
     min-height: 36px;
     min-width: 110px;
     border-radius: 20px;
@@ -80,15 +80,20 @@ QPushButton#SendButton {
     margin-top: 12px;
 }
 
+QPushButton#SendButton:pressed {
+    background-color: #D8C4B6;  /* גוון בהיר ללחיצה */
+    color: #213555;
+}
 QPushButton#SendButton:hover {
-    background-color: #944E25; /* חום כהה */
+    background-color: #3E5879;
+    color: white;
 }
 
 /* === Back Button === */
 QPushButton#BackButton {
-    background-color: #839788; /* ירקרק-חאקי */
-    color: white;
-    border: none;
+    background-color: transparent;
+    color: #213555;
+    border: 2px solid #3E5879;
     min-height: 36px;
     min-width: 110px;
     border-radius: 20px;
@@ -98,12 +103,13 @@ QPushButton#BackButton {
 }
 
 QPushButton#BackButton:hover {
-    background-color: #6E8274; /* ירוק כהה יותר */
+    background-color: #3E5879;
+    color: white;
 }
 
 /* === Footer === */
 QLabel#FooterLabel {
-    color: #ADB5BD;
+    color: #3E5879;
     font-size: 11px;
     margin-top: 20px;
     font-style: normal;

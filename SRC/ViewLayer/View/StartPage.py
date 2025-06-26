@@ -1,6 +1,7 @@
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLabel
 from PyQt5.QtCore import Qt, pyqtSignal
 from PyQt5.QtGui import QFont
+from PyQt5.QtGui import QPixmap 
 from SRC.ViewLayer.Theme.ModernUIQt5 import ModernUIQt5
 
 class StartPageView(QWidget):
@@ -21,6 +22,20 @@ class StartPageView(QWidget):
         main_layout = QVBoxLayout()
         main_layout.setAlignment(Qt.AlignCenter)
         main_layout.setSpacing(30)
+       
+        logo_label = QLabel()
+        logo_pixmap = QPixmap("Data/Logo.png")
+        if not logo_pixmap.isNull():
+            logo_pixmap = logo_pixmap.scaled(200, 200, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+            logo_label.setPixmap(logo_pixmap)
+        else:
+            logo_label.setText("LOGO")
+            logo_label.setStyleSheet("color: gray; font-size: 16px;")
+
+        logo_label.setAlignment(Qt.AlignHCenter | Qt.AlignTop)
+        logo_label.setObjectName("logoLabel")
+    
+
         
         # Title
         title_label = QLabel("Course Management System")
@@ -62,7 +77,7 @@ class StartPageView(QWidget):
         # Add widgets to layouts
         buttons_layout.addWidget(self.upload_button)
         buttons_layout.addWidget(self.continue_button)
-        
+        main_layout.addWidget(logo_label)
         main_layout.addWidget(title_label)
         main_layout.addWidget(subtitle_label)
         main_layout.addLayout(buttons_layout)

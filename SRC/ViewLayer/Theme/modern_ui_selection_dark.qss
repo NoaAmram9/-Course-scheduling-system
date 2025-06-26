@@ -1,85 +1,94 @@
+/* === Selection Page Specific Styles === */
 QGroupBox#CourseDetails {
-    border: 1px solid #748D92;
+    border: 1px solid #535C91;
     border-radius: 8px;
     padding: 6px;
-    background-color: #2E3944;
+    background-color: #1B1A55;
 }
 
 QListWidget#CourseList {
+    background-color: #1B1A55;
     border: none;
-    background-color: #212A31;
     padding: 6px;
     border-radius: 6px;
-    color: #D3D9D4;
+    color: #9290C3;
 }
 
 QLabel#TitleLabel {
     font-size: 18px;
     font-weight: bold;
-    color: #124E66;
-}
-QFrame#detailsFrame {
-    border: 2px solid #124E66;
+    color: #9290C3;
+    background-color: #1B1A55;
     border-radius: 12px;
-    background-color: #2E3944;
+    padding: 6px;
 }
 
+QFrame#detailsFrame {
+    border: 2px solid #535C91;
+    border-radius: 12px;
+    background-color: #1B1A55;
+}
 
 QFrame#detailRowFrame {
     padding-left: 6px;
     padding-right: 6px;
+    background-color: #1B1A55;
+    border-radius: 12px;
 }
 
 QLabel#detailLabel {
     font-size: 14px;
     font-weight: 500;
-    color: #D3D9D4;
+    color: #9290C3;
+    background-color: transparent;
 }
 
+/* === Course Tree Frame === */
 QFrame#courseTreeFrame {
-    border: 2px solid #124E66;
+    border: 2px solid #535C91;
     border-radius: 12px;
-    background-color: #2E3944;
+    background-color: #1B1A55;
 }
 
 QTreeWidget#courseTree {
     font-size: 14px;
-    alternate-background-color: #2E3944;
-    background-color: #212A31;
+    background-color: #1B1A55;
+    color: #9290C3;
     border: none;
-    color: #D3D9D4;
 }
 
 QLineEdit#searchInput {
     padding: 6px 10px;
-    border: 1px solid #748D92;
+    border: 1px solid #535C91;
     border-radius: 8px;
     font-size: 13px;
-    background-color: #212A31;
-    color: #D3D9D4;
+    background-color: #070F2B;
+    color: #9290C3;
 }
 
+/* === Selected Courses Panel === */
 #panelTitle {
     font-size: 18px;
     font-weight: bold;
-    color: #D3D9D4;
+    color: #9290C3;
     padding: 6px;
-    border-bottom: 1px solid #748D92;
+    border-bottom: 1px solid #535C91;
+    background-color: #1B1A55;
 }
 
 #countLabel {
+    background-color: transparent;
     font-size: 14px;
-    color: #748D92;
+    color: #535C91;
 }
 
 #selectedTable {
-    border: 1px solid #748D92;
+    border: 1px solid #535C91;
     border-radius: 10px;
-    background-color: #2E3944;
-    alternate-background-color: #212A31;
+    background-color: #1B1A55;
+    color: #9290C3;
     font-size: 14px;
     outline: none;
-    color: #D3D9D4;
 }
 
 #selectedTable::item {
@@ -88,54 +97,24 @@ QLineEdit#searchInput {
 }
 
 #selectedTable::item:selected {
-    background-color: #D3D9D4;
-    color: #212A31;
+    background-color: #535C91;
+    color: #ffffff;
     border-radius: 8px;
 }
 
 QHeaderView::section {
-    background-color: #124E66;
+    background-color: #070F2B;
+    color: #9290C3;
     padding: 6px;
     font-weight: bold;
-    color: #D3D9D4;
     border: none;
-    border-bottom: 1px solid #748D92;
+    border-bottom: 1px solid #535C91;
 }
 
+/* General QWidget inside panel */
 QWidget {
     font-family: 'Segoe UI', sans-serif;
     font-size: 13px;
-    color: #D3D9D4;
-    background-color: transparent;
-}
-
-QPushButton#DetailsButton {
-    background-color: #124E66;
-    border: none;
-    color: #D3D9D4;
-    padding: 8px 16px;
-    border-radius: 4px;
-    font-weight: bold;
-}
-
-QPushButton#DetailsButton:hover {
-    background-color: #748D92;
-}
-
-QWidget {
-    background-color: #D3D9D4;  /* רקע בהיר רך */
-    color:#124E66
-}
-
-QFrame#courseTreeFrame {
-    border: 2px solid #124E66;
-    border-radius: 12px;
-    background-color: #748D92;
-}
-
-QTreeWidget#courseTree {
-    font-size: 14px;
-    alternate-background-color: #fdfdfd;
-    background-color: #ffffff;
-    border: none;
+    color: #9290C3;
+    background-color: #070F2B;
 }

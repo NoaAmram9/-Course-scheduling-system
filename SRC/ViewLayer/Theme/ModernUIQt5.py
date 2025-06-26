@@ -39,19 +39,19 @@ class ModernUIQt5:
 
         bg_color = ModernUIQt5.COLORS.get(style, ModernUIQt5.COLORS["light_blue"])
         hover_color = "#7f8c8d" if style == "light_pink" else "#95a5a6"
-        button.setStyleSheet(f"""
-            QPushButton {{
-                background-color: {bg_color};
-                color: white;
-                border: none;
-                border-radius: 10px;
-                padding: 6px 12px;
-            }}
-            QPushButton:hover {{
-                background-color: {hover_color};
-                opacity: 0.85;
-            }}
-        """)
+        # button.setStyleSheet(f"""
+        #     QPushButton {{
+        #         background-color: {bg_color};
+        #         color: white;
+        #         border: none;
+        #         border-radius: 10px;
+        #         padding: 6px 12px;
+        #     }}
+        #     QPushButton:hover {{
+        #         background-color: {hover_color};
+        #         opacity: 0.85;
+        #     }}
+        # """)
         return button
 
     @staticmethod
