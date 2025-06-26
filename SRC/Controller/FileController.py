@@ -77,13 +77,22 @@ class FileController:
         """
         Returns the selected courses info based on the courses file and selected courses file.
         """
-        courses_info = self.read_courses_from_file(file_path1)[0]  # Get the first element which is the courses info
+        if self.use_database and file_path1 is None:
+            courses_info = self.get_courses_from_database()
+        elif file_path1 is not None:
+            courses_info = self.read_courses_from_file(file_path1)[0]
+        else:
+            raise ValueError("file_path1 is required when not using database")
+        
         selected_courses = self.get_selected_courses(file_path2)
         selected_courses_info = self.selected_courses_info(courses_info, selected_courses)
+    
         # Include dummy blocked courses if added earlier
         if hasattr(self, "_injected_constraints"):
             selected_courses_info.extend(self._injected_constraints)
+    
         return selected_courses_info
+
     
     def get_selected_courses_limited_info(self, file_path1, file_path2):
         selected_courses_info = self.get_selected_courses_info(file_path1, file_path2)
