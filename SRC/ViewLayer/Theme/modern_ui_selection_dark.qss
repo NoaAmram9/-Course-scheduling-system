@@ -116,5 +116,5 @@ QWidget {
     font-family: 'Segoe UI', sans-serif;
     font-size: 13px;
     color: #9290C3;
-    background-color: #070F2B;
+    background-color:rgb(32, 38, 58);
 }

@@ -79,8 +79,7 @@ class AddCourseDialog(QDialog):
         # Basic Information Section
         self._create_basic_info_section(form_layout)
         
-        # Course Details Section
-        self._create_course_details_section(form_layout)
+        
         
         # Lessons Section
         self._create_lessons_section(form_layout)
