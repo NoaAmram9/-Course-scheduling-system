@@ -86,7 +86,7 @@ class AddCourseDialog(QDialog):
         self._create_lessons_section(form_layout)
         
         # Additional Information Section
-        self._create_additional_info_section(form_layout)
+        # self._create_additional_info_section(form_layout)
 
         form_layout.addStretch()
         scroll_area.setWidget(form_widget)
@@ -112,30 +112,13 @@ class AddCourseDialog(QDialog):
             section_layout, "Semester", 
             ["Semester A", "Semester B"]
         )
-
-        parent_layout.addWidget(section_frame)
-
-    def _create_course_details_section(self, parent_layout):
-        """Create course details section"""
-        section_frame = self._create_section_frame("Course Details")
-        section_layout = section_frame.layout()
-
-        # Credit Points (Spin box)
-        self.form_fields['credit_points'] = self._create_spinbox_field(
-            section_layout, "Credit Points", 0, 10, 3
-        )
-
-        # Weekly Hours (Spin box)
-        self.form_fields['weekly_hours'] = self._create_spinbox_field(
-            section_layout, "Weekly Hours", 0, 20, 4
-        )
-
-        # Notes
+           # Notes
         self.form_fields['notes'] = self._create_text_area_field(
             section_layout, "Course Notes", "Any additional course information"
         )
 
         parent_layout.addWidget(section_frame)
+
 
     def _create_lessons_section(self, parent_layout):
         """Create lessons management section"""
@@ -193,17 +176,17 @@ class AddCourseDialog(QDialog):
 
         parent_layout.addWidget(section_frame)
 
-    def _create_additional_info_section(self, parent_layout):
-        """Create additional information section"""
-        section_frame = self._create_section_frame("Additional Information")
-        section_layout = section_frame.layout()
+    # def _create_additional_info_section(self, parent_layout):
+    #     """Create additional information section"""
+    #     section_frame = self._create_section_frame("Additional Information")
+    #     section_layout = section_frame.layout()
 
-        # # Main Instructor
-        # self.form_fields['instructor'] = self._create_form_field(
-        #     section_layout, "Main Instructor", "e.g., Dr. Smith"
-        # )
+    #     # # Main Instructor
+    #     # self.form_fields['instructor'] = self._create_form_field(
+    #     #     section_layout, "Main Instructor", "e.g., Dr. Smith"
+    #     # )
 
-        parent_layout.addWidget(section_frame)
+    #     parent_layout.addWidget(section_frame)
 
     def _create_section_frame(self, title):
         """Create a styled section frame with title"""
@@ -482,8 +465,8 @@ class AddCourseDialog(QDialog):
         self.form_fields['code'].clear()
         self.form_fields['name'].clear()
         self.form_fields['semester'].setCurrentIndex(0)
-        self.form_fields['credit_points'].setValue(3)
-        self.form_fields['weekly_hours'].setValue(4)
+        # self.form_fields['credit_points'].setValue(3)
+        # self.form_fields['weekly_hours'].setValue(4)
         self.form_fields['notes'].clear()
         self.lessons_list.clear()
         self._update_lessons_display()

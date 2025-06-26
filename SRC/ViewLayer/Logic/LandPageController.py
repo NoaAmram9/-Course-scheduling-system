@@ -234,7 +234,8 @@
    
    
 from PyQt5.QtWidgets import QMessageBox
-from SRC.ViewLayer.View.main_page_qt5 import MainPageQt5
+# from SRC.ViewLayer.View.main_page_qt5 import MainPageQt5
+from SRC.ViewLayer.View.MainPage import MainPageView as MainPageQt5
 from SRC.Models.ValidationError import ValidationError
 import os
 import shutil
@@ -245,7 +246,7 @@ class LandPageController:
     def __init__(self, view, parent_controller=None):
         self.view = view
         self.file_controller = None
-        self.parent_controller = parent_controller  # רפרנס לקונטרולר האב
+        self.parent_controller = parent_controller  
         
         self.file_uploaded = False
         self.uploaded_path = None
