@@ -114,3 +114,11 @@ class ModernUIQt5:
         start = ModernUIQt5._load_stylesheet("modern_ui_start.qss")
         return base + "\n" + start
     
+    @staticmethod
+    def get_Add_Course_stylesheet():
+        """Load and combine base + selection styles"""
+        base = ModernUIQt5._load_stylesheet("modern_ui_base.qss")
+        addCourse = ModernUIQt5._load_stylesheet("add_course.qss")
+        return base + "\n" + addCourse
+    
+    

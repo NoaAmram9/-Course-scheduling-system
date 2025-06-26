@@ -39,7 +39,7 @@ class CourseDetailsPopup(QDialog):
     def _create_title(self, parent_layout):
         """Create the popup title"""
         title = QLabel("Detailed Course Information")
-        title.setStyleSheet("font-size: 18px; font-weight: bold; color: #944e25; padding: 10px 0px;")
+       
         parent_layout.addWidget(title)
 
     def _create_scroll_area(self, parent_layout):
@@ -61,19 +61,7 @@ class CourseDetailsPopup(QDialog):
         close_layout.addStretch()
 
         close_btn = ModernUIQt5.create_button("✖ Close")
-        close_btn.setStyleSheet("""
-            QPushButton {
-                background-color: #f44336;
-                color: white;
-                border: none;
-                padding: 8px 16px;
-                border-radius: 4px;
-                font-weight: bold;
-            }
-            QPushButton:hover {
-                background-color: #944e25;
-            }
-        """)
+       
         close_btn.clicked.connect(self.close)
         close_layout.addWidget(close_btn)
         close_layout.addStretch()
@@ -112,13 +100,13 @@ class CourseDetailsPopup(QDialog):
 
         # Notes title
         notes_title = QLabel("Notes")
-        notes_title.setStyleSheet("font-weight: bold; font-size: 14px; color: #FFA500;")
+        
         notes_layout.addWidget(notes_title)
 
         # Notes content
         notes_text = QLabel(course.notes)
         notes_text.setWordWrap(True)
-        notes_text.setStyleSheet("padding: 10px; background-color: #f9f9f9; border-radius: 5px;")
+      
         notes_layout.addWidget(notes_text)
 
         self.popup_main_layout.addWidget(notes_frame)

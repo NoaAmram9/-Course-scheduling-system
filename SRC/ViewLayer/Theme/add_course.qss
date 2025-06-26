@@ -1,0 +1,118 @@
+/* === Base Widget === */
+QDialog {
+    background-color: #F5EFE7;
+    font-family: "Segoe UI", sans-serif;
+    font-size: 14px;
+    color: #213555;
+}
+
+/* === Section Frames === */
+QFrame#detailsFrame {
+    background-color: #ffffff;
+    border: 2px solid #D8C4B6;
+    border-radius: 12px;
+}
+
+/* === Section Titles === */
+QFrame#detailsFrame QLabel {
+    font-size: 16px;
+    font-weight: bold;
+    color: #213555;
+    background-color: #ffffff;  /* רקע לבן לכותרות */
+    padding: 4px 8px;
+    border-radius: 6px;
+}
+
+/* === Form Labels === */
+QLabel {
+    background-color: #ffffff;
+    color: #213555;
+    font-weight: 500;
+ 
+}
+
+/* === Input Fields === */
+QLineEdit,
+QComboBox,
+QTextEdit {
+    background-color: #ffffff;
+    background-color: white;
+    border: 1px solid #3E5879;
+    border-radius: 8px;
+    padding: 6px 10px;
+    color: #213555;
+    font-size: 13px;
+}
+
+QLineEdit:focus,
+QTextEdit:focus,
+QComboBox:focus {
+    border: 1px solid #213555;
+}
+
+
+
+
+/* === Placeholder Text Color === */
+QLineEdit[placeholderText],
+QTextEdit[placeholderText] {
+    color: #A0A0A0;
+}
+
+
+/* === Required Fields === */
+QLineEdit#required {
+    background-color: #ffffff;
+    border: 2px solid #D8C4B6;
+}
+
+/* === List of Lessons === */
+QListWidget {
+    background-color: #ffffff;
+    border: 1px solid #D8C4B6;
+    border-radius: 8px;
+    color: #213555;
+}
+
+/* === Buttons === */
+QPushButton {
+    background-color: #3E5879;
+    color: white;
+    border-radius: 10px;
+    padding: 8px 16px;
+    font-weight: bold;
+    font-size: 14px;
+    min-height: 36px;
+}
+
+QPushButton:hover {
+    background-color: #213555;
+}
+
+QPushButton:pressed {
+    background-color: #D8C4B6;
+    color: #213555;
+}
+
+/* === ScrollArea === */
+QScrollArea {
+    border: none;
+    background-color: transparent;
+}
+
+/* === Separator Lines === */
+QFrame[frameShape="4"] { /* QFrame.HLine */
+    background-color: #D8C4B6;
+    max-height: 1px;
+}
+
+/* === Centered Title Labels (header) === */
+QLabel[alignment="AlignCenter"] {
+    font-size: 22px;
+    font-weight: bold;
+    margin-top: 10px;
+    color: #213555;
+    background-color: #ffffff;
+    padding: 6px 12px;
+    border-radius: 10px;
+}

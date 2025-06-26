@@ -42,7 +42,7 @@ class AddCourseDialog(QDialog):
         self._create_buttons(main_layout)
         
         # Apply styling
-        self.setStyleSheet(ModernUIQt5.get_main_stylesheet())
+        self.setStyleSheet(ModernUIQt5.get_Add_Course_stylesheet())
 
     def _create_header(self, parent_layout):
         """Create the dialog header"""
@@ -52,11 +52,11 @@ class AddCourseDialog(QDialog):
         header_layout.setContentsMargins(15, 15, 15, 10)
 
         title = QLabel("Register New Course")
-        title.setStyleSheet("font-size: 20px; font-weight: bold; color: #944e25; padding: 5px 0px;")
+       
         title.setAlignment(Qt.AlignCenter)
 
         subtitle = QLabel("Fill in the course details below")
-        subtitle.setStyleSheet("font-size: 12px; color: #666; padding: 0px 0px 5px 0px;")
+  
         subtitle.setAlignment(Qt.AlignCenter)
 
         header_layout.addWidget(title)
@@ -93,7 +93,7 @@ class AddCourseDialog(QDialog):
 
     def _create_basic_info_section(self, parent_layout):
         """Create basic information section"""
-        section_frame = self._create_section_frame("Basic Information")
+        section_frame = self._create_section_frame("Basic Information")  
         section_layout = section_frame.layout()
 
         # Course Code (Required) - 5 digit format
@@ -127,49 +127,19 @@ class AddCourseDialog(QDialog):
         # Lessons list
         self.lessons_list_widget = QListWidget()
         self.lessons_list_widget.setMaximumHeight(150)
-        self.lessons_list_widget.setStyleSheet("""
-            QListWidget {
-                border: 2px solid #ddd;
-                border-radius: 4px;
-                padding: 5px;
-            }
-        """)
+      
         section_layout.addWidget(QLabel("Current Lessons:"))
         section_layout.addWidget(self.lessons_list_widget)
 
         # Add lesson button
         add_lesson_btn = ModernUIQt5.create_button("Add Lesson")
-        # add_lesson_btn.setStyleSheet("""
-        #     QPushButton {
-        #         background-color: #17a2b8;
-        #         color: white;
-        #         border: none;
-        #         padding: 8px 16px;
-        #         border-radius: 4px;
-        #         font-weight: bold;
-        #     }
-        #     QPushButton:hover {
-        #         background-color: #138496;
-        #     }
-        # """)
+       
         add_lesson_btn.clicked.connect(self._add_lesson)
         section_layout.addWidget(add_lesson_btn)
 
         # Remove lesson button
         remove_lesson_btn = ModernUIQt5.create_button("Remove Selected Lesson")
-        remove_lesson_btn.setStyleSheet("""
-            QPushButton {
-                background-color: #dc3545;
-                color: white;
-                border: none;
-                padding: 8px 16px;
-                border-radius: 4px;
-                font-weight: bold;
-            }
-            QPushButton:hover {
-                background-color: #c82333;
-            }
-        """)
+      
         remove_lesson_btn.clicked.connect(self._remove_lesson)
         section_layout.addWidget(remove_lesson_btn)
 
@@ -197,14 +167,13 @@ class AddCourseDialog(QDialog):
 
         # Section title
         title_label = QLabel(title)
-        title_label.setStyleSheet("font-weight: bold; font-size: 14px; color: #FFA500; padding: 0px 0px 5px 0px;")
         layout.addWidget(title_label)
 
         # Separator
         separator = QFrame()
         separator.setFrameShape(QFrame.HLine)
         separator.setFrameShadow(QFrame.Sunken)
-        separator.setStyleSheet("color: #FFA500; background-color: #FFA500; margin: 0px 0px 10px 0px;")
+
         layout.addWidget(separator)
 
         return frame
@@ -218,23 +187,13 @@ class AddCourseDialog(QDialog):
 
         # Label
         label = QLabel(label_text)
-        label.setStyleSheet("font-weight: bold; color: #333;")
+    
         layout.addWidget(label)
 
         # Input field
         line_edit = QLineEdit()
         line_edit.setPlaceholderText(placeholder)
-        line_edit.setStyleSheet("""
-            QLineEdit {
-                padding: 8px;
-                border: 2px solid #ddd;
-                border-radius: 4px;
-                font-size: 12px;
-            }
-            QLineEdit:focus {
-                border-color: #FFA500;
-            }
-        """)
+  
         
         if required:
             line_edit.setObjectName("required")
@@ -253,23 +212,13 @@ class AddCourseDialog(QDialog):
 
         # Label
         label = QLabel(label_text)
-        label.setStyleSheet("font-weight: bold; color: #333;")
+       
         layout.addWidget(label)
 
         # Combo box
         combo = QComboBox()
         combo.addItems(["Select..."] + options)
-        combo.setStyleSheet("""
-            QComboBox {
-                padding: 8px;
-                border: 2px solid #ddd;
-                border-radius: 4px;
-                font-size: 12px;
-            }
-            QComboBox:focus {
-                border-color: #FFA500;
-            }
-        """)
+    
         
         layout.addWidget(combo)
         parent_layout.addWidget(container)
@@ -285,24 +234,14 @@ class AddCourseDialog(QDialog):
 
         # Label
         label = QLabel(label_text)
-        label.setStyleSheet("font-weight: bold; color: #333;")
+      
         layout.addWidget(label)
 
         # Spin box
         spinbox = QSpinBox()
         spinbox.setRange(min_val, max_val)
         spinbox.setValue(default_val)
-        spinbox.setStyleSheet("""
-            QSpinBox {
-                padding: 8px;
-                border: 2px solid #ddd;
-                border-radius: 4px;
-                font-size: 12px;
-            }
-            QSpinBox:focus {
-                border-color: #FFA500;
-            }
-        """)
+    
         
         layout.addWidget(spinbox)
         parent_layout.addWidget(container)
@@ -318,24 +257,14 @@ class AddCourseDialog(QDialog):
 
         # Label
         label = QLabel(label_text)
-        label.setStyleSheet("font-weight: bold; color: #333;")
+     
         layout.addWidget(label)
 
         # Text area
         text_edit = QTextEdit()
         text_edit.setPlaceholderText(placeholder)
         text_edit.setMaximumHeight(80)
-        text_edit.setStyleSheet("""
-            QTextEdit {
-                padding: 8px;
-                border: 2px solid #ddd;
-                border-radius: 4px;
-                font-size: 12px;
-            }
-            QTextEdit:focus {
-                border-color: #FFA500;
-            }
-        """)
+      
         
         layout.addWidget(text_edit)
         parent_layout.addWidget(container)
@@ -373,20 +302,7 @@ class AddCourseDialog(QDialog):
 
         # Cancel button
         cancel_btn = ModernUIQt5.create_button("Cancel")
-        cancel_btn.setStyleSheet("""
-            QPushButton {
-                background-color: #6c757d;
-                color: white;
-                border: none;
-                padding: 10px 20px;
-                border-radius: 4px;
-                font-weight: bold;
-                min-width: 100px;
-            }
-            QPushButton:hover {
-                background-color: #5a6268;
-            }
-        """)
+       
         cancel_btn.clicked.connect(self.reject)
 
         # Add course button

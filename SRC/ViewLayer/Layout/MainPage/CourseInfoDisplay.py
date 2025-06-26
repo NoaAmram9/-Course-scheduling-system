@@ -69,7 +69,7 @@ class CourseInfoDisplay(QWidget):
         line = QFrame()
         line.setFrameShape(QFrame.HLine)
         line.setFrameShadow(QFrame.Sunken)
-        line.setStyleSheet("color: #FFA500; background-color: #944e25; max-height: 1px;")
+        line.setStyleSheet("color: #FFA500; background-color: #3E5879; max-height: 1px;")
         layout.addWidget(line)
 
     def update_course_info(self, course, calculator):
