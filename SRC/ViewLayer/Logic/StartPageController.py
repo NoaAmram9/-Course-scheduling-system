@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import QMessageBox
-from SRC.ViewLayer.View.main_page_qt5 import MainPageQt5
+from SRC.ViewLayer.View.MainPage import MainPageView as MainPageQt5
 from SRC.ViewLayer.View.LandPageView import LandPageView
 from SRC.ViewLayer.Logic.LandPageController import LandPageController
 from SRC.Controller.FileController import FileController
@@ -60,7 +60,6 @@ class StartPageController:
                 return
             
             # Create file controller for database access
-            # נניח שהמסד נתונים נמצא במיקום סטנדרטי
             db_path = "Data/courses.db"  # התאם לפי המיקום שלך
             self.file_controller = FileController(
                 file_type=".xlsx", 
@@ -79,21 +78,40 @@ class StartPageController:
                 )
                 return
             
-            # Open main page with existing data
-            self.main_page = MainPageQt5(courses, self.file_controller, db_path)
+            # Create callback function for returning to start page
+            def return_to_start():
+                """Callback function to return to start page"""
+                if self.main_page:
+                    self.main_page.hide()
+                self.show_start_page()
+            
+            # Open main page with existing data and callback
+            self.main_page = MainPageQt5(
+                Data=courses, 
+                controller=self.file_controller, 
+                filePath=db_path,
+                go_back_callback=return_to_start  # Pass the callback function
+            )
             
             # Add to windows list to prevent garbage collection
             self.windows.append(self.main_page)
             
+            # Set up the course manager with parent controller reference
+            if hasattr(self.main_page, 'course_manager'):
+                self.main_page.course_manager.parent_controller = self
+            
             self.main_page.show()
             self.main_page.setWindowTitle("Main Page")
-            self.main_page.resize(800, 600)
+            self.main_page.resize(1200, 650)  # Match the original size
             
             # Hide the current view
             self.view.hide()
             
         except Exception as e:
             QMessageBox.critical(self.view, "Error", f"Failed to load existing database:\n{str(e)}")
+            print(f"Debug - Error details: {e}")
+            import traceback
+            traceback.print_exc()
     
     def check_database_exists(self):
         """Check if database file exists"""

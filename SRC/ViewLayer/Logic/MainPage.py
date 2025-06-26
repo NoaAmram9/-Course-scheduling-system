@@ -103,18 +103,28 @@ class MainPageLogic:
     def handle_back(self):
         """Handle back action - Business Logic"""
         try:
+            # First try to use the go_back_callback from main_view
+            if self.main_view and hasattr(self.main_view, 'go_back_callback') and self.main_view.go_back_callback:
+              
+                self.main_view.go_back_callback()
+                return
+            
+            # Fallback: try parent_controller
             if hasattr(self, 'parent_controller') and self.parent_controller:
+                
                 self.main_view.hide()
                 self.parent_controller.show_start_page()
-            else:
-                # Fallback: create new start page
-                self.main_view.close()
-                from SRC.ViewLayer.View.StartPage import StartPageView
-                from SRC.ViewLayer.Logic.StartPageController import StartPageController
-                
-                start_view = StartPageView()
-                start_controller = StartPageController(start_view)
-                start_view.show()
+                return
+            
+            # Last resort: create new start page
+           
+            self.main_view.close()
+            from SRC.ViewLayer.View.StartPage import StartPageView
+            from SRC.ViewLayer.Logic.StartPageController import StartPageController
+            
+            start_view = StartPageView()
+            start_controller = StartPageController(start_view)
+            start_view.show()
                 
         except Exception as e:
             print(f"Error going back to start: {e}")
