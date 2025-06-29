@@ -23,6 +23,7 @@ from reportlab.lib.pagesizes import landscape, A4
 # Import custom modules from the application's structure
 from SRC.Controller.LessonEditController import LessonEditController
 from SRC.Services.LessonEditService import LessonEditService
+from SRC.ViewLayer.Layout.LessonSelectionDialog import LessonSelectionDialog
 from SRC.ViewLayer.Logic.TimeTable import map_courses_to_slots, DAYS, HOURS
 from SRC.ViewLayer.Layout.Timetable_qt5 import TimetableGridWidget
 from SRC.ViewLayer.Logic.TimetablesSorter import TimetablesSorter
@@ -678,16 +679,7 @@ class TimetablesPageQt5(QMainWindow):
                 QMessageBox.warning(self, "Conflict", "Selected lesson conflicts with the current timetable.")
 
     def ask_user_to_select(self, alternatives):
-        if not alternatives:
-            QMessageBox.information(self, "No Alternatives", "No alternative lessons found.")
-            return None
-
-        items = [
-            f"{l.time.day} {l.time.start_hour}-{l.time.end_hour} (Group {l.groupCode})"
-
-            for l in alternatives
-        ]
-        selected, ok = QInputDialog.getItem(self, "Select Lesson", "Choose a replacement:", items, 0, False)
-        if ok:
-            return alternatives[items.index(selected)]
+        dialog = LessonSelectionDialog(self, alternatives)
+        if dialog.exec_() == QDialog.Accepted:
+            return dialog.get_selected_lesson()
         return None
