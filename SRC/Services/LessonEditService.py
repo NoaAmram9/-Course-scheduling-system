@@ -2,16 +2,41 @@ from SRC.DataBase.DataBaseManager import DatabaseManager
 
 
 class LessonEditService:
-    def get_alternative_lessons(self, course_code, selected_lesson):
+    # def get_alternative_lessons(self, course_code, selected_lesson):
+    #     courses = DatabaseManager().search_courses(course_code)
+    #     if not courses:
+    #         print("No course found in database.")
+    #         return []
+    #     course = courses[0]
+
+    #     if not course:
+    #         print("No course found containing the lesson.")
+    #         return []
+
+    #     type_map = {
+    #         "lecture": course.lectures,
+    #         "exercise": course.exercises,
+    #         "lab": course.labs,
+    #         "reinforcement": course.reinforcement,
+    #         "training": course.training,
+    #         "departmentHours": course.departmentHours
+    #     }
+
+    #     same_type_lessons = type_map.get(selected_lesson.lesson_type, [])
+
+    #     print("Same type lessons found:", len(same_type_lessons))
+    #     for l in same_type_lessons:
+    #         print("Lesson:", l.time.day, l.time.start_hour, l.groupCode)
+
+    #     return same_type_lessons  # for now, skip filtering
+
+    def get_alternative_lessons(self, course_code, selected_lesson, timetable=None):
         courses = DatabaseManager().search_courses(course_code)
         if not courses:
             print("No course found in database.")
             return []
-        course = courses[0]
 
-        if not course:
-            print("No course found containing the lesson.")
-            return []
+        course = courses[0]
 
         type_map = {
             "lecture": course.lectures,
@@ -24,11 +49,18 @@ class LessonEditService:
 
         same_type_lessons = type_map.get(selected_lesson.lesson_type, [])
 
-        print("Same type lessons found:", len(same_type_lessons))
-        for l in same_type_lessons:
-            print("Lesson:", l.time.day, l.time.start_hour, l.groupCode)
+        print("Same type lessons found before filtering:", len(same_type_lessons))
 
-        return same_type_lessons  # for now, skip filtering
+        filtered_lessons = [
+            l for l in same_type_lessons
+            if l != selected_lesson 
+        ]
+
+        for l in filtered_lessons:
+            print("Accepted Lesson:", l.time.day, l.time.start_hour, l.groupCode)
+
+        return filtered_lessons
+
 
 
 
