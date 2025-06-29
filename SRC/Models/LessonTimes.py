@@ -27,3 +27,10 @@ class LessonTimes:
     @day.setter
     def day(self, value):
         self._day = value
+
+    def __eq__(self, other):
+        return (
+            self.day == other.day and
+            self.start_hour == other.start_hour and
+            self.end_hour == other.end_hour
+        )

@@ -13,7 +13,7 @@ from PyQt5.QtWidgets import (QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QPu
                              QGridLayout, QSizePolicy, QProgressBar)
 from PyQt5.QtCore import Qt, QSize, QTimer, pyqtSignal
 from PyQt5.QtGui import QFont, QPalette
-from PyQt5.QtWidgets import QDialog, QVBoxLayout, QLabel, QDateEdit, QPushButton
+from PyQt5.QtWidgets import QDialog, QVBoxLayout, QLabel, QDateEdit, QPushButton, QInputDialog
 from PyQt5.QtCore import QDate
 
 # Import modules for PDF generation using reportlab
@@ -21,6 +21,8 @@ from reportlab.platypus import SimpleDocTemplate, PageBreak
 from reportlab.lib.pagesizes import landscape, A4
 
 # Import custom modules from the application's structure
+from SRC.Controller.LessonEditController import LessonEditController
+from SRC.Services.LessonEditService import LessonEditService
 from SRC.ViewLayer.Logic.TimeTable import map_courses_to_slots, DAYS, HOURS
 from SRC.ViewLayer.Layout.Timetable_qt5 import TimetableGridWidget
 from SRC.ViewLayer.Logic.TimetablesSorter import TimetablesSorter
@@ -53,6 +55,7 @@ class TimetablesPageQt5(QMainWindow):
         self.timetables_sorter = TimetablesSorter()  # Timetable sorting utility
         self.sorted_timetables = []  # Sorted timetable cache
         self.display_sorted = False  # Display sorted flag
+        
         
         # Background worker for loading timetables
         self.worker = None
@@ -484,7 +487,12 @@ class TimetablesPageQt5(QMainWindow):
                     self.timetable_layout.removeItem(child_widget_item)
 
         # Create and show new timetable grid
-        timetable_grid = TimetableGridWidget(slot_map)
+        #timetable_grid = TimetableGridWidget(slot_map)
+        timetable_grid = TimetableGridWidget(
+            slot_map,
+            editing_mode=True,
+            on_selected_lesson_click=self.on_lesson_clicked
+        )
         self.timetable_layout.addWidget(timetable_grid)
         self.timetable_layout.addStretch()
 
@@ -650,3 +658,36 @@ class TimetablesPageQt5(QMainWindow):
             self.refresh_animation_timer.stop()
             del self.refresh_animation_timer
         self.refresh_label.setPixmap(self.default_refresh_icon.scaled(24, 24, Qt.KeepAspectRatio, Qt.SmoothTransformation))
+
+    def on_lesson_clicked(self, course_code, lesson):
+        if lesson is None:
+            return
+    
+        controller = LessonEditController(
+            self.all_options[self.current_index], 
+            LessonEditService()
+        )
+    
+        alternatives = controller.get_alternatives(course_code, lesson)
+        new_lesson = self.ask_user_to_select(alternatives)
+        if new_lesson:
+            if controller.replace_lesson(lesson, new_lesson):
+                QMessageBox.information(self, "Lesson Updated", "Lesson successfully replaced.")
+                self.update_view()
+            else:
+                QMessageBox.warning(self, "Conflict", "Selected lesson conflicts with the current timetable.")
+
+    def ask_user_to_select(self, alternatives):
+        if not alternatives:
+            QMessageBox.information(self, "No Alternatives", "No alternative lessons found.")
+            return None
+
+        items = [
+            f"{l.time.day} {l.time.start_hour}-{l.time.end_hour} (Group {l.groupCode})"
+
+            for l in alternatives
+        ]
+        selected, ok = QInputDialog.getItem(self, "Select Lesson", "Choose a replacement:", items, 0, False)
+        if ok:
+            return alternatives[items.index(selected)]
+        return None

@@ -74,3 +74,11 @@ class Lesson:
     def groupCode(self, value):
         self._groupCode = value
 
+    def __eq__(self, other):
+        if not isinstance(other, Lesson):
+            return False
+        return (
+            self.time == other.time and
+            self.lesson_type == other.lesson_type and
+            self.groupCode == other.groupCode
+        )
