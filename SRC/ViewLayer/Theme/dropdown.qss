@@ -1,6 +1,6 @@
 QMenu {
-    background-color: #f3efec;
-    border: 1px solid #944e25;
+    background-color: #F5EFE7;
+    border: 1px solid #3E5879;
     padding: 6px;
     border-radius: 10px;
 }
@@ -9,20 +9,20 @@ QMenu::item {
     padding: 6px 10px;
     margin: 2px 0px;
     background-color: transparent;
-    color: #944e25;
+    color: #213555;
     font-family: "Segoe UI", sans-serif;
     font-size: 14px;
 }
 
 QMenu::item:selected {
-    background-color: #ecac57;
+    background-color: #3E5879;
     color: white;
     border-radius: 6px;
 }
 
 QMenu::separator {
     height: 1px;
-    background: #944e25;
+    background: #3E5879;
     margin: 4px 8px;
 }
 
@@ -34,29 +34,30 @@ QMenu::indicator {
 QMenu::section {
     padding: 4px 10px;
     font-weight: bold;
-    color: #944e25;
+    color: #3E5879;
     background-color: transparent;
     margin-top: 4px;
 }
 
-QToolButton#dropdownButton  {
+QToolButton#dropdownButton {
     padding: 6px 10px;
     margin: 2px 0px;
     background-color: transparent;
-    color: #944e25;
+    color: #213555;
     font-family: "Segoe UI", sans-serif;
     font-size: 14px;
     font-weight: bold;
+    border: 1px solid transparent;
+    border-radius: 8px;
 }
-
-  
 
 QToolButton#dropdownButton::menu-indicator {
     image: none;
 }
 
 QToolButton#dropdownButton:hover {
-    border: 1px solid #944e25;
+    border: 1px solid #3E5879;
+    background-color: #E4E0DA;
     padding: 6px;
     border-radius: 10px;
 }

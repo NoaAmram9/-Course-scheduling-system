@@ -35,10 +35,10 @@ class LessonSectionWidget(QFrame):
         header_layout = QHBoxLayout()
         
         title_label = QLabel(f" {self.display_name}")
-        title_label.setStyleSheet("font-weight: bold; font-size: 14px; color: #FFA500;")
+        title_label.setStyleSheet("font-weight: bold; font-size: 14px; color: #3E5879;")
         
         count_label = QLabel(f"({len(self.lessons)} sessions)")
-        count_label.setStyleSheet("color: #888; font-size: 12px;")
+        count_label.setStyleSheet("color: #3E5879; font-size: 12px;")
 
         header_layout.addWidget(title_label)
         header_layout.addWidget(count_label)
@@ -51,7 +51,8 @@ class LessonSectionWidget(QFrame):
         separator = QFrame()
         separator.setFrameShape(QFrame.HLine)
         separator.setFrameShadow(QFrame.Sunken)
-        separator.setStyleSheet("color: #FFA500; background-color: #FFA500;")
+        
+        separator.setStyleSheet("color: #ffffff; background-color: #3E5879;")
         parent_layout.addWidget(separator)
 
     def _add_lesson_widgets(self, parent_layout):

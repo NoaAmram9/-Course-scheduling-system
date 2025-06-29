@@ -36,7 +36,7 @@ class LandPageView(QWidget):
         logo_label = QLabel()
         logo_pixmap = QPixmap("Data/Logo.png")
         if not logo_pixmap.isNull():
-            logo_pixmap = logo_pixmap.scaled(128, 128, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+            logo_pixmap = logo_pixmap.scaled(164, 164, Qt.KeepAspectRatio, Qt.SmoothTransformation)
             logo_label.setPixmap(logo_pixmap)
         else:
             logo_label.setText("LOGO")

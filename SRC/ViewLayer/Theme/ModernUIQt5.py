@@ -39,19 +39,19 @@ class ModernUIQt5:
 
         bg_color = ModernUIQt5.COLORS.get(style, ModernUIQt5.COLORS["light_blue"])
         hover_color = "#7f8c8d" if style == "light_pink" else "#95a5a6"
-        button.setStyleSheet(f"""
-            QPushButton {{
-                background-color: {bg_color};
-                color: white;
-                border: none;
-                border-radius: 10px;
-                padding: 6px 12px;
-            }}
-            QPushButton:hover {{
-                background-color: {hover_color};
-                opacity: 0.85;
-            }}
-        """)
+        # button.setStyleSheet(f"""
+        #     QPushButton {{
+        #         background-color: {bg_color};
+        #         color: white;
+        #         border: none;
+        #         border-radius: 10px;
+        #         padding: 6px 12px;
+        #     }}
+        #     QPushButton:hover {{
+        #         background-color: {hover_color};
+        #         opacity: 0.85;
+        #     }}
+        # """)
         return button
 
     @staticmethod
@@ -113,4 +113,12 @@ class ModernUIQt5:
         base = ModernUIQt5._load_stylesheet("modern_ui_base.qss")
         start = ModernUIQt5._load_stylesheet("modern_ui_start.qss")
         return base + "\n" + start
+    
+    @staticmethod
+    def get_Add_Course_stylesheet():
+        """Load and combine base + selection styles"""
+        base = ModernUIQt5._load_stylesheet("modern_ui_base.qss")
+        addCourse = ModernUIQt5._load_stylesheet("add_course.qss")
+        return base + "\n" + addCourse
+    
     

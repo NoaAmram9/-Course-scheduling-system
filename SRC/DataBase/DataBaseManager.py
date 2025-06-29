@@ -378,5 +378,31 @@ class DatabaseManager:
         except sqlite3.Error as e:
             print(f"Error getting database stats: {e}")
             return {}
+        
+    def check_courses_exist(self, courses: List[Course]) -> Dict[str, bool]:
+        """
+        Check if each course in the list exists in the database.
+
+        Returns:
+            Dict[str, bool]: key = "code|name", value = True if exists
+        """
+        existing = {}
+        try:
+            with sqlite3.connect(self.db_path) as conn:
+                cursor = conn.cursor()
+                for course in courses:
+                    key = f"{course.code.strip()}|{course.name.strip()}"
+                    cursor.execute('''
+                        SELECT 1 FROM courses
+                        WHERE code = ? AND name = ?
+                        LIMIT 1
+                    ''', (course.code.strip(), course.name.strip()))
+                    existing[key] = cursor.fetchone() is not None
+            return existing
+        except sqlite3.Error as e:
+            print(f"Error checking course existence: {e}")
+            return {f"{c.code}|{c.name}": False for c in courses}
+
+
 
    
