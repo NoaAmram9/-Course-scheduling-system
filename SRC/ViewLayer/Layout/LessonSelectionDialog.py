@@ -40,7 +40,6 @@ class LessonSelectionDialog(QDialog):
         cancel_btn = QPushButton("Cancel")
         cancel_btn.clicked.connect(self.reject)
         layout.addWidget(cancel_btn)
-        self.apply_stylesheet()
 
     def select_lesson(self, lesson):
         self.selected_lesson = lesson

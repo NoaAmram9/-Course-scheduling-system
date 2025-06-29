@@ -9,4 +9,9 @@ class LessonEditController:
         return self.lesson_edit_service.get_alternative_lessons(course_code, selected_lesson)
     
     def replace_lesson(self, old_lesson, new_lesson):
-        return self.lesson_edit_service.replace_lesson(self.timetable, old_lesson, new_lesson)
+        success = self.lesson_edit_service.replace_lesson(self.timetable, old_lesson, new_lesson)
+        if success:
+            # עדכון המטריקות מחדש
+            from SRC.Services.TimetableMetricsService import TimetableMetricsService
+            TimetableMetricsService().generate_metrics(self.timetable)
+        return success
