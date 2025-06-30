@@ -120,3 +120,5 @@ class UsersController:
             del user_dict['password_hash']
             return user_dict
         return None
+    
+    

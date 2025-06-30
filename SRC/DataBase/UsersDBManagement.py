@@ -69,9 +69,17 @@ class UsersDBManagement:
         conn.close()
         
         if row:
+            # Fixed: Added type parameter and corrected indexes
+            # Row structure: id=0, username=1, email=2, password_hash=3, first_name=4, last_name=5, type=6, created_at=7, is_active=8
             return User(
-                id=row[0], username=row[1], email=row[2], password_hash=row[3],
-                first_name=row[4], last_name=row[5], is_active=row[7]
+                id=row[0], 
+                username=row[1], 
+                email=row[2], 
+                password_hash=row[3],
+                first_name=row[4], 
+                last_name=row[5], 
+                type=row[6], 
+                is_active=row[8]  
             )
         return None
     
@@ -85,9 +93,17 @@ class UsersDBManagement:
         conn.close()
         
         if row:
+            # Fixed: Added type parameter and corrected indexes
+            # Row structure: id=0, username=1, email=2, password_hash=3, first_name=4, last_name=5, type=6, created_at=7, is_active=8
             return User(
-                id=row[0], username=row[1], email=row[2], password_hash=row[3],
-                first_name=row[4], last_name=row[5], is_active=row[7]
+                id=row[0], 
+                username=row[1], 
+                email=row[2], 
+                password_hash=row[3],
+                first_name=row[4], 
+                last_name=row[5], 
+                type=row[6],  # FIXED: Added missing type parameter
+                is_active=row[8]  # FIXED: Corrected index from 7 to 8
             )
         return None
     
@@ -110,6 +126,14 @@ class UsersDBManagement:
         users = []
         for row in rows:
             users.append(User(
-                id=row[0], username=row[1], email=row[2], password_hash=row[3],
-                first_name=row[4], last_name=row[5],  type=row[6], is_active=row[8]
+                id=row[0], 
+                username=row[1], 
+                email=row[2], 
+                password_hash=row[3],
+                first_name=row[4], 
+                last_name=row[5], 
+                type=row[6], 
+                is_active=row[8]
             ))
+        
+        return users

@@ -11,7 +11,7 @@ class User:
     password_hash: str = ""
     first_name: str = ""
     last_name: str = ""
-    type: str = "student"
+    type: str = ""
     created_at: Optional[datetime] = None
     is_active: bool = True
     
