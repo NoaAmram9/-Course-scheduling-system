@@ -2,7 +2,7 @@
 
 from PyQt5.QtWidgets import (QWidget, QGridLayout, QLabel, QFrame,
                              QSizePolicy, QVBoxLayout, QHBoxLayout)
-from PyQt5.QtCore import Qt, QSize  
+from PyQt5.QtCore import Qt, QSize , pyqtSignal
 from PyQt5.QtGui import QFont, QPalette 
 from SRC.ViewLayer.Logic.TimeTable import DAYS, HOURS
 
@@ -106,6 +106,7 @@ class TimetableGridWidget(QWidget):
         self.editing_mode = editing_mode
         self.on_available_click = on_available_click  # Save callback for clicking available cell
         self.on_selected_lesson_click = on_selected_lesson_click # Save callback for clicking edited lesson
+        lesson_clicked = pyqtSignal(object)
         # Set an object name for styling with Qt Style Sheets (QSS)
         self.setObjectName("timetableGrid")
         self.init_ui()  # Initialize the user interface components
@@ -316,6 +317,15 @@ class TimetableGridWidget(QWidget):
             if is_available and self.on_available_click:
                 cell.setCursor(Qt.PointingHandCursor)
                 cell.mouseReleaseEvent = lambda event: self.on_available_click(day, hour)
+
+            if self.editing_mode and self.on_selected_lesson_click:
+                # Connect only for normal lessons (not available/blocked)
+                cell.setCursor(Qt.PointingHandCursor)
+                cell.mouseReleaseEvent = lambda event: self.on_selected_lesson_click(
+                    course_data.get("code", ""),
+                    course_data.get("lesson", None)  # This should be a Lesson object
+                )
+
 
         else:  # If there is no course data for this slot (empty cell)
             cell.setObjectName("emptyCell")  # Style as an empty cell

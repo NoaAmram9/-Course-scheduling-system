@@ -101,5 +101,6 @@ def _map_lesson(slot_map, course_name, course_code, lesson_type, lesson):
             "name": course_name,
             "code": course_code,
             "type": lesson_type,
-            "location": f"{lesson.building}-{lesson.room}"
+            "location": f"{lesson.building}-{lesson.room}",
+            "lesson": lesson
         }
