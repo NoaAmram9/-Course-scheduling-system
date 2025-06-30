@@ -41,9 +41,11 @@ class RegisterController(QObject):
     
     def handle_registration(self, user_data):
         """Handle registration request"""
+       
         # Additional server-side validation
         validation_result = self.validate_user_data(user_data)
         if not validation_result['valid']:
+         
             self.view.show_error(validation_result['message'])
             return
         
@@ -166,28 +168,37 @@ class RegisterController(QObject):
                     'message': 'Please enter a valid phone number'
                 }
         
+        selected_type = user_data.get('type', '').lower()
+            
         return {'valid': True}
     
     def handle_registration_result(self, result):
         """Handle registration result from worker thread"""
+   
+        
         # Stop loading state
         self.view.set_loading(False)
         
         if result['success']:
+        
+            
             # Show success message
             self.view.show_success(result.get('message', 'Registration successful!'))
             
             # Clear form
             self.view.clear_form()
             
-            # Optional: Auto-login or redirect to login
-            if result.get('auto_login', False):
-                # Navigate to main application
-                self.ui_manager.show_main_window(result.get('user_data'))
-            else:
-                # Navigate to login page
-                self.handle_login_request()
+            # Get user data from result
+            user_data = result.get('user_data', {})
+          
+            
+            # Navigate to start page with user data
+           
+            self.ui_manager.show_start_page(user_data)
+            
         else:
+         
+            
             # Handle different error types
             error_code = result.get('error_code', 'UNKNOWN_ERROR')
             error_message = result.get('message', 'Registration failed')
@@ -213,7 +224,9 @@ class RegisterController(QObject):
     
     def handle_login_request(self):
         """Handle request to switch to login page"""
-        self.ui_manager.show_start_page()
+   
+        # Fixed: Call show_login instead of show_start_page
+        self.ui_manager.show_login()
     
     def cleanup_worker(self):
         """Clean up worker thread"""

@@ -24,7 +24,12 @@ class RegisterView(QMainWindow):
     def init_ui(self):
         """Initialize the UI"""
         self.setWindowTitle("Register - Modern App")
-        self.setFixedSize(800, 700)
+        
+        self.setMinimumSize(700, 900
+                            )  # minimal size but resizable
+
+        # After setup complete, adjust to content size:
+        self.adjustSize()
         self.setWindowFlags(Qt.Window | Qt.WindowCloseButtonHint | Qt.WindowMinimizeButtonHint)
         
         # Central widget
@@ -43,6 +48,8 @@ class RegisterView(QMainWindow):
         self.confirm_password_input = self.layout_manager.parent.confirm_password_input
         self.terms_checkbox = self.layout_manager.parent.terms_checkbox
         self.password_strength_label = self.layout_manager.parent.password_strength_label
+        self.type_selector = self.layout_manager.parent.type_selector
+
         
         
         self.connect_signals()
@@ -100,11 +107,15 @@ class RegisterView(QMainWindow):
             'username': self.username_input.text().strip(),
             'email': self.email_input.text().strip(),
             'password': self.password_input.text(),
-            'confirm_password': self.confirm_password_input.text()
+            'confirm_password': self.confirm_password_input.text(),
+            'type': self.type_selector.currentText().strip().capitalize()
         }
+   
+        
         
         # Validate data
         validation_result = self.validate_form(user_data)
+       
         if not validation_result['valid']:
             self.show_error(validation_result['message'])
             return

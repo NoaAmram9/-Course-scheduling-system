@@ -12,7 +12,7 @@ class UsersController:
         """Register a new user"""
         try:
             # Basic data validation
-            required_fields = ['username', 'email', 'password', 'first_name', 'last_name']
+            required_fields = ['username', 'email', 'password', 'first_name', 'last_name', 'type']
             for field in required_fields:
                 if not user_data.get(field):
                     return {
@@ -36,13 +36,14 @@ class UsersController:
                     'message': 'Email already exists in the system',
                     'error_code': 'EMAIL_EXISTS'
                 }
-            
+            user_type = user_data.get('type', 'Student')
             # Create a new user
             user = User(
                 username=user_data['username'],
                 email=user_data['email'],
                 first_name=user_data['first_name'],
-                last_name=user_data['last_name']
+                last_name=user_data['last_name'],
+                type=user_type
             )
             
             if self.db_manager.create_user(user, user_data['password']):

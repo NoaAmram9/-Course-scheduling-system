@@ -11,6 +11,7 @@ class User:
     password_hash: str = ""
     first_name: str = ""
     last_name: str = ""
+    type: str = "student"
     created_at: Optional[datetime] = None
     is_active: bool = True
     
@@ -28,6 +29,7 @@ class User:
             'password_hash': self.password_hash,
             'first_name': self.first_name,
             'last_name': self.last_name,
+            'type': self.type,
             'created_at': self.created_at.isoformat() if self.created_at else None,
             'is_active': self.is_active
         }
@@ -42,6 +44,7 @@ class User:
         user.password_hash = data.get('password_hash', '')
         user.first_name = data.get('first_name', '')
         user.last_name = data.get('last_name', '')
+        user.type = data.get('type', 'student')
         user.is_active = data.get('is_active', True)
         
         if data.get('created_at'):
@@ -52,3 +55,7 @@ class User:
     def get_full_name(self) -> str:
         """Get full name"""
         return f"{self.first_name} {self.last_name}".strip()
+    
+    def get_user_type(self) -> str:
+        """Return the user's type (e.g., 'student' or 'secretary')"""
+        return self.type

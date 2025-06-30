@@ -8,24 +8,20 @@ QWidget#RegisterWidget {
     border-radius: 10px;
 }
 
-/* Header/Title */
-QLabel#TitleLabel {
+QLabel#titleLabel {
     font-size: 28px;
     font-weight: bold;
-    color: #213555;
-    background: transparent;
-    padding: 20px 0px 10px 0px;
-    qproperty-alignment: AlignCenter;
+    color: #2C3E50; /* dark blue-gray */
+    margin-bottom: 8px;
 }
 
-QLabel#SubtitleLabel {
-    font-size: 14px;
-    color: #3E5879;
-    background: transparent;
-    padding: 0px 0px 30px 0px;
-    qproperty-alignment: AlignCenter;
+QLabel#subtitleLabel {
+    font-size: 16px;
+    font-weight: normal;
+    color: #7F8C8D; /* medium gray */
+    margin-bottom: 20px;
+    font-style: italic;
 }
-
 /* Form Container */
 QWidget#FormContainer {
     background: white;

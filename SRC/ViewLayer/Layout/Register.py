@@ -1,3 +1,4 @@
+from PyQt5.QtWidgets import QComboBox
 from PyQt5.QtWidgets import (QVBoxLayout, QHBoxLayout, QFormLayout, 
                             QLabel, QLineEdit, QPushButton, QFrame, 
                             QSpacerItem, QSizePolicy, QCheckBox, QScrollArea)
@@ -56,7 +57,7 @@ class RegisterLayout:
         layout.addWidget(title_label)
         
         # Subtitle
-        subtitle_label = QLabel("Join us today - it's free!")
+        subtitle_label = QLabel("Register to access the system")
         subtitle_label.setObjectName("subtitleLabel")
         subtitle_label.setAlignment(Qt.AlignCenter)
         layout.addWidget(subtitle_label)
@@ -119,6 +120,14 @@ class RegisterLayout:
         self.parent.confirm_password_input.setPlaceholderText("Confirm your password")
         self.parent.confirm_password_input.setEchoMode(QLineEdit.Password)
         form_layout.addRow(confirm_password_label, self.parent.confirm_password_input)
+        
+             # User Type selection (Student / Secretary)
+        type_label = QLabel("Account Type:")
+        type_label.setObjectName("fieldLabel")
+        self.parent.type_selector = QComboBox()
+        self.parent.type_selector.setObjectName("inputField")
+        self.parent.type_selector.addItems(["student", "secretary"])
+        form_layout.addRow(type_label, self.parent.type_selector)
         
         layout.addLayout(form_layout)
         

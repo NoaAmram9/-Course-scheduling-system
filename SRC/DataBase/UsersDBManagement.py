@@ -23,6 +23,7 @@ class UsersDBManagement:
                 password_hash TEXT NOT NULL,
                 first_name TEXT,
                 last_name TEXT,
+                type TEXT DEFAULT 'student',
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 is_active BOOLEAN DEFAULT 1
             )
@@ -44,10 +45,11 @@ class UsersDBManagement:
             user.password_hash = self.hash_password(password)
             
             cursor.execute('''
-                INSERT INTO users (username, email, password_hash, first_name, last_name, is_active)
-                VALUES (?, ?, ?, ?, ?, ?)
-            ''', (user.username, user.email, user.password_hash, 
-                  user.first_name, user.last_name, user.is_active))
+                    INSERT INTO users (username, email, password_hash, first_name, last_name, type, is_active)
+                    VALUES (?, ?, ?, ?, ?, ?, ?)
+                ''', (user.username, user.email, user.password_hash, 
+                    user.first_name, user.last_name, user.type, user.is_active))
+
             
             user.id = cursor.lastrowid
             conn.commit()
@@ -109,5 +111,5 @@ class UsersDBManagement:
         for row in rows:
             users.append(User(
                 id=row[0], username=row[1], email=row[2], password_hash=row[3],
-                first_name=row[4], last_name=row[5], is_active=row[7]
+                first_name=row[4], last_name=row[5],  type=row[6], is_active=row[8]
             ))
