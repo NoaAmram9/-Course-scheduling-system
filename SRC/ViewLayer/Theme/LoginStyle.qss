@@ -1,24 +1,24 @@
-/* Login Screen Styles */
+/* Register/Login Screen Styles (Updated Colors) */
 
 QMainWindow {
     background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
-        stop:0 #667eea, stop:1 #764ba2);
+        stop:0 #3E5879, stop:1 #213555);
 }
 
 #centerFrame {
     background: transparent;
 }
 
-#loginCard {
-    background: rgba(255, 255, 255, 0.95);
+#loginCard, #registerCard {
+    background: rgba(255, 255, 255, 0.96);
     border-radius: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.4);
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
 }
 
 /* Header Styles */
 #titleLabel {
-    color: #2c3e50;
+    color: #213555;
     font-size: 28px;
     font-weight: bold;
     margin-bottom: 5px;
@@ -26,7 +26,7 @@ QMainWindow {
 }
 
 #subtitleLabel {
-    color: #7f8c8d;
+    color: #3E5879;
     font-size: 14px;
     margin-bottom: 20px;
     font-family: 'Segoe UI', Arial, sans-serif;
@@ -34,7 +34,7 @@ QMainWindow {
 
 /* Form Styles */
 #fieldLabel {
-    color: #2c3e50;
+    color: #213555;
     font-size: 12px;
     font-weight: 600;
     margin-bottom: 5px;
@@ -43,31 +43,31 @@ QMainWindow {
 
 #inputField {
     padding: 12px 15px;
-    border: 2px solid #e0e6ed;
+    border: 2px solid #D8C4B6;
     border-radius: 8px;
     font-size: 14px;
-    background: white;
-    color: #2c3e50;
+    background: #ffffff;
+    color: #213555;
     min-height: 20px;
     font-family: 'Segoe UI', Arial, sans-serif;
-    transition: all 0.3s ease;
+   
 }
 
 #inputField:focus {
-    border-color: #667eea;
-    background: #f8f9ff;
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    border-color: #3E5879;
+    background: #f3efec;
+ 
 }
 
 #inputField:hover {
-    border-color: #c5d0e6;
+    border-color: #bfa08f;
 }
 
 /* Button Styles */
 #primaryButton {
     background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
-        stop:0 #667eea, stop:1 #764ba2);
-    color: white;
+        stop:0 #3E5879, stop:1 #213555);
+    color: #f3efec;
     border: none;
     border-radius: 8px;
     padding: 15px;
@@ -75,33 +75,32 @@ QMainWindow {
     font-weight: bold;
     min-height: 20px;
     font-family: 'Segoe UI', Arial, sans-serif;
-    transition: all 0.3s ease;
+   
 }
 
 #primaryButton:hover {
     background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
-        stop:0 #5a6fd8, stop:1 #6a4190);
-    transform: translateY(-1px);
-    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        stop:0 #334766, stop:1 #1a2b44);
+ 
+   
 }
 
 #primaryButton:pressed {
     background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
-        stop:0 #4e63c6, stop:1 #5e3b7e);
-    transform: translateY(0px);
-    box-shadow: 0 2px 5px rgba(102, 126, 234, 0.2);
+        stop:0 #2a3c5a, stop:1 #162238);
+  
+    
 }
 
 #primaryButton:disabled {
     background: #bdc3c7;
     color: #7f8c8d;
-    transform: none;
-    box-shadow: none;
+ 
 }
 
 /* Checkbox Styles */
 #checkBox {
-    color: #2c3e50;
+    color: #213555;
     font-size: 12px;
     font-family: 'Segoe UI', Arial, sans-serif;
     spacing: 8px;
@@ -113,24 +112,24 @@ QMainWindow {
 }
 
 #checkBox::indicator:unchecked {
-    border: 2px solid #bdc3c7;
+    border: 2px solid #D8C4B6;
     border-radius: 3px;
-    background: white;
+    background: #fff;
 }
 
 #checkBox::indicator:unchecked:hover {
-    border-color: #667eea;
+    border-color: #3E5879;
 }
 
 #checkBox::indicator:checked {
-    background: #667eea;
-    border: 2px solid #667eea;
+    background: #3E5879;
+    border: 2px solid #3E5879;
     border-radius: 3px;
 }
 
 #checkBox::indicator:checked:hover {
-    background: #5a6fd8;
-    border-color: #5a6fd8;
+    background: #2f4666;
+    border-color: #2f4666;
 }
 
 /* Footer Styles */
@@ -141,7 +140,7 @@ QMainWindow {
 }
 
 #linkButton {
-    color: #667eea;
+    color: #3E5879;
     background: transparent;
     border: none;
     font-size: 12px;
@@ -152,23 +151,18 @@ QMainWindow {
 }
 
 #linkButton:hover {
-    color: #5a6fd8;
-    background: rgba(102, 126, 234, 0.1);
+    color: #2f4666;
+    background: rgba(62, 88, 121, 0.1);
     border-radius: 4px;
 }
 
 #linkButton:pressed {
-    color: #4e63c6;
+    color: #213555;
 }
 
-/* Animation Effects */
-#loginCard {
-    animation: fadeInUp 0.6s ease-out;
-}
-
-/* Responsive adjustments */
+/* Placeholder Styles */
 #inputField::placeholder {
-    color: #95a5a6;
+    color: #a8a8a8;
     font-style: italic;
 }
 

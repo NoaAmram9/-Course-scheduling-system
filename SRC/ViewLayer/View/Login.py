@@ -1,6 +1,7 @@
 from PyQt5.QtWidgets import QMainWindow, QWidget, QMessageBox
 from PyQt5.QtCore import Qt, pyqtSignal
 from SRC.ViewLayer.Layout.Login import LoginLayout
+from SRC.ViewLayer.Theme.ModernUIQt5 import ModernUIQt5
 
 
 class LoginView(QMainWindow):
@@ -53,130 +54,9 @@ class LoginView(QMainWindow):
         )
     
     def load_styles(self):
-        """Load QSS styles for login screen"""
-        try:
-            with open('Theme/LoginStyle.qss', 'r', encoding='utf-8') as f:
-                self.setStyleSheet(f.read())
-        except FileNotFoundError:
-            # Fallback inline styles
-            self.setStyleSheet(self.get_fallback_styles())
+       self.setStyleSheet(ModernUIQt5.get_login_stylesheet())
     
-    def get_fallback_styles(self):
-        """Fallback styles if QSS file not found"""
-        return """
-        QMainWindow {
-            background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
-                stop:0 #667eea, stop:1 #764ba2);
-        }
-        
-        #centerFrame {
-            background: transparent;
-        }
-        
-        #loginCard {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
-        
-        #titleLabel {
-            color: #2c3e50;
-            font-size: 28px;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-        
-        #subtitleLabel {
-            color: #7f8c8d;
-            font-size: 14px;
-            margin-bottom: 20px;
-        }
-        
-        #fieldLabel {
-            color: #2c3e50;
-            font-size: 12px;
-            font-weight: 600;
-            margin-bottom: 5px;
-        }
-        
-        #inputField {
-            padding: 12px 15px;
-            border: 2px solid #e0e6ed;
-            border-radius: 8px;
-            font-size: 14px;
-            background: white;
-            min-height: 20px;
-        }
-        
-        #inputField:focus {
-            border-color: #667eea;
-            background: #f8f9ff;
-        }
-        
-        #primaryButton {
-            background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
-                stop:0 #667eea, stop:1 #764ba2);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            padding: 15px;
-            font-size: 16px;
-            font-weight: bold;
-            min-height: 20px;
-        }
-        
-        #primaryButton:hover {
-            background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
-                stop:0 #5a6fd8, stop:1 #6a4190);
-        }
-        
-        #primaryButton:pressed {
-            background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
-                stop:0 #4e63c6, stop:1 #5e3b7e);
-        }
-        
-        #checkBox {
-            color: #2c3e50;
-            font-size: 12px;
-        }
-        
-        #checkBox::indicator {
-            width: 16px;
-            height: 16px;
-        }
-        
-        #checkBox::indicator:unchecked {
-            border: 2px solid #bdc3c7;
-            border-radius: 3px;
-            background: white;
-        }
-        
-        #checkBox::indicator:checked {
-            background: #667eea;
-            border: 2px solid #667eea;
-            border-radius: 3px;
-            image: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIiIGhlaWdodD0iOSIgdmlld0JveD0iMCAwIDEyIDkiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxwYXRoIGQ9Ik0xIDQuNUw0LjUgOEwxMSAxIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgo8L3N2Zz4K);
-        }
-        
-        #footerLabel {
-            color: #7f8c8d;
-            font-size: 12px;
-        }
-        
-        #linkButton {
-            color: #667eea;
-            background: transparent;
-            border: none;
-            font-size: 12px;
-            font-weight: bold;
-            text-decoration: underline;
-        }
-        
-        #linkButton:hover {
-            color: #5a6fd8;
-        }
-        """
-    
+  
     def connect_signals(self):
         """Connect UI signals to slots"""
         self.login_button.clicked.connect(self.on_login_clicked)

@@ -213,7 +213,7 @@ class RegisterController(QObject):
     
     def handle_login_request(self):
         """Handle request to switch to login page"""
-        self.ui_manager.show_login_page()
+        self.ui_manager.show_start_page()
     
     def cleanup_worker(self):
         """Clean up worker thread"""

@@ -10,12 +10,15 @@ class RegisterLayout:
     
     def __init__(self, parent):
         self.parent = parent
+        self.parent.setObjectName("RegisterPage")
+        self.parent.setStyleSheet("QWidget#RegisterWidget { background: white; }")
         self.setup_ui()
     
     def setup_ui(self):
         """Setup the register UI layout"""
         main_layout = QVBoxLayout(self.parent)
-        main_layout.setContentsMargins(0, 0, 0, 0)  # מרווח 40 פיקסלים שמאל וימין, 0 למעלה ולמטה
+        main_layout.setContentsMargins(60, 40, 60, 40)
+       
         main_layout.setSpacing(0)
         
         scroll_area = QScrollArea(self.parent)
@@ -30,7 +33,7 @@ class RegisterLayout:
         register_card.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         
         card_layout = QVBoxLayout(register_card)
-        card_layout.setContentsMargins(20, 20, 20, 20)  # אפשר לשמור padding פנימי של הטופס
+        card_layout.setContentsMargins(20, 20, 20, 20) 
         card_layout.setSpacing(20)
         
         self.setup_header(card_layout)

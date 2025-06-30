@@ -4,6 +4,7 @@ from PyQt5.QtGui import QRegExpValidator
 from PyQt5.QtCore import QRegExp
 from SRC.ViewLayer.Layout.Register import RegisterLayout
 import re
+from SRC.ViewLayer.Theme.ModernUIQt5 import ModernUIQt5
 
 
 class RegisterView(QMainWindow):
@@ -73,118 +74,9 @@ class RegisterView(QMainWindow):
         self.last_name_input.setValidator(name_validator)
     
     def load_styles(self):
-        """Load QSS styles for register screen"""
-        try:
-            with open('Theme/RegisterStyle.qss', 'r', encoding='utf-8') as f:
-                self.setStyleSheet(f.read())
-        except FileNotFoundError:
-            # Fallback inline styles
-            self.setStyleSheet(self.get_fallback_styles())
+       self.setStyleSheet(ModernUIQt5.get_register_stylesheet())
     
-    def get_fallback_styles(self):
-        """Fallback styles if QSS file not found"""
-        return """
-        QMainWindow {
-            background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
-                stop:0 #764ba2, stop:1 #667eea);
-        }
-        
-        #centerFrame {
-            background: transparent;
-        }
-        
-        #registerCard {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
-        
-        #scrollArea {
-            background: transparent;
-            border: none;
-        }
-        
-        #titleLabel {
-            color: #2c3e50;
-            font-size: 28px;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-        
-        #subtitleLabel {
-            color: #7f8c8d;
-            font-size: 14px;
-            margin-bottom: 20px;
-        }
-        
-        #fieldLabel {
-            color: #2c3e50;
-            font-size: 12px;
-            font-weight: 600;
-            margin-bottom: 5px;
-        }
-        
-        #inputField {
-            padding: 12px 15px;
-            border: 2px solid #e0e6ed;
-            border-radius: 8px;
-            font-size: 14px;
-            background: white;
-            min-height: 20px;
-        }
-        
-        #inputField:focus {
-            border-color: #667eea;
-            background: #f8f9ff;
-        }
-        
-        #primaryButton {
-            background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
-                stop:0 #764ba2, stop:1 #667eea);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            padding: 15px;
-            font-size: 16px;
-            font-weight: bold;
-            min-height: 20px;
-        }
-        
-        #primaryButton:hover {
-            background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
-                stop:0 #6a4190, stop:1 #5a6fd8);
-        }
-        
-        #checkBox {
-            color: #2c3e50;
-            font-size: 12px;
-        }
-        
-        #termsLabel {
-            color: #2c3e50;
-            font-size: 12px;
-        }
-        
-        #footerLabel {
-            color: #7f8c8d;
-            font-size: 12px;
-        }
-        
-        #linkButton {
-            color: #667eea;
-            background: transparent;
-            border: none;
-            font-size: 12px;
-            font-weight: bold;
-            text-decoration: underline;
-        }
-        
-        #passwordStrengthLabel {
-            font-size: 11px;
-            margin-top: 5px;
-        }
-        """
-    
+   
     def connect_signals(self):
         """Connect UI signals to slots"""
         self.register_button.clicked.connect(self.on_register_clicked)
@@ -416,7 +308,25 @@ class RegisterView(QMainWindow):
             }
         """)
         msg_box.exec_()
-    
+    def highlight_field(self, field_name):
+        """Highlight a specific input field (e.g., email or username)"""
+        if field_name == 'email':
+            self.email_input.setStyleSheet("""
+                #inputField {
+                    border: 2px solid #e74c3c;
+                    background: #fdf2f2;
+                    border-radius: 8px;
+                }
+            """)
+        elif field_name == 'username':
+            self.username_input.setStyleSheet("""
+                #inputField {
+                    border: 2px solid #e74c3c;
+                    background: #fdf2f2;
+                    border-radius: 8px;
+                }
+            """)
+
     def clear_form(self):
         """Clear the form fields"""
         self.first_name_input.clear()
