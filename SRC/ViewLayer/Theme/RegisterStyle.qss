@@ -1,0 +1,336 @@
+/* Registration Form Styles — Updated Palette */
+QWidget#scrollArea {
+    background: white;
+}
+/* Main Container */
+QWidget#RegisterWidget {
+    background: white;
+    border-radius: 10px;
+}
+
+QLabel#titleLabel {
+    font-size: 28px;
+    font-weight: bold;
+    color: #2C3E50; /* dark blue-gray */
+    margin-bottom: 8px;
+}
+
+QLabel#subtitleLabel {
+    font-size: 16px;
+    font-weight: normal;
+    color: #7F8C8D; /* medium gray */
+    margin-bottom: 20px;
+    font-style: italic;
+}
+/* Form Container */
+QWidget#FormContainer {
+    background: white;
+    border-radius: 15px;
+    border: 1px solid #D8C4B6;
+    margin: 20px;
+    padding: 30px;
+}
+
+/* Input Fields */
+QLineEdit {
+    background: #f3efec;
+    border: 2px solid #D8C4B6;
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 14px;
+    color: #213555;
+    selection-background-color: #3E5879;
+    min-height: 20px;
+}
+
+QLineEdit:focus {
+    border: 2px solid #3E5879;
+    background: white;
+    outline: none;
+}
+
+QLineEdit:hover {
+    border: 2px solid #b29a8e;
+    background: white;
+}
+
+QLineEdit[error="true"] {
+    border: 2px solid #e74c3c;
+    background: #fff5f5;
+}
+
+QLineEdit[error="true"]:focus {
+    border: 2px solid #c0392b;
+}
+
+/* Field Labels */
+QLabel[fieldLabel="true"] {
+    font-size: 13px;
+    font-weight: 600;
+    color: #3E5879;
+    background: transparent;
+    margin-bottom: 5px;
+    margin-top: 15px;
+}
+
+QLabel[fieldLabel="true"][required="true"]::after {
+    content: " *";
+    color: #e74c3c;
+}
+
+/* Buttons */
+QPushButton {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+                                stop:0 #3E5879, stop:1 #213555);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 24px;
+    font-size: 14px;
+    font-weight: 600;
+    min-height: 20px;
+}
+
+QPushButton:hover {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+                                stop:0 #4a6a8f, stop:1 #1c2e4b);
+}
+
+QPushButton:pressed {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+                                stop:0 #2c4163, stop:1 #17263d);
+}
+
+QPushButton:disabled {
+    background: #bdc3c7;
+    color: #7f8c8d;
+}
+
+/* Register Button */
+QPushButton#RegisterButton {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+                                stop:0 #3E5879, stop:1 #213555);
+    font-size: 16px;
+    min-height: 25px;
+    margin-top: 20px;
+}
+
+QPushButton#RegisterButton:hover {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+                                stop:0 #4a6a8f, stop:1 #1c2e4b);
+}
+
+QPushButton#RegisterButton:pressed {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+                                stop:0 #2c4163, stop:1 #17263d);
+}
+
+/* Login Link Button */
+QPushButton#LoginButton {
+    background: transparent;
+    color: #3E5879;
+    border: none;
+    text-decoration: underline;
+    font-size: 13px;
+    padding: 5px;
+}
+
+QPushButton#LoginButton:hover {
+    color: #213555;
+    background: rgba(62, 88, 121, 0.1);
+    border-radius: 4px;
+}
+
+/* Loading Spinner Area */
+QWidget#LoadingWidget {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 15px;
+}
+
+QLabel#LoadingLabel {
+    color: #3E5879;
+    font-size: 14px;
+    font-weight: 600;
+    background: transparent;
+    qproperty-alignment: AlignCenter;
+}
+
+/* Error Messages */
+QLabel#ErrorLabel {
+    color: #e74c3c;
+    background: #fff5f5;
+    border: 1px solid #fadbd8;
+    border-radius: 6px;
+    padding: 10px 15px;
+    font-size: 13px;
+    margin: 10px 0px;
+    qproperty-wordWrap: true;
+}
+
+/* Success Messages */
+QLabel#SuccessLabel {
+    color: #229954;
+    background: #f0fff4;
+    border: 1px solid #d5f4e6;
+    border-radius: 6px;
+    padding: 10px 15px;
+    font-size: 13px;
+    margin: 10px 0px;
+    qproperty-wordWrap: true;
+}
+
+/* Checkbox */
+QCheckBox {
+    spacing: 8px;
+    color: #213555;
+    font-size: 13px;
+    background: transparent;
+}
+
+QCheckBox::indicator {
+    width: 18px;
+    height: 18px;
+    border-radius: 3px;
+    border: 2px solid #D8C4B6;
+    background: white;
+}
+
+QCheckBox::indicator:hover {
+    border: 2px solid #3E5879;
+}
+
+QCheckBox::indicator:checked {
+    background: #3E5879;
+    border: 2px solid #3E5879;
+    image: url(:/icons/check.png);
+}
+
+QCheckBox::indicator:checked:hover {
+    background: #2f4666;
+    border: 2px solid #2f4666;
+}
+
+/* Terms and Conditions Link */
+QLabel#TermsLabel {
+    color: #3E5879;
+    background: transparent;
+    font-size: 13px;
+}
+
+QLabel#TermsLabel:hover {
+    color: #213555;
+    text-decoration: underline;
+}
+
+/* Password Strength Indicator */
+QProgressBar#PasswordStrength {
+    border: 1px solid #D8C4B6;
+    border-radius: 4px;
+    text-align: center;
+    background: #f3efec;
+    margin-top: 5px;
+    max-height: 8px;
+}
+
+QProgressBar#PasswordStrength::chunk {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+                                stop:0 #e74c3c, stop:0.5 #f39c12, stop:1 #229954);
+    border-radius: 3px;
+}
+
+/* Tooltip Styles */
+QToolTip {
+    background: #213555;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 12px;
+    opacity: 220;
+}
+
+/* Scroll Area */
+QScrollArea {
+    border: none;
+    background: transparent;
+}
+
+QScrollArea > QWidget > QWidget {
+    background: transparent;
+}
+
+QScrollBar:vertical {
+    background: #f3efec;
+    width: 12px;
+    border-radius: 6px;
+}
+
+QScrollBar::handle:vertical {
+    background: #D8C4B6;
+    border-radius: 6px;
+    min-height: 20px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background: #b49c8a;
+}
+
+QScrollBar::add-line:vertical,
+QScrollBar::sub-line:vertical {
+    border: none;
+    background: none;
+}
+
+/* Responsive Design for Small Screens */
+QWidget[small_screen="true"] QLineEdit {
+    padding: 10px 14px;
+    font-size: 13px;
+}
+
+QWidget[small_screen="true"] QPushButton {
+    padding: 10px 20px;
+    font-size: 13px;
+}
+
+QWidget[small_screen="true"] QLabel#TitleLabel {
+    font-size: 24px;
+}
+
+/* Animation Support Classes */
+QWidget[fade_in="true"] {
+    /* Custom animation will be handled in Python code */
+}
+
+/* Focus Indicator */
+QWidget:focus {
+    outline: none;
+}
+
+/* Group Box */
+QGroupBox {
+    font-size: 14px;
+    font-weight: 600;
+    color: #213555;
+    border: 2px solid #D8C4B6;
+    border-radius: 8px;
+    margin-top: 10px;
+    padding-top: 10px;
+    background: white;
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    left: 10px;
+    padding: 0 8px;
+    background: white;
+}
+/* Register Card Style - Card Look */
+#registerCard {
+    background: #f3efec;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+  
+    padding: 30px;
+    margin: 40px auto;
+    max-width: 600px;
+}

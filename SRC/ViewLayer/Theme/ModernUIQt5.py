@@ -121,4 +121,19 @@ class ModernUIQt5:
         addCourse = ModernUIQt5._load_stylesheet("add_course.qss")
         return base + "\n" + addCourse
     
+    @staticmethod
+    def get_login_stylesheet(): #TODO: add dark mode support
+        """Load and combine base + manual schedule styles"""
+        base = ModernUIQt5._load_stylesheet("modern_ui_base.qss")
+        login = ModernUIQt5._load_stylesheet("LoginStyle.qss")
+       
+        return base + "\n" +login
+    
+    @staticmethod
+    def get_register_stylesheet(): #TODO: add dark mode support
+        """Load and combine base + manual schedule styles"""
+        base = ModernUIQt5._load_stylesheet("modern_ui_base.qss")
+        register = ModernUIQt5._load_stylesheet("RegisterStyle.qss")
+        return base + "\n" +register
+    
     

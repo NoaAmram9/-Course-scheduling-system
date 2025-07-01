@@ -136,11 +136,11 @@ class MainPageView(QMainWindow):
         footer_layout.setContentsMargins(0, 0, 0, 0)
         footer_layout.setSpacing(10)
         
-        # Left-aligned buttons
-        self.back_button = ModernUIQt5.create_button("Back", "primary")
-        self.back_button.setFixedHeight(36)
-        self.back_button.clicked.connect(self.on_back_clicked)
-        footer_layout.addWidget(self.back_button, alignment=Qt.AlignLeft)
+        # # Left-aligned buttons
+        # self.back_button = ModernUIQt5.create_button("Back", "primary")
+        # self.back_button.setFixedHeight(36)
+        # self.back_button.clicked.connect(self.on_back_clicked)
+        # footer_layout.addWidget(self.back_button, alignment=Qt.AlignLeft)
         
         self.toggle_constraints_button = ModernUIQt5.create_button("Add Time Constraints", "primary")
         self.toggle_constraints_button.setFixedHeight(36)
