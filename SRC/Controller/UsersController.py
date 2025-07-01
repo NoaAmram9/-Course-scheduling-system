@@ -47,10 +47,19 @@ class UsersController:
             )
             
             if self.db_manager.create_user(user, user_data['password']):
+                # החזר את פרטי המשתמש המלאים כולל type
                 return {
                     'success': True,
                     'message': 'User registered successfully',
-                    'user_id': user.id
+                    'user_id': user.id,
+                    'user_data': {
+                        'username': user.username,
+                        'email': user.email,
+                        'first_name': user.first_name,
+                        'last_name': user.last_name,
+                        'type': user.type,
+                        'id': user.id
+                    }
                 }
             else:
                 return {
@@ -65,7 +74,7 @@ class UsersController:
                 'message': f'Unexpected error: {str(e)}',
                 'error_code': 'UNEXPECTED_ERROR'
             }
-    
+        
     def login_user(self, username: str, password: str) -> Dict[str, Any]:
         """User login"""
         try:

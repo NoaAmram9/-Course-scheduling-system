@@ -40,8 +40,8 @@ class MainApplication:
             self.current_view.close()
         
       
-        # Default to Student if no user data provided
-        user_type = 'Student'
+        # # Default to Student if no user data provided
+        # user_type = 'Student'
         if user_data:
             raw_type = user_data.get('type')
             user_type = str(raw_type).strip().lower().capitalize()
