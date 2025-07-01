@@ -87,19 +87,24 @@ class ManualScheduleService:
             end = lesson.time.end_hour
 
             for hour in range(start, end):
-                slot_map[(day, hour)] = lesson
+                # slot_map[(day, hour)] = lesson
+                # lesson.course_id = course_id  # Attach course_id for reverse mapping
+                slot_map[(day, hour)] = {
+                    "lesson": lesson,
+                    "course_id": course_id
+                }
         return slot_map
                 
         # return []  # Return empty list if no lessons found for the course and type
 
-    def extract_all_available_lessons(self):
+    def extract_all_available_lessons(self, force_include_lesson_type=False):
         self.slot_map = defaultdict(list)  # Initialize an empty slot map
         
         for course_id, course in self.repository.items():
             for lesson_type, attr_name in self.lesson_type_map.items():
                 # Check if this lesson type has already been added to the schedule for this course
                 # If it has, skip adding available slots for this type
-                if self.is_lesson_type_taken(course_id, lesson_type):
+                if self.is_lesson_type_taken(course_id, lesson_type) and not force_include_lesson_type:
                     continue  # skip adding available slots for this type
                 lessons = getattr(course, attr_name, [])
                 if lessons:
@@ -141,9 +146,11 @@ class ManualScheduleService:
         Each key is a tuple (day, hour) and value is a lesson (available of fixed) scheduled at that time.
         """
         occupied_windows = defaultdict(list)
-        ############# צריך להוסיף גם סימון חלונות שלא במערכת ולא בזמינים, כלומר טיםול במקרה שבחרתי כבר הרצאה ולכן בחלונות הזמינים לא יהיו את שאר ההרצאות שלה, ואז במערכת לא יסומנו שאר החלונות של ההרצאה
-        available_lessons = self.extract_all_available_lessons()  # Get all available lessons as a map
-   
+        # available_lessons = self.extract_all_available_lessons()  # Get all available lessons as a map
+        
+        available_lessons = self.extract_all_available_lessons()
+            # force_include_lesson_type=bool(received_course_id and lesson_type))
+        
         for (day, hour), lessons in available_lessons.items():
             matches_requested_lesson = False
             # If one of the lessons at this time slot belongs to the user's requested lessons (by course and type), mark this time slot as a requested
@@ -162,7 +169,6 @@ class ManualScheduleService:
             end = lesson.time.end_hour
             
             matches_requested_lesson = False
-            ######### אני חושבת שעדיף פשוט לשנות שהשיעורים לפי קורסים יהיו map slot (day, hour) בעצמם ואז פשוט לסמן כל יום ושעה מהמפה הזו, כי ככה מפספסתי דברים, למשל אם יש הרצאה בזמן של שיעור מקובע, לא יראו אותה ככה
         
             # if course_id == received_course_id:
             #     if lesson in available_lessons_by_course:
@@ -193,10 +199,10 @@ class ManualScheduleService:
                                              "type": "available", "location": " ", "matches requested lesson": True,
                                              "lessons": []}
             
-        for (day,hour) in occupied_windows:
-            # print(f"time slot NOT marked: {day, hour}")
-            if occupied_windows[(day, hour)].get("matches requested lesson", ""):
-                print(f"time slot marked: {day, hour}")
+        # for (day,hour) in occupied_windows:
+        #     # print(f"time slot NOT marked: {day, hour}")
+        #     if occupied_windows[(day, hour)].get("matches requested lesson", ""):
+        #         print(f"time slot marked: {day, hour}")
         return occupied_windows
     
     def get_available_lessons_by_time(self, day, hour):
@@ -226,27 +232,25 @@ class ManualScheduleService:
                 non_colliding.append(lesson)
 
         return non_colliding
-
+        
     def add_lesson_to_schedule(self, course_id, lesson):
-        """
-        Adds a lesson to the schedule, removes conflicting lessons, and pushes both to the undo stack.
-        """
-        removed_conflicts = [] # List to keep track of removed conflicting lessons
-        for existing_lesson in self.schedule[:]: # Copy the current schedule to avoid modifying it while iterating
+        removed_conflicts = []
+        for cid, scheduled_lesson in self.schedule[:]:
+            if cid == course_id and scheduled_lesson.lesson_type == lesson.lesson_type:
+                self.schedule.remove((cid, scheduled_lesson))
+                removed_conflicts.append((cid, scheduled_lesson))
+        for existing_lesson in self.schedule[:]:
             _, scheduled = existing_lesson
             if self._lessons_overlap(lesson, scheduled):
                 removed_conflicts.append(existing_lesson)
-                self.schedule.remove(existing_lesson) # Remove the conflicting lesson from the schedule
-
+                self.schedule.remove(existing_lesson)
         self.schedule.append((course_id, lesson))
-
         if len(self.undo_stack) >= self.MAX_UNDO_STACK_SIZE:
-            self.undo_stack.pop(0) # Remove the oldest action if stack is full
-
+            self.undo_stack.pop(0)
         self.undo_stack.append({
             "action": "add",
             "added": (course_id, lesson),
-            "removed": removed_conflicts # a list of removed conflicting lessons in format: (course_id, lesson)
+            "removed": removed_conflicts
         })
 
     def remove_lesson_from_schedule(self, course_id, lesson):
@@ -342,3 +346,25 @@ class ManualScheduleService:
             if cid == course_id and lesson.lesson_type.capitalize() == lesson_type:
                 return True
         return False
+
+    # def add_lesson_to_schedule(self, course_id, lesson):
+    #     """
+    #     Adds a lesson to the schedule, removes conflicting lessons, and pushes both to the undo stack.
+    #     """
+    #     removed_conflicts = [] # List to keep track of removed conflicting lessons
+    #     for existing_lesson in self.schedule[:]: # Copy the current schedule to avoid modifying it while iterating
+    #         _, scheduled = existing_lesson
+    #         if self._lessons_overlap(lesson, scheduled):
+    #             removed_conflicts.append(existing_lesson)
+    #             self.schedule.remove(existing_lesson) # Remove the conflicting lesson from the schedule
+
+    #     self.schedule.append((course_id, lesson))
+
+    #     if len(self.undo_stack) >= self.MAX_UNDO_STACK_SIZE:
+    #         self.undo_stack.pop(0) # Remove the oldest action if stack is full
+
+    #     self.undo_stack.append({
+    #         "action": "add",
+    #         "added": (course_id, lesson),
+    #         "removed": removed_conflicts # a list of removed conflicting lessons in format: (course_id, lesson)
+    #     })

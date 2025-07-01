@@ -45,18 +45,34 @@
 #             course_label.clicked.connect(lambda checked, frame=lesson_frame: frame.setVisible(checked))
     
     
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QTreeWidget, QTreeWidgetItem
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QTreeWidget, QTreeWidgetItem, QLabel, QProgressBar
 from PyQt5.QtCore import Qt
 from SRC.ViewLayer.Theme.ModernUIQt5 import ModernUIQt5
 
 class ExpandableCourseList(QWidget):
     def __init__(self, courses_info, instance):
         super().__init__()
+       
         self.setObjectName("courseTreeFrame")  # מתאים לקובץ העיצוב שלך
         self.layout = QVBoxLayout()
+        self.layout.setContentsMargins(20,20,20,20)
         self.setLayout(self.layout)
         self.instance = instance
+        self.lesson_type_items = {}
+        
+        self.progress_label = QLabel("Scheduled 0 out of 0 required lessons")
+        self.progress_label.setObjectName("progressLabel")  
+        self.layout.addWidget(self.progress_label)
 
+        self.progress_bar = QProgressBar()
+        self.progress_bar.setMinimum(0)
+        self.progress_bar.setMaximum(100)
+        self.progress_bar.setValue(0)
+        self.progress_bar.setTextVisible(False)
+        self.progress_bar.setFormat("Scheduled 0 out of 0")
+        self.progress_bar.setStyleSheet("QProgressBar { color: black; }")
+        self.layout.addWidget(self.progress_bar)
+        
         self.tree = QTreeWidget()
         self.tree.setHeaderHidden(True)  # בלי כותרות עמודה
         self.tree.setObjectName("courseTree")   
@@ -79,6 +95,7 @@ class ExpandableCourseList(QWidget):
             for lesson_type in required_lessons:
                 lesson_item = QTreeWidgetItem([lesson_type])
                 lesson_item.setData(0, Qt.UserRole, (course_id, lesson_type))
+                self.lesson_type_items[(course_id, lesson_type)] = lesson_item
                 course_item.addChild(lesson_item)
 
         # חיבור לאירוע לחיצה
@@ -92,3 +109,31 @@ class ExpandableCourseList(QWidget):
         elif isinstance(data, str):
             course_id = data
             self.instance.handle_course_click(course_id)
+
+    def mark_selected_lesson_types(self, selected_lessons):
+        for (course_id, lesson_type), item in self.lesson_type_items.items():
+            if self._lesson_type_selected(selected_lessons, course_id, lesson_type):
+                item.setForeground(0, Qt.blue)  # או צבע/סטייל אחר לסימון
+            else:
+                item.setForeground(0, Qt.black)
+        
+    def _lesson_type_selected(self, selected_lessons, course_id, lesson_type):
+        for cid, lesson in selected_lessons:
+            if cid == course_id and lesson.lesson_type.capitalize() == lesson_type:
+                return True
+        return False
+
+    def update_progress_bar(self, scheduled, total):
+        if total == 0:
+            percent = 0
+            self.progress_bar.setFormat("No required lessons")
+            self.progress_bar.setStyleSheet("QProgressBar::chunk { background-color: gray; }")
+        else:
+            percent = int((scheduled / total) * 100)
+            self.progress_bar.setFormat(f"Scheduled {scheduled} out of {total}")
+            if percent == 100:
+                self.progress_bar.setStyleSheet("QProgressBar::chunk { background-color: green; }")
+            else:
+                self.progress_bar.setStyleSheet("QProgressBar::chunk { background-color: orange; }")
+
+        self.progress_bar.setValue(percent)
