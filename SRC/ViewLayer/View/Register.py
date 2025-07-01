@@ -11,8 +11,8 @@ class RegisterView(QMainWindow):
     """Register view handling UI display and user interactions"""
     
     # Signals
-    register_requested = pyqtSignal(dict)  # user_data dict
-    login_requested = pyqtSignal()
+    register_requested = pyqtSignal(dict) # Signal to request registration with user data
+    login_requested = pyqtSignal() # Signal to request navigation to login view
     
     def __init__(self):
         super().__init__()
@@ -24,11 +24,7 @@ class RegisterView(QMainWindow):
     def init_ui(self):
         """Initialize the UI"""
         self.setWindowTitle("Register - Modern App")
-        
-        self.setMinimumSize(700, 900
-                            )  # minimal size but resizable
-
-        # After setup complete, adjust to content size:
+        self.setMinimumSize(700, 900)
         self.adjustSize()
         self.setWindowFlags(Qt.Window | Qt.WindowCloseButtonHint | Qt.WindowMinimizeButtonHint)
         
@@ -49,8 +45,6 @@ class RegisterView(QMainWindow):
         self.terms_checkbox = self.layout_manager.parent.terms_checkbox
         self.password_strength_label = self.layout_manager.parent.password_strength_label
         self.type_selector = self.layout_manager.parent.type_selector
-
-        
         
         self.connect_signals()
         # Center window on screen
