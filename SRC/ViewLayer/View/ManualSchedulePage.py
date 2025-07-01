@@ -15,10 +15,11 @@ from PyQt5.QtGui import QPixmap
 from PyQt5.QtWidgets import QDialog, QVBoxLayout, QLabel, QPushButton, QDialogButtonBox, QListWidget
 
 class ManualSchedulePage(QWidget):
-    def __init__(self, controller, file_path):
+    def __init__(self, controller, file_path, courses_data, go_back_callback):
         super().__init__()
-        self.logic = ManualScheduleLogic(controller, file_path)
+        self.logic = ManualScheduleLogic(controller, file_path, courses_data)
         self.courses_info = self.logic.limited_courses_info
+        self.callback = go_back_callback
         
         self.setWindowTitle("Manual Schedule")
         
@@ -43,6 +44,7 @@ class ManualSchedulePage(QWidget):
         # Course list component (left)
         self.course_list_component = ExpandableCourseList(self.courses_info, self)
         self.content_layout.addWidget(self.course_list_component, stretch=1)
+        self.update_schedule_progress_label()
 
         # Timetable container (right)
         self.create_timetable_container(self.content_layout)
@@ -88,22 +90,51 @@ class ManualSchedulePage(QWidget):
     def handle_course_click(self, course_id):
         self.logic.handle_course_click(course_id)
     
+    # def handle_available_cell_click(self, day, hour):
+    #     """Handle cell click event to show available lessons."""
+    #     available_lessons = self.logic.get_available_lessons_by_time(day, hour)
+    #     if not available_lessons:
+    #         return
+    #     # Show a dialog to select a lesson
+    #     dialog = LessonSelectionDialog(available_lessons, self)
+    #     if dialog.exec_() == QDialog.Accepted:
+    #         selected_lesson = dialog.get_selected_lesson()
+    #         if selected_lesson:
+    #             # print("User selected:", selected_lesson)
+    #             # Do something with selected_lesson
+    #             self.logic.add_lesson_to_schedule(day, hour, selected_lesson.get('code'), selected_lesson.get('lesson'))
+    #     else:
+    #         print("User canceled the selection")
+    #     self.update_view()  # Update the view after selection
+    
     def handle_available_cell_click(self, day, hour):
-        """Handle cell click event to show available lessons."""
+        # אם מדובר בבחירה ממוקדת - בחר את השיעור שכבר ידוע
+        if (day, hour) in self.logic.focused_lessons_by_slot:
+            # print(f"focused lesson by slot: {self.logic.focused_lessons_by_slot[(day, hour)]}")
+            lesson_data = self.logic.focused_lessons_by_slot[(day, hour)]
+            lesson = lesson_data["lesson"]
+            course_id = lesson_data["course_id"]
+            self.logic.add_lesson_to_schedule(day, hour, course_id, lesson)
+            self.logic.clear_lesson_type_focus()
+            self.update_view()
+            return
+
+        # אחרת - תצוגה רגילה
         available_lessons = self.logic.get_available_lessons_by_time(day, hour)
         if not available_lessons:
             return
-        # Show a dialog to select a lesson
+
         dialog = LessonSelectionDialog(available_lessons, self)
         if dialog.exec_() == QDialog.Accepted:
             selected_lesson = dialog.get_selected_lesson()
             if selected_lesson:
-                # print("User selected:", selected_lesson)
-                # Do something with selected_lesson
                 self.logic.add_lesson_to_schedule(day, hour, selected_lesson.get('code'), selected_lesson.get('lesson'))
         else:
-            print("User canceled the selection")
-        self.update_view()  # Update the view after selection
+            # print("User canceled the selection")
+            pass
+
+        self.update_view()
+
     
     def handle_selected_lesson_click(self, course_id, lesson):
         reply = QMessageBox.question(
@@ -118,7 +149,9 @@ class ManualSchedulePage(QWidget):
     def update_view(self):
         # self.create_timetable_container(self.content_layout)
         self.timetable_grid.update_timetable(self.logic.occupied_windows)
-        
+        self.course_list_component.mark_selected_lesson_types(self.logic.get_dynamic_schedule())
+        self.update_schedule_progress_label()
+
     def handle_reset(self):
         """Reset the current schedule."""
         self.logic.reset()
@@ -127,11 +160,37 @@ class ManualSchedulePage(QWidget):
         
     def save_schedule(self):
         """Save the current schedule to a file."""
-        self.logic.save_schedule()
-        # Optionally, you can update the view or notify the user
-        print("Schedule saved")
+        timetable = self.logic.save_schedule()
+        if timetable == {}:
+            QMessageBox.warning(
+                        self,
+                        "Incomplete Schedule",
+                        "Not all required lesson types have been scheduled. Please complete the schedule before saving."
+                    )
+        else:
+            self.logic.show_timetables_page(timetable, self)
     
     def undo_last_action(self):
         """Undo the last action in the schedule."""
         self.logic.undo_last_action()
         self.update_view()
+        
+    def clear_lesson_type_focus(self):
+        self.logic.clear_lesson_type_focus()
+        self.update_view()
+    
+    def update_schedule_progress_label(self):
+        selected_count, total_required = self.logic.get_schedule_progress()
+        self.course_list_component.progress_label.setText(f"Scheduled {selected_count} out of {total_required} required lessons")
+        self.course_list_component.update_progress_bar(scheduled=selected_count, total=total_required)
+    
+    def update_progress_label(self, selected_count, total_required):
+        
+        self.progress_label.setText(f"Scheduled {selected_count} out of {total_required} required lessons")
+
+        if total_required == 0:
+            self.progress_label.setStyleSheet("color: gray; font-weight: bold;")
+        elif selected_count < total_required:
+            self.progress_label.setStyleSheet("color: red; font-weight: bold;")
+        else:
+            self.progress_label.setStyleSheet("color: green; font-weight: bold;")

@@ -13,6 +13,9 @@ class ManualScheduleController:
     def get_available_lessons(self):
         return self.service.extract_all_available_lessons()
     
+    def get_dynamic_schedule(self):
+        return self.service.get_dynamic_schedule()
+    
     def get_available_lessons_by_course(self, course_id, lesson_type):
         return self.service.extract_available_lessons_by_course(course_id, lesson_type)
     
@@ -35,4 +38,4 @@ class ManualScheduleController:
         self.service.undo_last_action()
     
     def save_schedule(self):
-        self.service.create_schedule()
+        return self.service.create_schedule()
