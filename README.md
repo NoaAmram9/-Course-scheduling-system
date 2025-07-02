@@ -74,7 +74,8 @@ Noa Amram, Adi Faktorovich, Gil Berti, Avigail Gorfinkel
 
 - **Project Repository**: [Course Scheduling System GitHub](https://github.com/NoaAmram9/-Course-scheduling-system.git)
 - **Version 1.0 Files**: [Download v1.0 ZIP](https://github.com/user-attachments/files/19683801/course.scheduling.1.0.zip)
-- **Version 4.0 Files**: [Schedule_4.0.zip](https://github.com/user-attachments/files/21024458/Schedule_4.0.zip)
+- **Version 4.0 SSD FILE**: [SSD 4.0.pdf](https://github.com/user-attachments/files/21024655/SSD.4.0.pdf)
+
 
 
 
