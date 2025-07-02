@@ -246,7 +246,35 @@ class MainPageView(QMainWindow):
         
     def show_manual_schedule_page(self):
         """Show manual schedule page - Called by LOGIC layer"""
-        self.manual_schedule_page = ManualSchedulePage(self.controller, self.filePath)
+        # print("filePath =", self.filePath)
+        # self.manual_schedule_page = ManualSchedulePage(self.controller, self.filePath, courses_data = self.Data)
+        # self.manual_schedule_page.show()
+        self.show_manual_page()
+    
+    def manual_schedule(self):
+        if self.course_manager.save_selection():
+            # selected_courses = self.get_selected_courses()
+            self.controller.save_courses_to_file("Data/All_Courses.xlsx", self.Data)
+            self.show_manual_page()
+            
+    def show_manual_page(self):
+        
+        # Create callback function to return to course selection
+        def go_back():
+            if self.manual_schedule_page:
+                self.manual_schedule_page.close()
+                self.manual_schedule_page = None
+            self.show()  # Show the course selection window again
+        
+        # Hide the current window
+        self.hide()
+            
+        self.manual_schedule_page = ManualSchedulePage(
+            controller = self.controller,
+            file_path = self.filePath,
+            courses_data = self.Data,
+            go_back_callback=go_back,
+        )
         self.manual_schedule_page.show()
         
     def show_confirmation_dialog(self, title, message):

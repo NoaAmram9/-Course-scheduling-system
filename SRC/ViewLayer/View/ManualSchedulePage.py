@@ -19,7 +19,8 @@ class ManualSchedulePage(QWidget):
         super().__init__()
         self.logic = ManualScheduleLogic(controller, file_path, courses_data)
         self.courses_info = self.logic.limited_courses_info
-        self.callback = go_back_callback
+        self.go_back_callback = go_back_callback
+        self._is_exiting_from_back = False
         
         self.setWindowTitle("Manual Schedule")
         
@@ -51,7 +52,7 @@ class ManualSchedulePage(QWidget):
         self.content_layout.setStretch(1, 3)  # timetable = 3/4 of the width
         
         bottom_layout = BottomNavBar(self)
-        main_layout.addLayout(bottom_layout.create_layout())  
+        main_layout.addWidget(bottom_layout.create_layout())  
         
     def create_timetable_container(self, parent_layout):
         """Create the scrollable area to display timetable widgets"""
@@ -82,6 +83,10 @@ class ManualSchedulePage(QWidget):
         
         # Set size policies to allow the widget to expand and fill available space
         self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+    
+    def hendle_go_back_click(self):
+        self._is_exiting_from_back = True
+        self.go_back_callback()
         
     def handle_lesson_type_click(self, course_id, lesson_type):
         self.logic.handle_lesson_type_click(course_id, lesson_type)
@@ -194,3 +199,25 @@ class ManualSchedulePage(QWidget):
             self.progress_label.setStyleSheet("color: red; font-weight: bold;")
         else:
             self.progress_label.setStyleSheet("color: green; font-weight: bold;")
+
+    def closeEvent(self, event):
+        if getattr(self, "_is_exiting_from_back", False):
+        # חזרה רגילה – לא מציגים דיאלוג
+            event.accept()
+            return
+        reply = QMessageBox.question(
+            self,
+            "Exit Confirmation",
+            "Are you sure you want to exit?",
+            QMessageBox.Yes | QMessageBox.No,
+            defaultButton=QMessageBox.Yes  
+        )
+
+        if reply == QMessageBox.Yes:
+            try:
+                self.logic.outer_controller.handle_exit()
+            except:
+                pass
+            event.accept()
+        else:
+            event.ignore()

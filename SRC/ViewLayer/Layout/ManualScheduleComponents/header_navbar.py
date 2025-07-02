@@ -10,6 +10,13 @@ class HeaderNavbar:
         header_layout = QHBoxLayout()
         header_layout.setContentsMargins(20, 20, 20, 10)  # Top margin for header
             
+        self.go_back_button = QPushButton("←")
+        self.go_back_button.setStyleSheet("font-weight: bold;")
+        self.go_back_button.setObjectName("gobackButton")
+        self.go_back_button.clicked.connect(lambda: self.instance.hendle_go_back_click())
+        header_layout.addWidget(self.go_back_button)
+
+            
         self.reset_button = QPushButton("Reset")
         self.reset_button.setObjectName("resetButton")
         self.reset_button.clicked.connect(lambda: self.instance.handle_reset())
@@ -30,7 +37,7 @@ class HeaderNavbar:
         self.title = QLabel("Manual Schedule")
         self.title.setObjectName("pageTitle")
         self.title.setAlignment(Qt.AlignCenter)
-        self.title.setStyleSheet("font-size: 24px; font-weight: bold; color: #FFA500;")  # Example style
+        self.title.setStyleSheet("font-size: 24px; font-weight: bold; color: #213555;") 
         header_layout.addWidget(self.title)
         header_layout.addStretch() 
         

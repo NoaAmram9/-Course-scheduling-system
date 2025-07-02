@@ -32,7 +32,7 @@ QMainWindow {
 #timetableWidgetContainer {
     background-color: #ffffff;
     border-radius: 16px;
-    border: 1px solid #D8C4B6;
+    border: 1px solid #3E5879;
 }
 
 /* תווית שאין נתונים */
@@ -163,14 +163,14 @@ QLabel#blockedLabel {
 }
 
 QFrame#availableCell {
-    background-color: #FAE4BC;
+    background-color:rgb(99, 119, 146);
     border-radius: 10px;
-    border: 1px solid #EBCB97;
+    border: 1px solid #3E5879;
 }
 
 QFrame#availableCell:hover {
-    background-color: #EBCB97;
-    border: 1px solid #EBCB97;
+    background-color: #3E5879;
+    border: 1px solid #213555;
 }
 
 QFrame[customTag="manual_selected"]:hover {
@@ -180,8 +180,8 @@ QFrame[customTag="manual_selected"]:hover {
 }
 
 QFrame#requestedCell {
-    background-color: #A28878;
-    border: 1px solid #9A6A4E;
+    background-color: #213555;
+    border: 1px solid rgb(18, 40, 77);
     border-radius: 10px;
 }
 

@@ -3,7 +3,8 @@ from SRC.Controller.ManualScheduleController import ManualScheduleController
 
 class ManualScheduleLogic:
     def __init__(self, controller, file_path, courses_data):
-        self.courses_repo = controller.get_selected_courses_info(file_path, "Data/selected_courses.txt", courses_data)
+        self.courses_repo = controller.get_selected_courses_info(None, "Data/selected_courses.txt", include_blocks = False)
+        self.outer_controller = controller
         self.controller = ManualScheduleController(self.courses_repo)  # Initialize the controller with the courses repository
         self.file_path = file_path
         self.limited_courses_info = self.get_selected_courses_info() # limited course information for list of courses and thier requierd lessons
@@ -138,12 +139,14 @@ class ManualScheduleLogic:
         # Hide the current window
         instance.hide()
         
-        # # Create the timetables window
-        # self.timetables_window = TimetablesPageQt5(
-        #     go_back_callback=go_back_to_selection,
-        #     timetable=timetable
-        # )
+        # Create the timetables window
+        self.timetables_window = TimetablesPageQt5(
+            controller=self.outer_controller,
+            filePath=self.file_path,
+            go_back_callback=go_back_to_selection,
+            timetable=timetable
+        )
         
-        # # Show the timetables window
-        # self.timetables_window.show()  
+        # Show the timetables window
+        self.timetables_window.show()  
     

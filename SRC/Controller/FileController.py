@@ -73,7 +73,7 @@ class FileController:
         scheduleService = ScheduleService()
         return scheduleService.generate_schedules(selected_courses, limit=1000)
   
-    def get_selected_courses_info(self, file_path1, file_path2):
+    def get_selected_courses_info(self, file_path1, file_path2, include_blocks = True):
         """
         Returns the selected courses info based on the courses file and selected courses file.
         """
@@ -88,7 +88,7 @@ class FileController:
         selected_courses_info = self.selected_courses_info(courses_info, selected_courses)
     
         # Include dummy blocked courses if added earlier
-        if hasattr(self, "_injected_constraints"):
+        if include_blocks and hasattr(self, "_injected_constraints"):
             selected_courses_info.extend(self._injected_constraints)
     
         return selected_courses_info
