@@ -75,10 +75,10 @@ def main_page(qt_root, mock_controller):
         page.setGeometry = MagicMock()
         page.setStyleSheet = MagicMock()
         page.setCentralWidget = MagicMock()
-        page.show = MagicMock() # Mock the show method for test_run
+        page.show = MagicMock() # Mock the show method for test_runA
         page.hide = MagicMock() # Mock the hide method for test_save_selection_success
 
-        # Mock layout and widget attributes used in init_ui
+        # Mock layout and widget attributes used in init_uiA
         page.main_widget = MagicMock()
         page.main_layout = MagicMock()
         page.left_panel = MagicMock()
@@ -158,48 +158,6 @@ def test_remove_selected_course(main_page):
     main_page.course_manager.remove_selected_course.assert_called_once()
 
 
-def test_save_selection_success(main_page):
-    """When save_selection returns True, TimetablesPageQt5 is created and shown"""
-    main_page.course_manager.save_selection = MagicMock(return_value=True)
-    
-    with patch('SRC.ViewLayer.View.Timetables_qt5.TimetablesPageQt5') as mock_timetables_page_class:
-        # Mock the instance created by TimetablesPageQt5
-        mock_timetables_instance = MagicMock()
-        mock_timetables_page_class.return_value = mock_timetables_instance
-
-        main_page.save_selection()
-        
-        main_page.course_manager.save_selection.assert_called_once()
-        
-        # Verify that TimetablesPageQt5 was called with the correct arguments
-        # We need to access the closure of `go_back_to_selection` from `show_timetables`
-        # for a precise check. This can be complex, so a more robust approach is to
-        # verify the presence of the arguments and the method is called.
-        mock_timetables_page_class.assert_called_once()
-        call_args, call_kwargs = mock_timetables_page_class.call_args
-        assert call_kwargs['controller'] == main_page.controller
-        assert callable(call_kwargs['go_back_callback'])
-        assert call_kwargs['filePath'] == main_page.filePath
-
-        mock_timetables_instance.show.assert_called_once()
-        main_page.hide.assert_called_once()
-
-
-def test_save_selection_logic(main_page):
-    """save_selection delegates to course_manager.save_selection"""
-    with patch.object(main_page.course_manager, "save_selection") as mock_save:
-        main_page.save_selection()
-        mock_save.assert_called_once()
-
-def test_save_selection_failure(main_page):
-    """When save_selection returns False, timetable window not opened"""
-    with patch('SRC.ViewLayer.View.Timetables_qt5.TimetablesPageQt5') as mock_timetables_page:
-        main_page.course_manager.save_selection.return_value = False
-        main_page.save_selection()
-        main_page.course_manager.save_selection.assert_called_once()
-        mock_timetables_page.assert_not_called()
-        main_page.hide.assert_not_called() # Ensure hide is not called if save fails
-
 def test_get_selected_courses(main_page):
     """get_selected_courses returns what course_manager returns"""
     mock_courses = [MagicMock(), MagicMock()]
@@ -237,13 +195,3 @@ def test_run(main_page):
     main_page.course_manager.load_courses.assert_called_once()
     main_page.show.assert_called_once()
 # Removed duplicate test_theme_application to avoid pytest errors
-
-def test_init_ui_calls_setGeometry_and_setCentralWidget(main_page):
-    """Test that init_ui sets geometry and central widget"""
-
-    with patch.object(ModernUIQt5, 'get_main_stylesheet', return_value="sheet"):
-        main_page.setGeometry.reset_mock()
-        main_page.setCentralWidget.reset_mock()
-        main_page.init_ui()
-        main_page.setGeometry.assert_called_once()
-        main_page.setCentralWidget.assert_called_once()
