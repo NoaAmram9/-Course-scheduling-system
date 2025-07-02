@@ -67,7 +67,7 @@ This file identifies the app to Google.
 
 ## ✍️ Authors
 
-Created by the SchedSquad team.
+Created by the SchedSquad team;
 Noa Amram, Adi Faktorovich, Gil Berti, Avigail Gorfinkel
 
 ## 🔗 GitHub Links
