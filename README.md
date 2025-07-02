@@ -23,7 +23,7 @@ Make sure you have Python installed.
 Install the required dependencies:
 
 ```bash
-pip install pandas openpyxl PyQt5 pytest xlrd google-api-python-client google-auth google-auth-oauthlib google-auth-httplib2
+pip install pandas openpyxl PyQt5 pytest xlrd google-api-python-client google-auth-httplib2 google-auth-oauthlib requests
 ```
 
 ## ✨ Features
