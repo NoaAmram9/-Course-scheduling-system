@@ -21,6 +21,7 @@ class ManualSchedulePage(QWidget):
         self.courses_info = self.logic.limited_courses_info
         self.go_back_callback = go_back_callback
         self._is_exiting_from_back = False
+        self.dark_mode_enabled = False
         
         self.setWindowTitle("Manual Schedule")
         
@@ -36,7 +37,7 @@ class ManualSchedulePage(QWidget):
         # ====== HEADER NAVBAR ======
         self.header = HeaderNavbar(self)
         main_layout.addLayout(self.header.create_layout())
-        self.save_button, self.reset_button, self.undo_button = self.header.get_buttons()
+        self.save_button, self.reset_button, self.undo_button, self.dark_mode_button = self.header.get_buttons()
         
         # ====== CONTENT LAYOUT: HORIZONTAL ======
         self.content_layout = QHBoxLayout()
@@ -84,7 +85,7 @@ class ManualSchedulePage(QWidget):
         # Set size policies to allow the widget to expand and fill available space
         self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
     
-    def hendle_go_back_click(self):
+    def handle_go_back_click(self):
         self._is_exiting_from_back = True
         self.go_back_callback()
         
@@ -221,3 +222,9 @@ class ManualSchedulePage(QWidget):
             event.accept()
         else:
             event.ignore()
+
+     
+    def handle_dark_mode_click(self):
+        self.dark_mode_enabled = not self.dark_mode_enabled
+        self.header.change_dark_icon(self.dark_mode_enabled)
+        self.setStyleSheet(ModernUIQt5.get_manual_schedule_stylesheet(self.dark_mode_enabled))

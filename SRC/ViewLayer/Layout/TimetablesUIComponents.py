@@ -32,10 +32,10 @@ class TimetableUIComponents:
         # Create the refresh button with icons
         current_dir = os.path.dirname(__file__)
         instance.refresh_icons = [
-            QPixmap(os.path.normpath(os.path.join(current_dir, "../Icons/refresh_down.gif"))),
-            QPixmap(os.path.normpath(os.path.join(current_dir, "../Icons/refresh_left.gif"))),
-            QPixmap(os.path.normpath(os.path.join(current_dir, "../Icons/refresh_up.gif"))),
-            QPixmap(os.path.normpath(os.path.join(current_dir, "../Icons/refresh_right.gif"))),
+            QPixmap(os.path.normpath(os.path.join(current_dir, "../Icons/refresh_down1.gif"))),
+            QPixmap(os.path.normpath(os.path.join(current_dir, "../Icons/refresh_left1.gif"))),
+            QPixmap(os.path.normpath(os.path.join(current_dir, "../Icons/refresh_up1.gif"))),
+            QPixmap(os.path.normpath(os.path.join(current_dir, "../Icons/refresh_right1.gif"))),
         ]
 
         # define the default icon as the last one (refresh_right)
