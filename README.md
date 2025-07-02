@@ -1,51 +1,40 @@
-# Course Scheduling System
+# 📘 Course Scheduling System (v4.0)
 
-A course scheduling system designed to help students build efficient and personalized semester schedules.
+A Python-based application to help students and academic staff build personal and efficient semester schedules.
 
 ## 🚀 Getting Started
 
-This project is written in **Python** and provides a graphical user interface  using **PyQt5** for selecting courses, setting time constraints, and generating valid schedules.
+To run the app, open `App.py` and run it (e.g., with `F5` in your IDE).
 
-To run the system, open the `App.py` file and run it (e.g., press `F5` in your IDE).
+## 🧱 Structure
 
-## 🧭 Project Structure
+- `App.py` – Entry point.
+- `SRC/` – Source code:
+  - `Models/` – Core data models.
+  - `ViewLayer/` – PyQt5 GUI (MVC structure).
+  - `Controller/` – App logic coordinators.
+  - `Services/` – Scheduling, constraints, file I/O, export tools.
+  - `DataBase/` – SQLite-based user/course storage.
+  - `tests/` – Unit and GUI tests.
 
-- `App.py` – Entry point for running the application.
-- `SRC/` – Source code folder containing:
-  - `Controller/` – Application logic controllers.
-  - `ViewLayer/` – GUI components built with PyQt5.
-  - `Models/` – Data structures such as Course, Lesson, etc.
-  - `Services/` – Handles file I/O, validation, scheduling, prefrences and time constraints.
-  - `tests/` – tests for logic and GUI.
-
-
-## 🔀 Branches
-
-- `Part 3` – Including performance optimization, user experience improvements, and dynamic scheduling features.
-
-## 📥 Installation
-
+## 🧪 Installation
 Make sure you have Python installed.
 
 Install the required dependencies:
 
 ```bash
-pip install pandas openpyxl PyQt5 pytest xlrd
+pip install pandas openpyxl PyQt5 pytest xlrd google-api-python-client google-auth google-auth-oauthlib google-auth-httplib2
 ```
 
-## 🔗 GitHub Links
+## ✨ Features
 
-- **Project Repository**: [Course Scheduling System GitHub](https://github.com/NoaAmram9/-Course-scheduling-system.git)
-- **Version 1.0 Files**: [Download v1.0 ZIP](https://github.com/user-attachments/files/19683801/course.scheduling.1.0.zip)
-
-
-## 💡 Features
-
-- Course selection with support for lectures, exercises, labs, reinforcement, and more.
-- User-defined time constraints using intuitive GUI or external file.
-- Export schedule to PDF.
-- Dynamic sorting and filtering of schedule results (e.g., by number of free windows or study days).
-
+- Course selection, constraints, and preferences.
+- Automatic and manual schedule generation.
+- PDF export and Google Calendar integration.
+- SQLite-based data persistence.
+- Login system for students and secretaries.
+- Dark mode and modern UI.
+  
 ## 📌 Google Calendar Export — Setup Instructions  
 
 This app allows you to export your timetable to **Google Calendar**.
@@ -79,6 +68,15 @@ This file identifies the app to Google.
 ## ✍️ Authors
 
 Created by the SchedSquad team.
+Noa Amram, Adi Faktorovich, Gil Berti, Avigail Gorfinkel
+
+## 🔗 GitHub Links
+
+- **Project Repository**: [Course Scheduling System GitHub](https://github.com/NoaAmram9/-Course-scheduling-system.git)
+- **Version 1.0 Files**: [Download v1.0 ZIP](https://github.com/user-attachments/files/19683801/course.scheduling.1.0.zip)
+- **Version 4.0 Files**: [Schedule_4.0.zip](https://github.com/user-attachments/files/21024458/Schedule_4.0.zip)
+
+
 
 ---
 
