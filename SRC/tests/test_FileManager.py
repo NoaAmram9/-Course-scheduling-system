@@ -5,8 +5,8 @@ from SRC.Models.ValidationError import ValidationError
 from SRC.Models.TimeTable import TimeTable
 from SRC.Models.LessonTimes import LessonTimes
 from SRC.Models.Lesson import Lesson
-from SRC.Services.FileManager import FileManager
-from SRC.Controller.Controller import Controller
+from SRC.Services.TxtManager import FileManager
+from SRC.Controller.FileController import Controller
 
 file_manager = FileManager()
 

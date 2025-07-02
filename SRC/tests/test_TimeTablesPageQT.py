@@ -6,8 +6,8 @@ from PyQt6.QtWidgets import (QApplication, QWidget, QFrame, QLabel,
                             QPushButton, QScrollArea, QMessageBox)
 from PyQt6.QtCore import Qt
 from PyQt6.QtTest import QTest
-from SRC.ViewLayer.Theme.ModernUI import ModernUI
-from SRC.ViewLayer.View.TimetablesPage import TimetablesPage
+from SRC.ViewLayer.Theme.ModernUIQt5 import ModernUI
+from SRC.ViewLayer.View.Timetables_qt5 import TimetablesPage
 from SRC.ViewLayer.Logic.TimeTable import map_courses_to_slots
 
 @pytest.fixture(scope="session")
