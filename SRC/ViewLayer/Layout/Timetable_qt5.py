@@ -253,7 +253,6 @@ class TimetableGridWidget(QWidget):
             lesson_type = course_data.get("type", "")
             is_blocked = course_data.get("code", "").startswith("BLOCKED")
             is_available = course_data.get("type") == "available"  # Check if the course type is "available"
-
             if is_blocked:
                 cell.setObjectName("blockedCell")
             elif is_available:
@@ -318,7 +317,7 @@ class TimetableGridWidget(QWidget):
                 cell.setCursor(Qt.PointingHandCursor)
                 cell.mouseReleaseEvent = lambda event: self.on_available_click(day, hour)
 
-            if self.editing_mode and self.on_selected_lesson_click:
+            if self.editing_mode and self.on_selected_lesson_click and not is_available:
                 # Connect only for normal lessons (not available/blocked)
                 cell.setCursor(Qt.PointingHandCursor)
                 cell.mouseReleaseEvent = lambda event: self.on_selected_lesson_click(

@@ -41,7 +41,7 @@ class TimetablesPageQt5(QMainWindow):
     # Signal for when a new timetable is ready to be shown
     new_timetable_ready = pyqtSignal()
     
-    def __init__(self, controller, go_back_callback, filePath):
+    def __init__(self, controller, go_back_callback, filePath, timetable=None):
         super().__init__()
         self.controller = controller
         self.go_back_callback = go_back_callback
@@ -57,6 +57,8 @@ class TimetablesPageQt5(QMainWindow):
         self.sorted_timetables = []  # Sorted timetable cache
         self.display_sorted = False  # Display sorted flag
         
+        if timetable:
+            self.all_options.append(timetable)
         
         # Background worker for loading timetables
         self.worker = None
@@ -75,6 +77,7 @@ class TimetablesPageQt5(QMainWindow):
         self.init_screenshot_exporter()  # Initialize PDF screenshot exporter
         self.init_ui()  # Initialize user interface
         self.start_background_loading()  # Start loading timetables in background
+        self.update_view()
 
     def init_ui(self):
         """Initialize the main UI layout and components"""
@@ -492,7 +495,7 @@ class TimetablesPageQt5(QMainWindow):
         timetable_grid = TimetableGridWidget(
             slot_map,
             editing_mode=True,
-            on_selected_lesson_click=self.on_lesson_clicked
+            on_selected_lesson_click=self.on_lesson_clicked 
         )
         self.timetable_layout.addWidget(timetable_grid)
         self.timetable_layout.addStretch()

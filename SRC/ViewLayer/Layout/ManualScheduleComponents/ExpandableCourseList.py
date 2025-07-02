@@ -45,15 +45,16 @@
 #             course_label.clicked.connect(lambda checked, frame=lesson_frame: frame.setVisible(checked))
     
     
+import os
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QTreeWidget, QTreeWidgetItem, QLabel, QProgressBar
 from PyQt5.QtCore import Qt
 from SRC.ViewLayer.Theme.ModernUIQt5 import ModernUIQt5
+from PyQt5.QtGui import QBrush, QColor, QFont
 
 class ExpandableCourseList(QWidget):
     def __init__(self, courses_info, instance):
         super().__init__()
-       
-        self.setObjectName("courseTreeFrame")  # מתאים לקובץ העיצוב שלך
+        self.setObjectName("courseTreeFrame")  
         self.layout = QVBoxLayout()
         self.layout.setContentsMargins(20,20,20,20)
         self.setLayout(self.layout)
@@ -79,7 +80,12 @@ class ExpandableCourseList(QWidget):
         self.layout.addWidget(self.tree)
 
         self.populate_tree(courses_info)
-
+        
+        # with open("../../Theme/expandable_course_list.qss", "r") as f:
+        path = os.path.join(os.path.dirname(__file__), "../../Theme/expandable_course_list.qss")
+        with open(path, "r", encoding="utf-8") as f:
+            self.setStyleSheet(f.read())
+            
     def populate_tree(self, courses_info):
         for course in courses_info:
             course_name = course["course_name"]
@@ -89,12 +95,17 @@ class ExpandableCourseList(QWidget):
             # יצירת פריט ראשי עבור הקורס
             course_item = QTreeWidgetItem([f"{course_name} ({course_id})"])
             course_item.setData(0, Qt.UserRole, course_id)
+            
+            # ביטול אפשרות סימון קורס
+            course_item.setFlags(course_item.flags() & ~Qt.ItemIsSelectable)
+
             self.tree.addTopLevelItem(course_item)
 
             # יצירת תתי-פריטים עבור סוגי השיעורים
             for lesson_type in required_lessons:
                 lesson_item = QTreeWidgetItem([lesson_type])
                 lesson_item.setData(0, Qt.UserRole, (course_id, lesson_type))
+                lesson_item.setFlags(lesson_item.flags() & ~Qt.ItemIsSelectable)
                 self.lesson_type_items[(course_id, lesson_type)] = lesson_item
                 course_item.addChild(lesson_item)
 
@@ -113,9 +124,21 @@ class ExpandableCourseList(QWidget):
     def mark_selected_lesson_types(self, selected_lessons):
         for (course_id, lesson_type), item in self.lesson_type_items.items():
             if self._lesson_type_selected(selected_lessons, course_id, lesson_type):
-                item.setForeground(0, Qt.blue)  # או צבע/סטייל אחר לסימון
+                # הוספת וי בתחילת הטקסט
+                # item.setText(0, f"✔ {lesson_type}")
+                item.setText(0, f"{lesson_type}")
+                item.setBackground(0, QBrush(QColor("#E4E0DA")))  # רקע עדין
+                item.setForeground(0, QBrush(QColor("#021431")))  # טקסט כהה
+                bold_font = QFont()
+                bold_font.setBold(True)
+                item.setFont(0, bold_font)
             else:
-                item.setForeground(0, Qt.black)
+                item.setText(0, lesson_type)  # הסרת ה־✔ אם לא נבחר
+                item.setBackground(0, QBrush(Qt.transparent))
+                item.setForeground(0, QBrush(QColor("#213555")))  # צבע רגיל
+                normal_font = QFont()
+                normal_font.setBold(False)
+                item.setFont(0, normal_font)
         
     def _lesson_type_selected(self, selected_lessons, course_id, lesson_type):
         for cid, lesson in selected_lessons:
@@ -132,8 +155,8 @@ class ExpandableCourseList(QWidget):
             percent = int((scheduled / total) * 100)
             self.progress_bar.setFormat(f"Scheduled {scheduled} out of {total}")
             if percent == 100:
-                self.progress_bar.setStyleSheet("QProgressBar::chunk { background-color: green; }")
+                self.progress_bar.setStyleSheet("QProgressBar::chunk { background-color: #213555; }")
             else:
-                self.progress_bar.setStyleSheet("QProgressBar::chunk { background-color: orange; }")
+                self.progress_bar.setStyleSheet("QProgressBar::chunk { background-color: #3E5879; }")
 
         self.progress_bar.setValue(percent)

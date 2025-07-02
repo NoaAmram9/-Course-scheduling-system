@@ -203,6 +203,8 @@ class ManualScheduleService:
         #     # print(f"time slot NOT marked: {day, hour}")
         #     if occupied_windows[(day, hour)].get("matches requested lesson", ""):
         #         print(f"time slot marked: {day, hour}")
+        # for (day, hour) in occupied_windows:
+        #     print(f"{occupied_windows[(day,hour)]} \n")
         return occupied_windows
     
     def get_available_lessons_by_time(self, day, hour):

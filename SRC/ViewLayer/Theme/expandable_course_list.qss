@@ -1,0 +1,61 @@
+QWidget#courseTreeFrame{
+    border: 1px solid #3E5879;
+    border-radius: 8px;
+    padding: 6px;
+}
+
+/* עיצוב כללי לעץ הקורסים */
+QTreeWidget#courseTree {
+    background-color: #F5EFE7;
+    border: 1px solid #3E5879;
+    border-radius: 12px;
+    padding: 10px;
+    font-family: "Segoe UI", sans-serif;
+    font-size: 14px;
+    color: #213555;
+}
+
+/* פריטי קורס ראשיים */
+QTreeWidget::item {
+    padding: 6px 10px;
+    margin: 4px 0px;
+    border-radius: 6px;
+    background-color: transparent; /* חשוב! */
+}
+
+
+
+/* בעת ריחוף */
+QTreeWidget::item:hover {
+    background-color: #E4E0DA;
+}
+
+
+
+/* הסתרת branch indicator (הריבוע המיותר) */
+QTreeView::branch {
+    image: none;
+}
+
+
+/* תווית התקדמות */
+QLabel#progressLabel {
+    font-size: 14px;
+    font-weight: bold;
+    color: #3E5879;
+    padding: 4px 0;
+}
+
+/* פס התקדמות */
+QProgressBar {
+    height: 14px;
+    border: 1px solid #3E5879;
+    border-radius: 7px;
+    background-color: #F5EFE7;
+    font-family: "Segoe UI", sans-serif;
+}
+
+QProgressBar::chunk {
+    border-radius: 7px;
+    background-color: orange; /* יהיה מעודכן דינאמית בקוד */
+}
